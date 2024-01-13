@@ -146,3 +146,16 @@ plot <- dt[,
                plot.background = element_rect(fill = base_clear)
              )]
 
+
+# Save plot ---------------------------------------------------------------
+cat("Saving plot... \n\n", sep = "")
+
+ggsave(
+  filename = "eolica.png",
+  path = normalizePath("R/2024/week_01/"),
+  plot = plot,
+  device = "png",
+  units = "cm",
+  width = 30 ,
+  height = 18.54102
+)
