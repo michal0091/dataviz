@@ -58,10 +58,91 @@ color_1 <- "#5fb0dd"
 color_2 <- "#f04b73"
 
 # Fonts
-font_base <- "Lato-Regular"
-font_title <- "Lato-Black"
+font_base <- "Lato"
+font_title <- "Lato Black"
+
 
 # Load data ---------------------------------------------------------------
 cat("Loading data... \n\n", sep = "")
 dt <- fread("R/2024/week_01/eolica.csv", header = T)
+
+
+# Transform data ----------------------------------------------------------
+cat("Transforming data... \n\n", sep = "")
+
+# Long format
+dt <- dt %>%
+  melt(id.vars = "CCAA", measure.vars = c("2012", "2022"), value.name = "GWh", variable.name = "Año") 
+
+# Set hjust type
+dt[, my_hjust := fifelse(GWh[2] - GWh[1] >= 0, 1, 0), CCAA]
+dt[Año == 2012, my_hjust := fifelse(my_hjust == 1, 0, 1)]
+dt[, nchar := nchar(GWh) + 1]
+
+
+# Plot --------------------------------------------------------------------
+cat("Plotting... \n\n", sep = "")
+
+plot <- dt[,
+           # Plot
+           ggplot(.SD, aes(
+             x = reorder(CCAA, GWh),
+             y = GWh,
+             fill = Año,
+             group = Año)
+             ) +
+             
+             # Geoms
+             geom_line(aes(group = CCAA), color = base_accent_light, linewidth =
+                         3.5) +
+             geom_point(aes(color = Año), size = 3) +
+             geom_text(
+               aes(label = GWh, color = Año),
+               nudge_y = fifelse(my_hjust == 1, nchar * 180, -nchar * 180),
+               hjust = my_hjust,
+               show.legend = FALSE
+             ) +
+             
+             # Scales
+             scale_color_manual(values = c(color_1, color_2)) +
+             scale_y_continuous(limits = c(-500, 16000),
+                                breaks = seq(0, 16000, 2000)) +
+             
+             # Flip coordinates
+             coord_flip() +
+             
+             # Labels
+             labs(
+               title = "Energía eólica en España",
+               subtitle = "GWh producidos en 2012 y 2022",
+               caption = "Fuente: Elaboración propia a partir de datos oficiales del Gobierno de España\nmichal0091",
+               x = NULL,
+               y = NULL
+             ) +
+             
+             # Theme
+             theme_minimal() +
+             theme(
+               legend.position = "top",
+               text = element_text(color = base_text, family = font_base),
+               plot.title = element_text(
+                 color = base_text,
+                 family = font_title,
+                 size = 18
+               ),
+               axis.text.x = element_text(color = base_text, family = font_title),
+               axis.text.y = element_text(
+                 color = base_text,
+                 family = font_base,
+                 size = 12
+               ),
+               plot.caption =  element_text(
+                 color = base_text,
+                 family = font_base,
+                 size = 8
+               ),
+               plot.margin = margin(1.5, 0.5, 1, 1, "cm"),
+               panel.grid = element_blank(),
+               plot.background = element_rect(fill = base_clear)
+             )]
 
