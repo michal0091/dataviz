@@ -6,6 +6,9 @@
 .RData
 .RDataTmp
 
+# Plots
+*.png
+
 # User-specific files
 .Ruserdata
 
