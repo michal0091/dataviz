@@ -44,3 +44,24 @@ for(n in 1:n_packages){
 
 # Load fonts
 loadfonts(device = "win")
+
+
+# Style -------------------------------------------------------------------
+cat("Setting style... \n\n", sep = "")
+
+# Color palette
+base_clear <- "#efeef2"
+base_text <- "#2e2445"
+base_accent <- "#b9c602"
+base_accent_light <- "#f2e1d5"
+color_1 <- "#5fb0dd"
+color_2 <- "#f04b73"
+
+# Fonts
+font_base <- "Lato-Regular"
+font_title <- "Lato-Black"
+
+# Load data ---------------------------------------------------------------
+cat("Loading data... \n\n", sep = "")
+dt <- fread("R/2024/week_01/eolica.csv", header = T)
+
