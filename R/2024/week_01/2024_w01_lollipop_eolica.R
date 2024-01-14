@@ -51,11 +51,13 @@ cat("Setting style... \n\n", sep = "")
 
 # Color palette
 base_clear <- "#efeef2"
+base_clear_sh <- "#e1e2e7"
 base_text <- "#2e2445"
-base_accent <- "#b9c602"
 base_accent_light <- "#f2e1d5"
 color_1 <- "#5fb0dd"
 color_2 <- "#f04b73"
+color_positive <- "#284D33"
+color_negative <- "#6B3842"
 
 # Fonts
 font_base <- "Lato"
@@ -144,8 +146,72 @@ plot <- dt[,
                plot.margin = margin(1.5, 0.5, 1, 1, "cm"),
                panel.grid = element_blank(),
                plot.background = element_rect(fill = base_clear)
-             )]
+             ) 
+             ]
 
+# Add text 
+dt_diff <- dt[, .(diff = GWh[2] - GWh[1]), CCAA]
+dt_diff[, diff_label := fcase(
+  diff > 0, paste0("+", abs(diff)),
+  diff < 0, paste0("-", abs(diff)),
+  diff == 0, "0"
+)]
+
+# Convert to factor
+dt_diff[, CCAA := factor(CCAA, levels = CCAA)]
+
+# Add color
+dt_diff[, color := fcase(
+  diff > 0, color_positive,
+  diff < 0, color_negative,
+  diff == 0, base_text
+)]
+
+# Make plot box information with difference between 2012 and 2022
+plot_box <- dt_diff[, ggplot(.SD) +
+                      # Geoms
+                      geom_text(
+                        aes(
+                          x = reorder(CCAA,-as.numeric(CCAA)),
+                          y = 0,
+                          label = diff_label,
+                          family = font_base,
+                          vjust = 1
+                        ),
+                        fontface = "bold",
+                        size = 3.5,
+                        color = color
+                      ) +
+                      geom_text(
+                        aes(x = 18, y = 0), # 18 is the length + 1 of the x axis
+                        label = "dif.",
+                        nudge_y = .0,
+                        nudge_x = .8, 
+                        color = base_text,
+                        family = font_title,
+                        size = 3.5,
+                        vjust = "inward",
+                        hjust = "inward"
+                      ) +
+                      # Flip coordinates
+                      coord_flip() +
+                      theme_void() +
+                      # Theme
+                      theme(
+                        text = element_text(color = base_text, family = font_base),
+                        plot.margin = margin(
+                          l = 0,
+                          r = 0,
+                          b = 0,
+                          t = 0
+                        ),
+                        panel.background = element_rect(fill = base_clear_sh, color = base_clear_sh),
+                        legend.position = "none"
+                      )]
+
+# Make combined plot
+plot_combined <- plot + annotation_custom(ggplotGrob(plot_box), xmin = 0.25, xmax = 19, 
+                       ymin = 15500, ymax = 16500)
 
 # Save plot ---------------------------------------------------------------
 cat("Saving plot... \n\n", sep = "")
@@ -153,7 +219,7 @@ cat("Saving plot... \n\n", sep = "")
 ggsave(
   filename = "eolica.png",
   path = normalizePath("R/2024/week_01/"),
-  plot = plot,
+  plot = plot_combined,
   device = "png",
   units = "cm",
   width = 30 ,
