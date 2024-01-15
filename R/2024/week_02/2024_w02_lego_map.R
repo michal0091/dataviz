@@ -82,7 +82,8 @@ plot <-
   geom_sf(data = centroids,
           color = alpha("black", 0.75),
           size = 1) +
-  labs(fill = "% of eco-farms", title = "Ecological farms in Poland \U1F33D") +
+  labs(fill = "% of eco-farms", title = "Ecological farms in Poland \U1F33D",
+       caption = "Source: Główny Urząd Statystyczny\nmichal0091") +
   guides(fill = guide_legend(
     nrow = 1,
     title.position = "top",
@@ -100,6 +101,13 @@ plot <-
       color = text,
       family = font_title,
       size = 28 
+    ),
+    plot.caption = element_text(
+      hjust = 1,
+      vjust = -18,
+      color = text,
+      family = font_base,
+      size = 8 
     ),
     legend.position = "bottom",
     legend.title = element_text(
