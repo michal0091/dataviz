@@ -74,6 +74,21 @@ calendar[, weekend := ifelse(wday(date) %in% c(7, 1), TRUE, FALSE)]
 calendar[, week_month := frank(week, ties.method = "dense"), by = month]
 
 
+# Style -------------------------------------------------------------------
+# Color palette
+background <- "#fffefa"
+weekday_color <- "#313743"
+weekend_color <- "#67b7b5"
+holiday_color <- "#fa334c"
+
+# Load fonts
+loadfonts(device = "win")
+
+# Fonts
+font_base <- "Lato"
+font_title <- "Lato Black"
+
+
 # Plot --------------------------------------------------------------------
 cat("Plot... \n\n", sep = "")
 
