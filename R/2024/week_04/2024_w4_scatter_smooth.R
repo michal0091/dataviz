@@ -23,7 +23,7 @@ options(encoding = "UTF-8") # sets string encoding to UTF-8 instead of ANSI
 
 # Install packages & load libraries ---------------------------------------
 cat("Install packages & load libraries... \n\n", sep = "")
-packages <- c("tidyverse", "data.table", "zoo", "extrafont", "ggpubr") # list of packages to load
+packages <- c("tidyverse", "data.table", "zoo", "extrafont", "patchwork") # list of packages to load
 n_packages <- length(packages) # count how many packages are required
 
 new_pkg <- packages[!(packages %in% installed.packages())] # determine which packages aren't installed
@@ -132,7 +132,6 @@ loadfonts(device = "win")
 font_base <- "Noto Sans"
 
 ### All age groups plot
-
 p_1 <- summary_id[, ggplot(.SD) +
                     # Man
                     geom_point(
@@ -194,4 +193,78 @@ p_1 <- summary_id[, ggplot(.SD) +
                       axis.text = element_text(colour = color_text_medium),
                       legend.position = "none"
                     )]
+
+### 18-34 age group plot
+p_2 <- summary_18_34_id[, ggplot(.SD) +
+                          # Man
+                          geom_point(
+                            aes(x = year, y = m_position),
+                            size = 2,
+                            alpha = 0.5,
+                            color = color_m
+                          ) +
+                          geom_path(aes(x = year, y = m_position_sm),
+                                    size = 1.2,
+                                    color = color_m) +
+                          # Woman
+                          geom_point(
+                            aes(x = year, y = w_position),
+                            size = 2,
+                            alpha = 0.5,
+                            color = color_w
+                          ) +
+                          geom_path(aes(x = year, y = w_position_sm),
+                                    size = 1.2,
+                                    color = color_w) +
+                          # Gap
+                          geom_ribbon(
+                            aes(x = year, ymin = m_position_sm, ymax = w_position_sm),
+                            alpha = 0.5,
+                            fill = color_gap
+                          ) +
+                          # 0 hline
+                          geom_hline(yintercept = 0,
+                                     color = color_text_medium,
+                                     size = 1) +
+                          # Scales
+                          scale_y_continuous(
+                            breaks = seq(-10, 50, 10),
+                            limits = c(-10, 50),
+                            labels = fifelse(seq(-10, 50, 10) > 0,
+                                             paste0("+", seq(-10, 50, 10)),
+                                             as.character(seq(-10, 50, 10))),
+                            position = "right"
+                          ) +
+                          scale_x_continuous(breaks = seq(2013, 2023, 5),
+                                             limits = c(2013, 2023)) +
+                          # Labels
+                          labs(title = NULL,
+                               subtitle = "Young adult population ages 18 to 34") +
+                          # Theme
+                          theme_void() +
+                          theme(
+                            plot.margin = margin(1, 0.5, 1, 1, "cm"),
+                            plot.background = element_rect(fill = background, color = NA),
+                            plot.subtitle = element_text(
+                              hjust = 0,
+                              vjust = 2,
+                              color = color_text_medium,
+                              family = font_base,
+                              size = 12
+                            ),
+                            panel.grid.major.y = element_line(colour = "#B0A7A2"),
+                            axis.text = element_text(
+                              colour = color_text_medium,
+                              vjust = 1,
+                              hjust = 1
+                            ),
+                            legend.position = "none"
+                          )]
+
+
+
+
+
+
+
 
