@@ -115,6 +115,7 @@ summary_18_34_id[, `:=`(
 
 
 # Plot data ---------------------------------------------------------------
+cat("Plot data... \n\n", sep = "")
 
 # Style
 # Color palette
@@ -266,7 +267,7 @@ combined_plot <- p_1 + p_2 + plot_layout(widths = c(2, 1)) +
   plot_annotation(
     title = "Ideology gap is closing up between man and woman in Spain",
     subtitle = "Ideological self-positioning (% left minus % right), by sex",
-    "Source: Spanish Sociological Research Center (CIS)\nInspired by FT graphic: John Born-Murdoch\nmichal0091",
+    "Source: Spanish Sociological Research Center (CIS)\nInspired by FT graphic: John Born-Murdoch @jburnmurdoch\nmichal0091",
     theme = theme(
       plot.background = element_rect(fill = background, color = NA),
       plot.title = element_text(
@@ -295,8 +296,16 @@ combined_plot <- p_1 + p_2 + plot_layout(widths = c(2, 1)) +
   )
 
 
+# Save plot ---------------------------------------------------------------
+cat("Saving plot... \n\n", sep = "")
 
-
-
-
-
+ggsave(
+  filename = "ideology_gap_spain.png",
+  path = normalizePath("R/2024/week_04/"),
+  plot = combined_plot,
+  device = "png",
+  units = "cm",
+  width = 30,
+  height = 15,
+  dpi = 320
+)
