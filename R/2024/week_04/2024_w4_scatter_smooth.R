@@ -131,5 +131,67 @@ loadfonts(device = "win")
 # Fonts
 font_base <- "Noto Sans"
 
+### All age groups plot
 
+p_1 <- summary_id[, ggplot(.SD) +
+                    # Man
+                    geom_point(
+                      aes(x = year, y = m_position),
+                      size = 2,
+                      alpha = 0.5,
+                      color = color_m
+                    ) +
+                    geom_path(aes(x = year, y = m_position_sm),
+                              size = 1.2,
+                              color = color_m) +
+                    # Woman
+                    geom_point(
+                      aes(x = year, y = w_position),
+                      size = 2,
+                      alpha = 0.5,
+                      color = color_w
+                    ) +
+                    geom_path(aes(x = year, y = w_position_sm),
+                              size = 1.2,
+                              color = color_w) +
+                    # Gap
+                    geom_ribbon(
+                      aes(x = year, ymin = m_position_sm, ymax = w_position_sm),
+                      alpha = 0.5,
+                      fill = color_gap
+                    ) +
+                    # 0 hline
+                    geom_hline(yintercept = 0,
+                               color = color_text_medium,
+                               size = 1) +
+                    # Scales
+                    scale_y_continuous(
+                      breaks = seq(-10, 50, 10),
+                      limits = c(-10, 50),
+                      labels = fifelse(seq(-20, 40, 10) > 0, paste0("+", seq(-10, 50, 10)), as.character(seq(-10, 50, 10)))
+                    ) +
+                    scale_x_continuous(
+                      breaks = seq(1990, 2020, 10),
+                      limits = c(1990, 2023),
+                      labels = c("1990", "'00", "'10", "'20")
+                    ) +
+                    # Labels
+                    labs(title = NULL,
+                         subtitle = "All adult age groups") +
+                    # Theme
+                    theme_void() +
+                    theme(
+                      plot.margin = margin(1, 0.5, 1, 1, "cm"),
+                      plot.background = element_rect(fill = background, color = NA),
+                      plot.subtitle = element_text(
+                        hjust = 0,
+                        vjust = 2,
+                        color = color_text_medium,
+                        family = font_base,
+                        size = 12
+                      ),
+                      panel.grid.major.y = element_line(colour = "#B0A7A2"),
+                      axis.text = element_text(colour = color_text_medium),
+                      legend.position = "none"
+                    )]
 
