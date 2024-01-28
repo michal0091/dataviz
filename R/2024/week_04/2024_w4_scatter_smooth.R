@@ -261,6 +261,38 @@ p_2 <- summary_18_34_id[, ggplot(.SD) +
                             legend.position = "none"
                           )]
 
+### Combine plots
+combined_plot <- p_1 + p_2 + plot_layout(widths = c(2, 1)) +
+  plot_annotation(
+    title = "Ideology gap is closing up between man and woman in Spain",
+    subtitle = "Ideological self-positioning (% left minus % right), by sex",
+    "Source: Spanish Sociological Research Center (CIS)\nInspired by FT graphic: John Born-Murdoch\nmichal0091",
+    theme = theme(
+      plot.background = element_rect(fill = background, color = NA),
+      plot.title = element_text(
+        hjust = 0,
+        vjust = 1,
+        color = color_text_base,
+        family = font_base,
+        size = 18,
+        face = "bold"
+      ),
+      plot.subtitle = element_text(
+        hjust = 0,
+        vjust = 1,
+        color = color_text_medium,
+        family = font_base,
+        size = 16
+      ),
+      plot.caption = element_text(
+        hjust = 0,
+        vjust = 0,
+        color = color_text_medium,
+        family = font_base,
+        size = 10
+      ),
+    )
+  )
 
 
 
