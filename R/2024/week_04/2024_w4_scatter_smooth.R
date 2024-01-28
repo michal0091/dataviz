@@ -48,4 +48,37 @@ ideology <- fread("R/2024/week_04/ideological_perception_by_sex_es.csv", dec = "
 ideology_18_34 <- fread("R/2024/week_04/ideological_perception_by_sex_18_34y_es.csv")
 
 
+# Manage data -------------------------------------------------------------
+cat("Manage data... \n\n", sep = "")
+
+# All age groups
+
+# Rescale 1-10 to 1-5
+ideology[, scale_aux := fcase(
+  scale %in% c("1", "2"), "1-2",
+  scale %in% c("3", "4"), "3-4",
+  scale %in% c("5", "6"), "5-6",
+  scale %in% c("7", "8"), "7-8",
+  scale %in% c("9", "10"), "9-10"
+)]
+ideology[, scale_aux := fifelse(is.na(scale_aux), scale, scale_aux)]
+ideology_rs <- ideology[, .(m = sum(m),
+                            w = sum(w),
+                            all = sum(all)), by = .(year, scale = scale_aux)]
+
+# Drop NR & DK
+ideology_rs <- ideology_rs[!scale %in% c("NR", "DK")]
+
+# Factorize scale
+ideology_rs[, scale := factor(scale, levels = c("1-2", "3-4", "5-6", "7-8", "9-10"))]
+
+# Get left vs right
+summary_id <- ideology_rs[, .(m_position = sum(m[scale %in% c("1-2", "3-4")]) - sum(m[scale %in% c("7-8", "9-10")]),
+                              w_position = sum(w[scale %in% c("1-2", "3-4")]) - sum(w[scale %in% c("7-8", "9-10")])),
+                          .(year)]
+
+# Add loess
+summary_id[, `:=`(
+  m_position_sm = loess(m_position ~ year, span = 0.5)$fitted,
+  w_position_sm = loess(w_position ~ year, span = 0.5)$fitted)]
 
