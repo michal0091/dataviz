@@ -164,6 +164,15 @@ p_1 <- summary_id[, ggplot(.SD) +
                     geom_hline(yintercept = 0,
                                color = color_text_medium,
                                size = 1) +
+                    # Add annotation man and woman
+                    annotate("text", x = 2020, y = 15, label = "Women",
+                             color = color_w,
+                             family = font_base,
+                             size = 6) +
+                    annotate("text", x = 2022, y = 32, label = "Men",
+                             color = color_m,
+                             family = font_base,
+                             size = 6) +
                     # Scales
                     scale_y_continuous(
                       breaks = seq(-10, 50, 10),
@@ -265,7 +274,7 @@ p_2 <- summary_18_34_id[, ggplot(.SD) +
 ### Combine plots
 combined_plot <- p_1 + p_2 + plot_layout(widths = c(2, 1)) +
   plot_annotation(
-    title = "Ideology gap is closing up between man and woman in Spain",
+    title = "Ideology gap is closing up between men and women in Spain",
     subtitle = "Ideological self-positioning (% left minus % right), by sex",
     "Source: Spanish Sociological Research Center (CIS)\nInspired by FT graphic: John Born-Murdoch @jburnmurdoch\nmichal0091",
     theme = theme(
