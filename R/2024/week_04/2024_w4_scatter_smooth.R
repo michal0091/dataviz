@@ -113,5 +113,23 @@ summary_18_34_id[, `:=`(
   m_position_sm = loess(m_position ~ year, span = 0.75)$fitted,
   w_position_sm = loess(w_position ~ year, span = 0.75)$fitted)]
 
-# 
+
+# Plot data ---------------------------------------------------------------
+
+# Style
+# Color palette
+background = "#F2E4DC"
+color_m <- "#41BDD9"
+color_w <- "#BF3641"
+color_gap <- "#F2BBC9"
+color_text_base <- "#37302A"
+color_text_medium <- "#625D59"
+
+# Load fonts
+loadfonts(device = "win")
+
+# Fonts
+font_base <- "Noto Sans"
+
+
 
