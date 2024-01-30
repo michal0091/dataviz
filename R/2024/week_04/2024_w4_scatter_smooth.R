@@ -318,3 +318,133 @@ ggsave(
   height = 15,
   dpi = 320
 )
+
+
+
+# Extra plot --------------------------------------------------------------
+
+ideology_18_34_rsg <- ideology_18_34[, .(m   = as.numeric(sum(m)),
+                                         w   = as.numeric(sum(w)),
+                                         all = as.numeric(sum(all))), by = .(
+                                           year = fcase(
+                                             between(year, 2013, 2015),
+                                             "2013-2015",
+                                             between(year, 2016, 2018),
+                                             "2016-2018",
+                                             between(year, 2019, 2021),
+                                             "2019-2021",
+                                             year >= 2022,
+                                             "2022-2023"
+                                           ),
+                                           scale = fifelse(scale_aux %in% c("NR", "DK"), "NR or DK", scale_aux)
+                                         )]
+
+vars <- c("m", "w", "all")
+ideology_18_34_rsg[, (vars) := lapply(.SD, function(x)
+  round(100 * x / sum(x), 1)), .SDcols = vars, year]
+
+ideology_18_34_rs_melt <-
+  melt(ideology_18_34_rsg, id.vars = c("year", "scale"))
+
+
+# horizontal bar plot per year
+pal <-
+  c("#B52D25",
+    "#F54F48",
+    "#F9C555",
+    "#1F84C4",
+    "#11576c",
+    "darkgray")
+col_text <- "#24613b"
+col_background <- "#F5ECD7"
+col_bckg_shl <- "#ebe2cd"
+col_bckg_shd <- "#c2baa6"
+col_black <- "#353535"
+col_sel <- "#F18F01"
+
+# Fonts
+font_base <- "Lato"
+
+library(ggrepel)
+ideology_18_34_rs_melt[, scale := factor(scale, labels = c("1-2", "3-4", "5-6", "7-8", "9-10", "NR or DK"))]
+
+plot <- ideology_18_34_rs_melt[variable != "all",
+                               ggplot(.SD, aes(x = variable, y = value, fill = scale)) +
+                                 geom_bar(position = "fill", stat = "identity") +
+                                 geom_label_repel(
+                                   aes(label = paste0(value, "%")),
+                                   position = position_fill(vjust = 1),
+                                   family = font_base,
+                                   direction = "y",
+                                   point.padding = 1,
+                                   segment.size = 0.8,
+                                   size = 2.5,
+                                   seed = 3,
+                                   show.legend = FALSE
+                                 ) +
+                                 labs(
+                                   title = "Ideological self-positioning",
+                                   subtitle = "18-34 years old",
+                                   caption = "Far-left 1 to Far-right 10\n\nSource: Spanish Sociological Research Center (CIS)\nmichal0091",
+                                   x = NULL,
+                                   y = NULL,
+                                   fill = NULL
+                                 ) +
+                                 scale_y_continuous(labels = scales::percent) +
+                                 scale_x_discrete(labels = c("men", "women")) +
+                                 facet_wrap( ~ year) +
+                                 scale_fill_manual(values = pal) +
+                                 theme_void() +
+                                 theme(
+                                   plot.margin = margin(1, 0.5, 1, 1, "cm"),
+                                   plot.background = element_rect(fill = col_background, color = NA),
+                                   legend.background = element_rect(fill = col_bckg_shd, color = NA),
+                                   plot.title = element_text(
+                                     hjust = 0,
+                                     vjust = 4,
+                                     color = col_text,
+                                     family = font_base,
+                                     size = 18,
+                                     face = "bold"
+                                   ),
+                                   plot.subtitle = element_text(
+                                     hjust = 0,
+                                     vjust = 1,
+                                     color = col_sel,
+                                     family = font_base,
+                                     size = 16
+                                   ),
+                                   ,
+                                   plot.caption = element_text(
+                                     hjust = 0,
+                                     vjust = 0,
+                                     color = col_black,
+                                     family = font_base,
+                                     size = 10
+                                   ),
+                                   axis.text = element_text(
+                                     color = col_black,
+                                     family = font_base,
+                                     size = 9
+                                   ),
+                                   strip.text = element_text(
+                                     color = col_black,
+                                     family = font_base,
+                                     size = 14,
+                                     face = "bold"
+                                   ),
+                                   
+                                   strip.background = element_rect(colour = col_bckg_shd,
+                                                                   fill = col_bckg_shd)
+                                 )]
+ggsave(
+  filename = "ideology_18_34_spain.png",
+  path = normalizePath("R/2024/week_04/"),
+  plot = plot,
+  device = "png",
+  units = "cm",
+  width = 30,
+  height = 22.5,
+  dpi = 320
+)
+
