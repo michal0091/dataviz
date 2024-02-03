@@ -23,7 +23,7 @@ options(encoding = "UTF-8") # sets string encoding to UTF-8 instead of ANSI
 
 # Install packages & load libraries ---------------------------------------
 cat("Install packages & load libraries... \n\n", sep = "")
-packages <- c("tidyverse", "data.table", "eurostat", "sf") # list of packages to load
+packages <- c("tidyverse", "data.table", "eurostat", "sf", "giscoR") # list of packages to load
 n_packages <- length(packages) # count how many packages are required
 
 new_pkg <- packages[!(packages %in% installed.packages())] # determine which packages aren't installed
@@ -42,4 +42,15 @@ for(n in 1:n_packages){
 
 
 # Load data ---------------------------------------------------------------
+cat("Load data... \n\n", sep = "")
+salaries <- fread("R/2024/week_05/salarios.csv", dec = ",")
+# Fix the coin column
+salaries[, coin := as.numeric(gsub(",", ".", coin))]
 
+# Get spatial data
+eu_sf <- eurostat::get_eurostat_geospatial(resolution = 10, 
+                                           nuts_level = 0, 
+                                           year = 2016)
+
+# Merge data 
+eu_sf <- eu_sf %>% inner_join(salaries, by = "id")
