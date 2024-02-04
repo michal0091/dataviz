@@ -168,3 +168,15 @@ bar_plot_salary <- salaries %>%
   scale_fill_manual(name = "", values = c("Net salary" = col_1)) +
   scale_color_manual(name = "", values = c("Gross salary" = col_2)) +
   my_theme
+
+# Horizontal bar plot of avarage rental cost
+hbar_plot_rental <- salaries %>%
+  ggplot() +
+  geom_bar(aes(x = reorder(paste0(city, " (", id, ")"), rental_one_bedroom), y = rental_one_bedroom),
+           stat = "identity",
+           fill = col_3) +
+  labs(x = NULL, y = "EUR",
+       subtitle = "Average monthly rental cost of a furnished one-bedroom apartment") +
+  scale_y_continuous(limits = c(0, 2500), breaks = seq(0, 3000, 500)) +
+  coord_flip() +
+  my_theme
