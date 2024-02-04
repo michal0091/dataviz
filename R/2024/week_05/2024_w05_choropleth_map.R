@@ -82,7 +82,7 @@ col_3 <- "#ebc24c"
 sh_1 <- "#ddbfb3"
 sh_2 <- "#f5c0ae"
 
-palette <-  c("#21be80", "#636891", "#f5c0ae", "#ebc24c", "#f15f79")
+palette <-  c("#167d54", "#21be80", "#aef5c0", "#f5c0ae", "#ebc24c", "#f15f79", "#eb193e")
 
 # Load fonts
 loadfonts(device = "win")
@@ -140,13 +140,13 @@ map_plot <- eu_sf %>%
             size = 3,
             family = font_title, nudge_y = -0.5) +
   labs(fill = "% of net salary destinated to rental",
-       subtitle = "Average monthly rental cost of a furnished one-bedroom apartmentas\nas % of the net salary",) +
+       subtitle = "Average monthly rental cost of a furnished one-bedroom\n apartmentas as % of the net salary",) +
   guides(fill = guide_legend(
     nrow = 1,
     title.position = "top",
     label.position = "bottom"
   )) +
-  scale_fill_stepsn(labels = scales::percent, colors = palette) +
+  scale_fill_stepsn(labels = scales::percent, colors = palette, breaks = c(0.45, 0.6, 0.8, 1.0, 1.2, 1.4, 1.6, 2), limits = c(0.4,1.6)) +
   scale_x_continuous(limits = c(-10, 35)) +
   scale_y_continuous(limits = c(35, 70)) +
   my_theme +
@@ -176,7 +176,7 @@ hbar_plot_rental <- salaries %>%
            stat = "identity",
            fill = col_3) +
   labs(x = NULL, y = "EUR",
-       subtitle = "Average monthly rental cost of a furnished one-bedroom apartment") +
+       subtitle = "Average monthly rental cost of\na furnished one-bedroom apartment") +
   scale_y_continuous(limits = c(0, 2500), breaks = seq(0, 3000, 500)) +
   coord_flip() +
   my_theme
