@@ -23,7 +23,8 @@ options(encoding = "UTF-8") # sets string encoding to UTF-8 instead of ANSI
 
 # Install packages & load libraries ---------------------------------------
 cat("Install packages & load libraries... \n\n", sep = "")
-packages <- c("tidyverse", "data.table", "eurostat", "sf", "giscoR") # list of packages to load
+packages <- c("tidyverse", "data.table", "eurostat", "sf", "giscoR",
+              "extrafont", "patchwork", "osmdata") # list of packages to load
 n_packages <- length(packages) # count how many packages are required
 
 new_pkg <- packages[!(packages %in% installed.packages())] # determine which packages aren't installed
@@ -47,6 +48,19 @@ salaries <- fread("R/2024/week_05/salarios.csv", dec = ",")
 # Fix the coin column
 salaries[, coin := as.numeric(gsub(",", ".", coin))]
 
+# Add city coords
+salaries[, c("lon", "lat") := {
+  coor <- osmdata::getbb(.BY$city) %>%
+    t() %>%
+    data.frame() %>%
+    sf::st_as_sf(coords = c("x", "y"), crs = 4326) %>%
+    sf::st_bbox() %>%
+    sf::st_as_sfc() %>%
+    sf::st_centroid() %>% unlist() %>% as.numeric()
+  .(coor[1], coor[2])
+}, by = city]
+
+
 # Get spatial data
 eu_sf <- eurostat::get_eurostat_geospatial(resolution = 10, 
                                            nuts_level = 0, 
@@ -54,3 +68,7 @@ eu_sf <- eurostat::get_eurostat_geospatial(resolution = 10,
 
 # Merge data 
 eu_sf <- eu_sf %>% inner_join(salaries, by = "id")
+
+
+
+
