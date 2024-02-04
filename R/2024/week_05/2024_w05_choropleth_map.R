@@ -70,5 +70,59 @@ eu_sf <- eurostat::get_eurostat_geospatial(resolution = 10,
 eu_sf <- eu_sf %>% inner_join(salaries, by = "id")
 
 
+# Styles ------------------------------------------------------------------
+cat("Setting style... \n\n", sep = "")
+# Color palette
+background <- "#fefdfc"
+text <- "#503a5a"
+text2 <- "#21be80"
+col_1 <- "#636891"
+col_2 <- "#f15f79"
+col_3 <- "#ebc24c"
+sh_1 <- "#ddbfb3"
+sh_2 <- "#f5c0ae"
+
+palette <-  c("#21be80", "#636891", "#f5c0ae", "#ebc24c", "#f15f79")
+
+# Load fonts
+loadfonts(device = "win")
+
+# Fonts
+font_base <- "Lato"
+font_title <- "Lato Black"
+
+# Common theme
+my_theme <- theme_void() +
+  theme( 
+    plot.margin = margin(1, 1, 1, 1, "cm"),
+    plot.background = element_rect(fill = background, color = NA),
+    plot.subtitle = element_text(
+      hjust = 0,
+      vjust = 1,
+      color = text2,
+      family = font_base,
+      size = 14 
+    ),
+    plot.caption =  element_text(
+      color = text,
+      family = font_base,
+      size = 10
+    ),
+    axis.text = element_text(
+      color = text,
+      family = font_base,
+      size = 10
+    ),
+    legend.position = "bottom",
+    legend.title = element_text(
+      hjust = 0.5,
+      color = text,
+      family = font_base
+    ),
+    legend.key.width = unit(1, "cm"),
+    legend.key.height = unit(0.6, "cm"),
+    legend.text = element_text(color = text, family = font_base)
+  )
+
 
 
