@@ -180,3 +180,32 @@ hbar_plot_rental <- salaries %>%
   scale_y_continuous(limits = c(0, 2500), breaks = seq(0, 3000, 500)) +
   coord_flip() +
   my_theme
+
+
+# Combine plots -----------------------------------------------------------
+cat("Combine plots... \n\n", sep = "")
+
+combined_plot <-
+  map_plot +
+  (bar_plot_salary + hbar_plot_rental + plot_layout(ncol = 1)) +
+  plot_layout(widths = c(1, 1)) +
+  plot_annotation(
+    title = "% of net median salary destinated to rental by Capital",
+    caption = "michal0091",
+    theme = theme(
+      plot.background = element_rect(fill = background, color = NA),
+      plot.title = element_text(
+        hjust = 0,
+        vjust = 1,
+        color = text,
+        family = font_title,
+        size = 20
+      ),
+      plot.caption =  element_text(
+        color = text,
+        family = font_base,
+        size = 10
+      )
+    )
+  )
+
