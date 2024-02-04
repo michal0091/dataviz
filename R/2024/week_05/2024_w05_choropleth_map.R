@@ -152,5 +152,19 @@ map_plot <- eu_sf %>%
   my_theme +
   theme(axis.text = element_blank())
 
-
-
+# Bar plot of net salary
+bar_plot_salary <- salaries %>%
+  ggplot(aes(x = reorder(id, -net))) +
+  geom_bar(aes(y = net / 12, fill = "Net salary"),
+           stat = "identity") +
+  geom_point(aes(y = gross / 12, color = "Gross salary"), size = 1.5) +
+  geom_line(aes(
+    y = gross / 12,
+    group = 1,
+    color = "Gross salary"
+  ), size = 1.05) +
+  labs(x = NULL, y = "EUR",
+       subtitle = "Full-time median monthly salary") +
+  scale_fill_manual(name = "", values = c("Net salary" = col_1)) +
+  scale_color_manual(name = "", values = c("Gross salary" = col_2)) +
+  my_theme
