@@ -124,5 +124,33 @@ my_theme <- theme_void() +
     legend.text = element_text(color = text, family = font_base)
   )
 
+# Make plots --------------------------------------------------------------
+cat("Make plots... \n\n", sep = "")
+
+# Choropleth map
+map_plot <- eu_sf %>%
+  ggplot() +
+  geom_sf(aes(fill = pe), color = background) +
+  geom_point(aes(x = lon, y = lat),
+             shape = 15,
+             color = text,
+             size = 2) +
+  geom_text(aes(x = lon, y = lat, label = city),
+            color = text,
+            size = 3,
+            family = font_title, nudge_y = -0.5) +
+  labs(fill = "% of net salary destinated to rental",
+       subtitle = "Average monthly rental cost of a furnished one-bedroom apartmentas\nas % of the net salary",) +
+  guides(fill = guide_legend(
+    nrow = 1,
+    title.position = "top",
+    label.position = "bottom"
+  )) +
+  scale_fill_stepsn(labels = scales::percent, colors = palette) +
+  scale_x_continuous(limits = c(-10, 35)) +
+  scale_y_continuous(limits = c(35, 70)) +
+  my_theme +
+  theme(axis.text = element_blank())
+
 
 
