@@ -209,3 +209,18 @@ combined_plot <-
     )
   )
 
+
+# Save --------------------------------------------------------------------
+cat("Save plot... \n\n", sep = "")
+
+ggsave(
+  filename = "choropleth_map.png",
+  path = normalizePath("R/2024/week_05/"),
+  plot = combined_plot,
+  device = "png",
+  units = "cm",
+  width =  29.7,
+  height = 21,
+  dpi = 320
+)
+
