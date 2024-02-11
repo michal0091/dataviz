@@ -47,7 +47,26 @@ cat("Load data... \n\n", sep = "")
 net_wealth <- fread("R/2024/week_06/median_net_wealth_by_age.csv")
 
 
-
 # Styles ------------------------------------------------------------------
 cat("Setting style... \n\n", sep = "")
+
+# Color palette
+background <- "#f4f7f2"
+col_tex <- "#251c7a"
+col_accent_1 <- "#e8a9ab"
+col_accent_2 <- "#ef563a"
+col_accent_3 <- "#d93917"
+
+palette <- c("#00ad93",
+             "#009cad",
+             "#00839a",
+             "#026876",
+             "#0b3250",
+             "#2e2c3f")
+
+
+
+
+
+
 
