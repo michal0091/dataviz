@@ -97,77 +97,115 @@ font_title <- "Lato Black"
 # Plot --------------------------------------------------------------------
 cat("Plotting... \n\n", sep = "")
 
-net_wealth[,
-           ggplot(.SD, aes(x = ola, y = valor, fill = forcats::fct_rev(categoria))) +
-             geom_area() +
-             scale_fill_manual(values = palette) +
-             scale_x_continuous(breaks = summary_ola$ola) +
-             scale_y_continuous(breaks = seq(0, 1500, 250), limits = c(0, 1500)) +
-             # Add vertical line for ola
-             geom_segment(data = summary_ola, aes(x = ola, xend = ola, y = 0, yend = line_length, fill = NULL),
-                          linetype = "solid",
-                          linewidth = 1.2,
-                          color = col_accent_1) +
-             # Add points for vline
-             geom_point(data = summary_ola, aes(x = ola, y = line_length, fill = NULL),
-                        color = col_accent_2,
-                        size = 3, show.legend = FALSE) +
-             # Add text label for segments
-             geom_text(data = summary_ola, aes(x = ola, y = line_length, label = valor, fill = NULL),
+plot <- net_wealth[,
+                   ggplot(.SD, aes(
+                     x = ola,
+                     y = valor,
+                     fill = forcats::fct_rev(categoria)
+                   )) +
+                     geom_area() +
+                     scale_fill_manual(values = palette) +
+                     scale_x_continuous(breaks = summary_ola$ola) +
+                     scale_y_continuous(breaks = seq(0, 1500, 250), limits = c(0, 1500)) +
+                     # Add vertical line for ola
+                     geom_segment(
+                       data = summary_ola,
+                       aes(
+                         x = ola,
+                         xend = ola,
+                         y = 0,
+                         yend = line_length,
+                         fill = NULL
+                       ),
+                       linetype = "solid",
+                       linewidth = 1.2,
+                       color = col_accent_1
+                     ) +
+                     # Add points for vline
+                     geom_point(
+                       data = summary_ola,
+                       aes(x = ola, y = line_length, fill = NULL),
+                       color = col_accent_2,
+                       size = 3,
+                       show.legend = FALSE
+                     ) +
+                     # Add text label for segments
+                     geom_text(
+                       data = summary_ola,
+                       aes(
+                         x = ola,
+                         y = line_length,
+                         label = valor,
+                         fill = NULL
+                       ),
                        hjust = 1,
                        vjust = 1,
                        nudge_y = 100,
                        color = col_accent_3,
                        family = font_base,
-                       size = 3) +
-             labs(title = "Riqueza neta mediana de las familias españolas",
-                  subtitle = "por edad del cabeza de familia",
-                  x = "Año",
-                  y = "Miles de Euros",
-                  caption = "Soure: Encuesta Financiera de las Familias\nBanco de España\nmichal0091",
-                  fill = NULL) +
-             theme_void() +
-             theme(
-               plot.margin = margin(1, 1, 1, 1, "cm"),
-               plot.background = element_rect(fill = background, color = NA),
-               plot.title = element_text(
-                 hjust = 0,
-                 vjust = 6,
-                 color = col_tex,
-                 family = font_title,
-                 size = 28 
-               ),
-               plot.subtitle = element_text(
-                 hjust = 0,
-                 vjust = 6,
-                 color = col_tex,
-                 family = font_title,
-                 size = 18 
-               ),
-               plot.caption = element_text(
-                 hjust = 1,
-                 vjust = -18,
-                 color = col_tex,
-                 family = font_base,
-                 size = 8 
-               ),
-               axis.text = element_text(
-                 color = col_tex,
-                 family = font_base,
-                 size = 10
-               ),
-               axis.title.y = element_text(
-                 color = col_tex,
-                 family = font_base,
-                 size = 12,angle = 90
-               ),
-               legend.position = "bottom",
-               legend.title = element_text(
-                 hjust = 0.5,
-                 color = col_tex,
-                 family = font_title
-               ),
-               legend.text = element_text(color = col_tex, family = font_base)
-             )
-           ]
+                       size = 3
+                     ) +
+                     labs(
+                       title = "Riqueza neta mediana de las familias españolas",
+                       subtitle = "por edad del cabeza de familia",
+                       x = "Año",
+                       y = "Miles de Euros",
+                       caption = "Soure: Encuesta Financiera de las Familias\nBanco de España\nmichal0091",
+                       fill = NULL
+                     ) +
+                     theme_void() +
+                     theme(
+                       plot.margin = margin(1, 1, 1, 1, "cm"),
+                       plot.background = element_rect(fill = background, color = NA),
+                       plot.title = element_text(
+                         hjust = 0,
+                         vjust = 6,
+                         color = col_tex,
+                         family = font_title,
+                         size = 28
+                       ),
+                       plot.subtitle = element_text(
+                         hjust = 0,
+                         vjust = 6,
+                         color = col_tex,
+                         family = font_title,
+                         size = 18
+                       ),
+                       plot.caption = element_text(
+                         hjust = 1,
+                         vjust = -18,
+                         color = col_tex,
+                         family = font_base,
+                         size = 8
+                       ),
+                       axis.text = element_text(
+                         color = col_tex,
+                         family = font_base,
+                         size = 10
+                       ),
+                       axis.title.y = element_text(
+                         color = col_tex,
+                         family = font_base,
+                         size = 12,
+                         angle = 90
+                       ),
+                       legend.position = "bottom",
+                       legend.title = element_text(
+                         hjust = 0.5,
+                         color = col_tex,
+                         family = font_title
+                       ),
+                       legend.text = element_text(color = col_tex, family = font_base)
+                     )]
 
+# Save plot ---------------------------------------------------------------
+cat("Saving plot... \n\n", sep = "")
+ggsave(
+  filename = "wealth_age_head_family.png",
+  path = normalizePath("R/2024/week_06/"),
+  plot = plot,
+  device = "png",
+  units = "cm",
+  width = 30 ,
+  height = 18.54102
+)
