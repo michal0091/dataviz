@@ -133,3 +133,92 @@ base_plot <-
                         scale_y_continuous(limits = c(-50, 25)) +
                         facet_wrap( ~ factor(geo, levels = countries))
                     }]
+
+# Add style to base plot
+base_plot_styled <- base_plot +
+  scale_color_manual(values = palette) +
+  theme(
+    axis.title = element_blank(),
+    axis.text = element_text(
+      color = font_color,
+      family = font_base,
+      size = 7
+    ),
+    plot.margin = margin(1, 1, 1, 1, "cm"),
+    plot.background = element_rect(fill = background, color  = NA),
+    panel.spacing = unit(1, "lines"),
+    panel.background = element_rect(color = background, fill = background),
+    legend.position = "none",
+    strip.text = element_text(
+      color = font_color,
+      family = font_title,
+      size = 10,
+      face = "bold"
+    ),
+    strip.background = element_rect(colour = background,
+                                    fill = background)
+  )
+
+
+
+# Text --------------------------------------------------------------------
+cat("Adding text... \n\n", sep = "")
+
+# Caption
+caption_text <- str_glue(
+  "**Source:** European Commission - Directorate-General for Economic and Financial Affairs (DG ECFIN)<br>",
+  "**@michal0091**")
+
+# Titles theme 
+tit_theme <- 
+  theme_void() +
+  theme(plot.background = element_rect(color=background, fill=background))
+
+
+# Subtitle
+subtitle_text <- data.table(
+  x = 0,
+  y = 0,
+  label = "The consumer confidence indicator in the Euro Area dropped by 1 point from the previous month to -16.1 in January 2024, falling unexpectedly from December's five-month peak. Preliminary data showed a decline contrary to market expectations of improvement to 14.3. Across the entire European Union, consumer sentiment slightly declined by 0.2 points to -16.2.<br>")
+
+subtitle <-
+  ggplot(subtitle_text, aes(x = x, y = y)) +
+  geom_textbox(
+    aes(label = label),
+    box.color = background, fill=background, width = unit(10, "lines"),
+    family=font_base, size = 3, lineheight = 1, color = font_color) +  
+  coord_cartesian(expand = FALSE, clip = "off") +
+  tit_theme
+
+
+# Title
+title_text <- data.table(
+  x = 0, y = 0,
+  label = "**Consumer confidence indicators<br>in EU**<br>"
+)
+
+title <- ggplot(title_text, aes(x = x, y = y)) +
+  geom_textbox(
+    aes(label = label),
+    box.color = background,
+    fill = background,
+    width = unit(12, "lines"),
+    family = font_title,
+    color = title_font_color,
+    size = 10,
+    lineheight = 1) +
+  coord_cartesian(expand = FALSE, clip = "off") +
+  tit_theme
+
+
+# Gathering all parts
+
+final_plot <- (title+sub)/p1 +
+  plot_layout(heights = c(1, 2)) +
+  plot_annotation(
+    caption = caption_text,
+    theme=theme(plot.caption = element_markdown(hjust=0, margin=margin(20,0,0,0), size=6, color= font_color, lineheight = 1.2),
+                plot.margin = margin(20,20,20,20)))
+
+
+
