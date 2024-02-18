@@ -213,7 +213,7 @@ title <- ggplot(title_text, aes(x = x, y = y)) +
 
 # Gathering all parts
 
-final_plot <- (title+sub)/p1 +
+combined_plot <- (title+sub)/p1 +
   plot_layout(heights = c(1, 2)) +
   plot_annotation(
     caption = caption_text,
@@ -221,4 +221,17 @@ final_plot <- (title+sub)/p1 +
                 plot.margin = margin(20,20,20,20)))
 
 
+# Save plot ---------------------------------------------------------------
+cat("Saving plot... \n\n", sep = "")
+
+ggsave(
+  filename = "cci.png",
+  path = normalizePath("R/2024/week_07/"),
+  plot = combined_plot,
+  device = "png",
+  units = "mm",
+  width = 210,
+  height = 297,
+  dpi = 320
+)
 
