@@ -414,7 +414,6 @@ plot <- ideology_18_34_rs_melt[variable != "all",
                                      family = font_base,
                                      size = 16
                                    ),
-                                   ,
                                    plot.caption = element_text(
                                      hjust = 0,
                                      vjust = 0,
