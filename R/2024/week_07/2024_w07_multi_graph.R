@@ -23,7 +23,8 @@ options(encoding = "UTF-8") # sets string encoding to UTF-8 instead of ANSI
 
 # Install packages & load libraries ---------------------------------------
 cat("Install packages & load libraries... \n\n", sep = "")
-packages <- c("tidyverse", "data.table", "zoo", "eurostat", "extrafont") # list of packages to load
+packages <- c("tidyverse", "data.table", "zoo", "eurostat", "extrafont",
+              "gghighlight", "ggtext", "patchwork") # list of packages to load
 n_packages <- length(packages) # count how many packages are required
 
 new_pkg <- packages[!(packages %in% installed.packages())] # determine which packages aren't installed
@@ -39,3 +40,53 @@ for(n in 1:n_packages){
   lib_load <- paste("library(\"",packages[n],"\")", sep = "") # create string of text for loading each library
   eval(parse(text = lib_load)) # evaluate the string to load the library
 }
+
+
+# Load data ---------------------------------------------------------------
+cat("Load data... \n\n", sep = "")
+
+toc <- get_eurostat_toc()
+
+# Get confidence indicators by sector
+eurostat_data_code <- "teibs020" 
+ci <- get_eurostat(id = eurostat_data_code,
+                    stringsAsFactors = TRUE)
+ci_labeled <- label_eurostat(cci)
+
+# Set to data table
+ci_labeled <- as.data.table(ci_labeled)
+cci <- ci_labeled[indic == "Consumer confidence indicator"]
+
+cci_since_2023 <- cci[between(TIME_PERIOD, "2023-01-01", "2023-12-31"),
+                      .(median_cci = median(values)), 
+                      geo]
+cci_since_2023 <- cci_since_2023[order(-median_cci)]
+
+# Select 3 countries with highest median CCI, 3 with lowest and 3 in the middle 
+# (bigger economies) 
+countries <- c("Lithuania", "Poland", "Denmark",
+               "Germany", "Netherlands", "Spain",
+               "Portugal", "Greece", "Hungary")
+
+# Selected countries
+cci_sel_countries <- cci[geo %in% countries]
+
+
+# Styles -------------------------------------------------------------------
+cat("Setting style... \n\n", sep = "")
+
+# Color palette
+background <- "#f8fefd"
+title_font_color <- "#bdaaa8"
+font_color <- "#605c6e"
+
+palette <- c("#d64408", "#121214", "#96cccd", "#a3ac57", "#3a464f", "#efcf9c",
+             "#fac712", "#337553", "#4d3ad8")
+
+# Load fonts
+loadfonts(device = "win")
+
+# Fonts
+font_base <- "Lato"
+font_title <- "Lato Black"
+
