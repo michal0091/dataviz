@@ -90,3 +90,46 @@ loadfonts(device = "win")
 font_base <- "Lato"
 font_title <- "Lato Black"
 
+
+# Plot --------------------------------------------------------------------
+cat("Plotting... \n\n", sep = "")
+
+# Base plot
+base_plot <-
+  cci_sel_countries[,
+                    {
+                      aux_data <- .SD[, .(TIME_PERIOD = max(TIME_PERIOD),
+                                          values = values[which.max(TIME_PERIOD)]),
+                                      geo]
+                      
+                      
+                      ggplot(.SD) +
+                        geom_hline(yintercept = 0,
+                                   linetype = "solid",
+                                   size = .25) +
+                        geom_point(
+                          data = aux_data,
+                          aes(x = TIME_PERIOD, y = values, color = geo),
+                          shape = 16,
+                          size = 2
+                        ) +
+                        geom_line(aes(x = TIME_PERIOD, y = values, color = geo)) +
+                        gghighlight(use_direct_label = F,
+                                    unhighlighted_params = list(colour = alpha("gray", 1))) +
+                        geom_text(
+                          data = aux_data,
+                          aes(
+                            x = TIME_PERIOD,
+                            y = values,
+                            color = geo,
+                            label = round(values)
+                          ),
+                          hjust = 1,
+                          vjust = -1,
+                          size = 3,
+                          fontface = "bold"
+                        ) +
+                        scale_x_date(date_labels = "%m-%y") +
+                        scale_y_continuous(limits = c(-50, 25)) +
+                        facet_wrap( ~ factor(geo, levels = countries))
+                    }]
