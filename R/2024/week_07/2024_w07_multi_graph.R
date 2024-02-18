@@ -142,17 +142,18 @@ base_plot_styled <- base_plot +
     axis.text = element_text(
       color = font_color,
       family = font_base,
-      size = 7
+      size = 8
     ),
     plot.margin = margin(1, 1, 1, 1, "cm"),
     plot.background = element_rect(fill = background, color  = NA),
-    panel.spacing = unit(1, "lines"),
+    panel.spacing.x = unit(2, "lines"),
+    panel.spacing.y = unit(4, "lines"),
     panel.background = element_rect(color = background, fill = background),
     legend.position = "none",
     strip.text = element_text(
       color = font_color,
       family = font_title,
-      size = 10,
+      size = 16,
       face = "bold"
     ),
     strip.background = element_rect(colour = background,
@@ -185,8 +186,14 @@ subtitle <-
   ggplot(subtitle_text, aes(x = x, y = y)) +
   geom_textbox(
     aes(label = label),
-    box.color = background, fill=background, width = unit(10, "lines"),
-    family=font_base, size = 3, lineheight = 1, color = font_color) +  
+    box.color = background,
+    fill = background,
+    width = unit(16, "lines"),
+    family = font_title,
+    size = 5,
+    lineheight = 1,
+    color = font_color
+  ) +
   coord_cartesian(expand = FALSE, clip = "off") +
   tit_theme
 
@@ -202,10 +209,10 @@ title <- ggplot(title_text, aes(x = x, y = y)) +
     aes(label = label),
     box.color = background,
     fill = background,
-    width = unit(12, "lines"),
+    width = unit(14, "lines"),
     family = font_title,
     color = title_font_color,
-    size = 10,
+    size = 14,
     lineheight = 1) +
   coord_cartesian(expand = FALSE, clip = "off") +
   tit_theme
@@ -213,12 +220,20 @@ title <- ggplot(title_text, aes(x = x, y = y)) +
 
 # Gathering all parts
 
-combined_plot <- (title+sub)/p1 +
+combined_plot <- (title + subtitle) / base_plot_styled +
   plot_layout(heights = c(1, 2)) +
   plot_annotation(
     caption = caption_text,
-    theme=theme(plot.caption = element_markdown(hjust=0, margin=margin(20,0,0,0), size=6, color= font_color, lineheight = 1.2),
-                plot.margin = margin(20,20,20,20)))
+    theme = theme(
+      plot.caption = element_markdown(
+        hjust = 0,
+        size = 6,
+        color = font_color,
+        lineheight = 1.2
+      ),
+      plot.margin = margin(1, 1, 1, 1, "cm")
+    )
+  )
 
 
 # Save plot ---------------------------------------------------------------
