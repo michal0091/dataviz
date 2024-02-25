@@ -167,3 +167,16 @@ plot <-
            panel.background = element_rect(color = iris_colors[5],
                                            fill  = iris_colors[5])
          )]
+
+
+# Save plot ---------------------------------------------------------------
+cat("Saving plot... \n\n", sep = "")
+
+ggsave(
+  filename = "iris.png",
+  path = normalizePath("R/2024/week_08/"),
+  plot = plot,
+  device = "png",
+  units = "cm",
+  width = 21,
+  height = 12.97899)
