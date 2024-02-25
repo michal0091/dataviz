@@ -42,3 +42,26 @@ for(n in 1:n_packages){
 }
 
 
+# Load data ---------------------------------------------------------------
+cat("Load data... \n\n", sep = "")
+data(iris) 
+iris <- as.data.table(iris)
+
+
+# Styles -------------------------------------------------------------------
+cat("Setting style... \n\n", sep = "")
+
+# Color palette
+iris_colors <- c("#221B4B",
+                 "#361D8C",
+                 "#504396",
+                 "#5352B6",
+                 "#BFBEF3")
+
+# Load fonts
+loadfonts(device = "win")
+
+# Fonts
+font_black <- "Lato Black"
+font_normal <- "Lato"
+
