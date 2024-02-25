@@ -65,3 +65,56 @@ loadfonts(device = "win")
 font_black <- "Lato Black"
 font_normal <- "Lato"
 
+# Plots -------------------------------------------------------------------
+iris_gradient <- linearGradient(iris_colors)
+iris_gradient_light <- linearGradient(iris_colors[2:4])
+
+plot <-
+  iris[,
+       ggplot(.SD, aes(Species, Sepal.Length)) +
+         # Apply new ggplot2 v3.5.0 gradient in fill and staplewidth in boxplot
+         geom_boxplot(outliers = FALSE,
+                      staplewidth = 0.5,
+                      fill = iris_gradient,
+                      color = "white",
+                      fatten = 2) +
+         # Scales
+         scale_y_continuous(limits = c(4, 8),
+                            breaks = seq(0, 8, 1)) +
+         # Labels
+         labs(
+           title = "Iris",
+           subtitle = "Sepal Length by Species",
+           x = NULL,
+           y = "length (cm)",
+           caption = "Source: Fisher's Iris Data\nmichal0091"
+         ) +
+         # Annotations v3.5.0. I() ‘AsIs’ variables automatically added an identity 
+         # scale to the plot
+         annotate(
+           "rect",
+           xmin   = I(0.55),
+           xmax   = I(1.68),
+           ymin   = I(0.68),
+           ymax   = I(0.95),
+           fill   = iris_gradient_light,
+           colour = NA,
+           size   = 1.5
+         ) +
+         annotate(
+           "text",
+           label = paste(
+             "This famous (Fisher's or Anderson's) iris data set",
+             "gives the measurements in centimeters of the variables",
+             "sepal length and width and petal length and width,",
+             "respectively, for 50 flowers from each of 3 species of iris.",
+             "The species are Iris setosa, versicolor, and virginica.",
+             sep = "\n"
+           ),
+           x = I(0.58),
+           y = I(0.82),
+           size = 2.5,
+           hjust = 0, 
+           color = iris_colors[5],
+           family = font_normal
+         )]
