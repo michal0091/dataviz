@@ -117,4 +117,53 @@ plot <-
            hjust = 0, 
            color = iris_colors[5],
            family = font_normal
+         ) +
+         
+         # Theme
+         theme_void() +
+         theme(
+           plot.margin = margin(1, 1, 1, 1, "cm"),
+           plot.background = element_rect(fill = iris_colors[5], color  = NA),
+           plot.title = element_text(
+             color = iris_colors[1],
+             family = font_black,
+             size = 18,
+             hjust = 0,
+             vjust = 6,
+             face = "bold"
+           ),
+           plot.subtitle = element_text(
+             color = iris_colors[1],
+             family = font_normal,
+             size = 16,
+             hjust = 0,
+             vjust = 6, 
+             face = "plain"
+           ),
+           plot.caption = element_text(
+             color = iris_colors[1],
+             family = font_normal,
+             size = 10,
+             hjust = 1,
+             vjust = -6
+           ),
+           axis.text.x = element_text(
+             color = iris_colors[2],
+             family = font_black,
+             size = 14
+           ),
+           axis.title.y = element_text(
+             color = iris_colors[2],
+             family = font_black,
+             size = 10,
+             angle = 90,
+             vjust = 4
+           ),
+           axis.text.y = element_text(
+             color = iris_colors[2],
+             family = font_black,
+             size = 10
+           ),
+           panel.background = element_rect(color = iris_colors[5],
+                                           fill  = iris_colors[5])
          )]
