@@ -180,3 +180,14 @@ ggsave(
   units = "cm",
   width = 21,
   height = 12.97899)
+
+
+# pdf format
+ggsave(
+  filename = "iris.pdf",
+  path = normalizePath("R/2024/week_08/"),
+  plot = plot,
+  device = cairo_pdf,
+  units = "cm",
+  width = 21,
+  height = 12.97899)
