@@ -1,0 +1,141 @@
+region;dificultad;periodo;valor
+España;No consta;2023;0,3
+España;Con mucha facilidad;2023;3,2
+España;Con mucha dificultad;2023;9,3
+España;Con facilidad;2023;19,4
+España;Con dificultad;2023;13,1
+España;Con cierta facilidad;2023;28,5
+España;Con cierta dificultad;2023;26,1
+Andalucía;No consta;2023;0,5
+Andalucía;Con mucha facilidad;2023;1,9
+Andalucía;Con mucha dificultad;2023;13,6
+Andalucía;Con facilidad;2023;15,6
+Andalucía;Con dificultad;2023;16
+Andalucía;Con cierta facilidad;2023;25,2
+Andalucía;Con cierta dificultad;2023;27,3
+Aragón;No consta;2023;0,4
+Aragón;Con mucha facilidad;2023;4,9
+Aragón;Con mucha dificultad;2023;9,6
+Aragón;Con facilidad;2023;21,9
+Aragón;Con dificultad;2023;9,1
+Aragón;Con cierta facilidad;2023;29,3
+Aragón;Con cierta dificultad;2023;24,8
+Asturias;No consta;2023;0
+Asturias;Con mucha facilidad;2023;5,3
+Asturias;Con mucha dificultad;2023;5,6
+Asturias;Con facilidad;2023;21,8
+Asturias;Con dificultad;2023;9,4
+Asturias;Con cierta facilidad;2023;35,7
+Asturias;Con cierta dificultad;2023;22,2
+Baleares;No consta;2023;0,4
+Baleares;Con mucha facilidad;2023;2,7
+Baleares;Con mucha dificultad;2023;5,2
+Baleares;Con facilidad;2023;20,3
+Baleares;Con dificultad;2023;8,5
+Baleares;Con cierta facilidad;2023;30,5
+Baleares;Con cierta dificultad;2023;32,3
+Canarias;No consta;2023;0,3
+Canarias;Con mucha facilidad;2023;1,3
+Canarias;Con mucha dificultad;2023;9,9
+Canarias;Con facilidad;2023;11,1
+Canarias;Con dificultad;2023;19,3
+Canarias;Con cierta facilidad;2023;22,4
+Canarias;Con cierta dificultad;2023;35,6
+Cantabria;No consta;2023;0,1
+Cantabria;Con mucha facilidad;2023;5,2
+Cantabria;Con mucha dificultad;2023;6,5
+Cantabria;Con facilidad;2023;23,5
+Cantabria;Con dificultad;2023;11,3
+Cantabria;Con cierta facilidad;2023;28,9
+Cantabria;Con cierta dificultad;2023;24,6
+Castilla y León;No consta;2023;0,3
+Castilla y León;Con mucha facilidad;2023;4,2
+Castilla y León;Con mucha dificultad;2023;7,7
+Castilla y León;Con facilidad;2023;26
+Castilla y León;Con dificultad;2023;9,2
+Castilla y León;Con cierta facilidad;2023;30,7
+Castilla y León;Con cierta dificultad;2023;22
+Castilla - La Mancha;No consta;2023;0,6
+Castilla - La Mancha;Con mucha facilidad;2023;1,8
+Castilla - La Mancha;Con mucha dificultad;2023;9,3
+Castilla - La Mancha;Con facilidad;2023;19,3
+Castilla - La Mancha;Con dificultad;2023;13,5
+Castilla - La Mancha;Con cierta facilidad;2023;26,8
+Castilla - La Mancha;Con cierta dificultad;2023;28,6
+Cataluña;No consta;2023;0,4
+Cataluña;Con mucha facilidad;2023;3,2
+Cataluña;Con mucha dificultad;2023;9,2
+Cataluña;Con facilidad;2023;19,6
+Cataluña;Con dificultad;2023;12,1
+Cataluña;Con cierta facilidad;2023;30,3
+Cataluña;Con cierta dificultad;2023;25,2
+Valencia;No consta;2023;0,3
+Valencia;Con mucha facilidad;2023;2,4
+Valencia;Con mucha dificultad;2023;6,9
+Valencia;Con facilidad;2023;17,8
+Valencia;Con dificultad;2023;13,6
+Valencia;Con cierta facilidad;2023;28,2
+Valencia;Con cierta dificultad;2023;30,7
+Extremadura;No consta;2023;0,3
+Extremadura;Con mucha facilidad;2023;2,7
+Extremadura;Con mucha dificultad;2023;11
+Extremadura;Con facilidad;2023;17,2
+Extremadura;Con dificultad;2023;16,7
+Extremadura;Con cierta facilidad;2023;24,8
+Extremadura;Con cierta dificultad;2023;27,4
+Galicia;No consta;2023;0,4
+Galicia;Con mucha facilidad;2023;2,6
+Galicia;Con mucha dificultad;2023;8,6
+Galicia;Con facilidad;2023;19,5
+Galicia;Con dificultad;2023;10,6
+Galicia;Con cierta facilidad;2023;33,2
+Galicia;Con cierta dificultad;2023;25
+Madrid;No consta;2023;0,3
+Madrid;Con mucha facilidad;2023;4,8
+Madrid;Con mucha dificultad;2023;9,2
+Madrid;Con facilidad;2023;22,3
+Madrid;Con dificultad;2023;12,7
+Madrid;Con cierta facilidad;2023;29,3
+Madrid;Con cierta dificultad;2023;21,5
+Murcia;No consta;2023;0,2
+Murcia;Con mucha facilidad;2023;1,7
+Murcia;Con mucha dificultad;2023;7,8
+Murcia;Con facilidad;2023;15,2
+Murcia;Con dificultad;2023;18,8
+Murcia;Con cierta facilidad;2023;25,4
+Murcia;Con cierta dificultad;2023;30,8
+Navarra;No consta;2023;0,1
+Navarra;Con mucha facilidad;2023;3,7
+Navarra;Con mucha dificultad;2023;7,2
+Navarra;Con facilidad;2023;26,6
+Navarra;Con dificultad;2023;11,8
+Navarra;Con cierta facilidad;2023;27,8
+Navarra;Con cierta dificultad;2023;22,7
+País Vasco;No consta;2023;0,4
+País Vasco;Con mucha facilidad;2023;7
+País Vasco;Con mucha dificultad;2023;6,3
+País Vasco;Con facilidad;2023;26,9
+País Vasco;Con dificultad;2023;7,8
+País Vasco;Con cierta facilidad;2023;32,6
+País Vasco;Con cierta dificultad;2023;19
+La Rioja;No consta;2023;0,4
+La Rioja;Con mucha facilidad;2023;6,8
+La Rioja;Con mucha dificultad;2023;4,8
+La Rioja;Con facilidad;2023;25
+La Rioja;Con dificultad;2023;12,6
+La Rioja;Con cierta facilidad;2023;27
+La Rioja;Con cierta dificultad;2023;23,3
+Ceuta;No consta;2023;0,3
+Ceuta;Con mucha facilidad;2023;2,4
+Ceuta;Con mucha dificultad;2023;20,9
+Ceuta;Con facilidad;2023;12,3
+Ceuta;Con dificultad;2023;12,2
+Ceuta;Con cierta facilidad;2023;22,6
+Ceuta;Con cierta dificultad;2023;29,4
+Melilla;No consta;2023;0,9
+Melilla;Con mucha facilidad;2023;3,2
+Melilla;Con mucha dificultad;2023;10,7
+Melilla;Con facilidad;2023;21,7
+Melilla;Con dificultad;2023;16,1
+Melilla;Con cierta facilidad;2023;23,1
+Melilla;Con cierta dificultad;2023;24,4
