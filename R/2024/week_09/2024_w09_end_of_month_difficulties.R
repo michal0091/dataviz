@@ -142,3 +142,65 @@ waffle_spain <- spain[, data.table(xvals = 0:99 %/% 10,
                         yvals = 1 - (0:99 %% 10),
                         fill = factor(rep(dificultad , times = fix_valor_round))),
            region]
+
+
+# Styles ------------------------------------------------------------------
+cat("Setting style... \n\n", sep = "")
+
+# Color palette
+background <- "#f8fefd"
+title_font_color <- "#9c807d"
+font_color <- "#3c3944"
+
+scale_palette <-
+  c("#8a1538",
+    "#da291c",
+    "#ed8b00",
+    "#00ed8b",
+    "#1cda29",
+    "#388a15")
+
+# Load fonts
+loadfonts(device = "win")
+
+# Fonts
+font_base <- "Lato"
+font_title <- "Lato Black"
+
+# Plots -------------------------------------------------------------------
+cat("Plotting... \n\n", sep = "")
+
+# Waffle chart Spain
+plot_spain <-
+  ggplot(waffle_spain, aes(xvals, yvals, color = fill)) +
+  geom_text(label = fontawesome('fa-male'),
+            family = 'fontawesome-webfont',
+            size = 6) +
+  coord_equal(expand = TRUE) +
+  lims(x  = c(min(df$xvals) - 1, max(df$xvals) + 1),
+       y  = c(min(df$yvals) - 1, max(df$yvals) + 1)) +
+  scale_color_manual(values = scale_palette) +
+  labs(title = "Total Nacional", color = NULL) +
+  theme_void() +
+  theme(
+    axis.title = element_blank(),
+    plot.margin = margin(1, 1, 1, 1, "cm"),
+    plot.background = element_rect(fill = background, color  = NA),
+    plot.title = element_text(
+      color = font_color,
+      family = font_title,
+      size = 16,
+      hjust = 0.5,
+      vjust = -1,
+      face = "bold"
+    ),
+    panel.background = element_rect(color = background, fill = background),
+    legend.position = "none"
+  )
+
+
+
+
+
+
+
