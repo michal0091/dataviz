@@ -23,7 +23,8 @@ options(encoding = "UTF-8") # sets string encoding to UTF-8 instead of ANSI
 
 # Install packages & load libraries ---------------------------------------
 cat("Install packages & load libraries... \n\n", sep = "")
-packages <- c("ggplot2", "data.table", "zoo", "extrafont", "fontawesome") # list of packages to load
+packages <- c("ggplot2", "data.table", "zoo", "showtext", "fontawesome",
+              "emojifont") # list of packages to load
 n_packages <- length(packages) # count how many packages are required
 
 new_pkg <- packages[!(packages %in% installed.packages())] # determine which packages aren't installed
@@ -161,11 +162,10 @@ scale_palette <-
     "#388a15")
 
 # Load fonts
-loadfonts(device = "win")
+font_add_google("Lato")
 
 # Fonts
 font_base <- "Lato"
-font_title <- "Lato Black"
 
 # Plots -------------------------------------------------------------------
 cat("Plotting... \n\n", sep = "")
@@ -177,8 +177,8 @@ plot_spain <-
             family = 'fontawesome-webfont',
             size = 6) +
   coord_equal(expand = TRUE) +
-  lims(x  = c(min(df$xvals) - 1, max(df$xvals) + 1),
-       y  = c(min(df$yvals) - 1, max(df$yvals) + 1)) +
+  lims(x  = c(min(waffle_spain$xvals) - 1, max(waffle_spain$xvals) + 1),
+       y  = c(min(waffle_spain$yvals) - 1, max(waffle_spain$yvals) + 1)) +
   scale_color_manual(values = scale_palette) +
   labs(title = "Total Nacional", color = NULL) +
   theme_void() +
@@ -188,7 +188,7 @@ plot_spain <-
     plot.background = element_rect(fill = background, color  = NA),
     plot.title = element_text(
       color = font_color,
-      family = font_title,
+      family = font_base,
       size = 16,
       hjust = 0.5,
       vjust = -1,
@@ -198,6 +198,41 @@ plot_spain <-
     legend.position = "none"
   )
 
+# Waffle chart CCAA
+plot_ccaa <- 
+  ggplot(waffle_ccaa, aes(xvals, yvals, color = fill)) +
+  geom_text(label = fontawesome('fa-male'), 
+            family = 'fontawesome-webfont', size = 3.5) +
+  coord_equal(expand = TRUE) +
+  lims(x  = c(min(waffle_ccaa$xvals) - 1, max(waffle_ccaa$xvals) + 1),
+       y  = c(min(waffle_ccaa$yvals) - 1, max(waffle_ccaa$yvals) + 1)) + 
+  scale_color_manual(values = scale_palette) +
+  labs(title = "Comunidades Autónomas", color = NULL) +
+  theme_void() +
+  facet_wrap( ~ region) +
+  theme(
+    plot.title = element_text(
+      color = font_color,
+      family = font_base,
+      size = 16,
+      hjust = 0.5,
+      vjust = 6,
+      face = "bold"
+    ),
+    plot.margin = margin(1, 1, 1, 1, "cm"),
+    plot.background = element_rect(fill = background, color  = NA),
+    panel.spacing.x = unit(1, "lines"),
+    panel.spacing.y = unit(1, "lines"),
+    panel.background = element_rect(color = background, fill = background),
+    strip.text = element_text(
+      color = font_color,
+      family = font_base,
+      size = 12
+    ),
+    legend.position = "bottom",
+    strip.background = element_rect(colour = background,
+                                    fill = background)
+  )
 
 
 
