@@ -24,7 +24,7 @@ options(encoding = "UTF-8") # sets string encoding to UTF-8 instead of ANSI
 # Install packages & load libraries ---------------------------------------
 cat("Install packages & load libraries... \n\n", sep = "")
 packages <- c("ggplot2", "data.table", "zoo", "showtext", "fontawesome",
-              "emojifont") # list of packages to load
+              "emojifont", "sf", "raster", "dplyr") # list of packages to load
 n_packages <- length(packages) # count how many packages are required
 
 new_pkg <- packages[!(packages %in% installed.packages())] # determine which packages aren't installed
@@ -45,7 +45,7 @@ for(n in 1:n_packages){
 # Load data ---------------------------------------------------------------
 cat("Load data... \n\n", sep = "")
 dt <- fread("R/2024/week_09/dificultades.csv", dec = ",", encoding = "Latin-1")
-
+sf_ccaa <- sf::st_as_sf(raster::getData('GADM', country = 'ESP', level = 1))
 
 # Prepare data ------------------------------------------------------------
 cat("Prepare data... \n\n", sep = "")
@@ -144,6 +144,30 @@ waffle_spain <- spain[, data.table(xvals = 0:99 %/% 10,
                         fill = factor(rep(dificultad , times = fix_valor_round))),
            region]
 
+# Prepare data for choropleth map
+ccaa_dificulad <- ccaa[dificultad %in% c("Con mucha dificultad",
+                                         "Con dificultad", 
+                                         "Con cierta dificultad"), .(valor = sum(valor)), .(region)] 
+# Ceuta and Melilla fusion
+ccaa_dificulad <- rbind(
+  ccaa_dificulad[!(region %in% c("Ceuta", "Melilla"))],
+  ccaa_dificulad[region %in% c("Ceuta", "Melilla"), .(region = "Ceuta y Melilla", valor = mean(valor))]
+  )
+
+sf_ccaa_names <- sf_ccaa$NAME_1
+ccaa_dificulad[, NAME_1 := {
+  sf_ccaa_names[sf_ccaa_names %like% gsub("-", "", .BY$region)]
+  },
+  region]
+  
+# Merge data
+sf_ccaa <- merge(sf_ccaa, ccaa_dificulad, by = "NAME_1")
+
+grid <- st_make_grid(sf_ccaa, n = c(45,45)) %>% st_sf()
+grid <- st_join(grid, sf_ccaa)
+grid <- grid %>% filter(!is.na(valor))
+grid$valor <- grid$valor / 100 
+
 
 # Styles ------------------------------------------------------------------
 cat("Setting style... \n\n", sep = "")
@@ -160,6 +184,13 @@ scale_palette <-
     "#00ed8b",
     "#1cda29",
     "#388a15")
+
+scale_palette_bad <- 
+  c("#fae100",
+    "#ffb81c",
+    "#ed8b00",
+    "#da291c",
+    "#8a1538")
 
 # Load fonts
 font_add_google("Lato")
