@@ -24,7 +24,8 @@ options(encoding = "UTF-8") # sets string encoding to UTF-8 instead of ANSI
 # Install packages & load libraries ---------------------------------------
 cat("Install packages & load libraries... \n\n", sep = "")
 packages <- c("ggplot2", "data.table", "zoo", "showtext", "fontawesome",
-              "emojifont", "sf", "raster", "dplyr") # list of packages to load
+              "emojifont", "sf", "raster", "dplyr", "patchwork", "stringr",
+              "ggtext") # list of packages to load
 n_packages <- length(packages) # count how many packages are required
 
 new_pkg <- packages[!(packages %in% installed.packages())] # determine which packages aren't installed
@@ -265,8 +266,119 @@ plot_ccaa <-
                                     fill = background)
   )
 
+# Choropleth map
+plot_grid_map <- ggplot() +
+  geom_sf(data = grid, aes(fill = valor), color = background) +
+  guides(fill = guide_legend(
+    nrow = 1,
+    title.position = "top",
+    label.position = "bottom"
+  )) +
+  labs(
+    fill = "% de personas con dificultades",
+    title = "Personas con algún grado de dificultad para llegar a fin",
+    subtitle = "Comunidades Autónomas",
+    fill = NULL
+  ) +
+  scale_fill_stepsn(
+    labels = scales::percent,
+    colors = scale_palette_bad,
+    breaks = seq(0.35, 0.7, 0.07)
+  ) +
+  theme_void() +
+  theme(
+    plot.margin = margin(1, 0.5, 1, 1, "cm"),
+    plot.background = element_rect(fill = background, color = NA),
+    plot.title = element_text(
+      hjust = 0.5,
+      vjust = 2,
+      color = font_color,
+      family = font_base,
+      size = 16,
+      face = "bold"
+    ),
+    plot.subtitle = element_text(
+      hjust = 0.5,
+      vjust = 2,
+      color = font_color,
+      family = font_base,
+      size = 14
+    ),
+    legend.position = "bottom",
+    legend.title = element_text(
+      hjust = 0.5,
+      color = font_color,
+      family = font_base
+    ),
+    legend.text = element_text(color = font_color, family = font_base)
+  )
+
+# Text --------------------------------------------------------------------
+cat("Adding text... \n\n", sep = "")
+
+# Caption
+caption_text <- str_glue("**Source:** INE<br>",
+                         "**@michal0091**")
+
+# Titles theme 
+tit_theme <-
+  theme_void() +
+  theme(plot.background = element_rect(color = background, fill = background))
 
 
+# Subtitle
+subtitle_text <- data.table(
+  x = 0,
+  y = 0,
+  label = "En España, la sombra de la dificultad para llegar a fin de mes se extiende sobre casi la mitad de la población (48,5%), según datos de 2023. La realidad económica actual, marcada por la inflación, el aumento del coste de la vida y la incertidumbre, golpea con fuerza a los hogares españoles.<br>")
 
+subtitle <-
+  ggplot(subtitle_text, aes(x = x, y = y)) +
+  geom_textbox(
+    aes(label = label),
+    box.color = background,
+    fill = background,
+    family = font_title,
+    size = 4,
+    lineheight = 1,
+    color = font_color
+  ) +
+  coord_cartesian(expand = FALSE, clip = "off") +
+  tit_theme
 
+# Gathering all parts
+
+design <- 
+"AAAB#
+ CCCCC
+ CCCCC"
+
+comb_right <- plot_spain + wrap_elements(subtitle) + plot_grid_map +
+  plot_layout(design = design)
+
+combined_plot  <- plot_ccaa | cc
+
+combined_plot <- combined_plot +
+  plot_annotation(
+    title = "Personas según dificultades para llegar a fin de mes",
+    caption = caption_text,
+    theme = theme(
+      plot.title = element_text(
+        hjust = 0.5,
+        vjust = 2,
+        color = title_font_color,
+        family = font_base,
+        size = 22,
+        face = "bold"
+      ),
+      plot.caption = element_markdown(
+        hjust = 1,
+        size = 6,
+        color = font_color,
+        lineheight = 1.2
+      ),
+      plot.margin = margin(1, 1, 1, 1, "cm"),
+      plot.background = element_rect(color = background, fill = background)
+    )
+  )
 
