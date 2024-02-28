@@ -157,7 +157,7 @@ ccaa_dificulad <- rbind(
 
 sf_ccaa_names <- sf_ccaa$NAME_1
 ccaa_dificulad[, NAME_1 := {
-  sf_ccaa_names[sf_ccaa_names %like% gsub("-", "", .BY$region)]
+  sf_ccaa_names[trimws(gsub("-", " ", sf_ccaa_names)) %like% trimws(gsub(" -", "", .BY$region))]
   },
   region]
   
@@ -221,7 +221,7 @@ plot_spain <-
     plot.title = element_text(
       color = font_color,
       family = font_base,
-      size = 16,
+      size = 32,
       hjust = 0.5,
       vjust = -1,
       face = "bold"
@@ -234,7 +234,7 @@ plot_spain <-
 plot_ccaa <- 
   ggplot(waffle_ccaa, aes(xvals, yvals, color = fill)) +
   geom_text(label = fontawesome('fa-male'), 
-            family = 'fontawesome-webfont', size = 3.5) +
+            family = 'fontawesome-webfont', size = 5) +
   coord_equal(expand = TRUE) +
   lims(x  = c(min(waffle_ccaa$xvals) - 1, max(waffle_ccaa$xvals) + 1),
        y  = c(min(waffle_ccaa$yvals) - 1, max(waffle_ccaa$yvals) + 1)) + 
@@ -246,7 +246,7 @@ plot_ccaa <-
     plot.title = element_text(
       color = font_color,
       family = font_base,
-      size = 16,
+      size = 32,
       hjust = 0.5,
       vjust = 6,
       face = "bold"
@@ -259,9 +259,13 @@ plot_ccaa <-
     strip.text = element_text(
       color = font_color,
       family = font_base,
-      size = 12
+      size = 26
     ),
     legend.position = "bottom",
+    legend.text = element_text(
+      color = font_color,
+      family = font_base,
+      size = 22),
     strip.background = element_rect(colour = background,
                                     fill = background)
   )
@@ -294,7 +298,7 @@ plot_grid_map <- ggplot() +
       vjust = 2,
       color = font_color,
       family = font_base,
-      size = 16,
+      size = 32,
       face = "bold"
     ),
     plot.subtitle = element_text(
@@ -302,15 +306,19 @@ plot_grid_map <- ggplot() +
       vjust = 2,
       color = font_color,
       family = font_base,
-      size = 14
+      size = 22
     ),
     legend.position = "bottom",
     legend.title = element_text(
       hjust = 0.5,
       color = font_color,
-      family = font_base
+      family = font_base,
+      size = 26
     ),
-    legend.text = element_text(color = font_color, family = font_base)
+    legend.text = element_text(
+      color = font_color,
+      family = font_base,
+      size = 22)
   )
 
 # Text --------------------------------------------------------------------
@@ -338,16 +346,19 @@ subtitle <-
     aes(label = label),
     box.color = background,
     fill = background,
-    family = font_title,
-    size = 4,
-    lineheight = 1,
+    family = font_base,
+    size = 7,
+    lineheight = 0.5,
     color = font_color
   ) +
   coord_cartesian(expand = FALSE, clip = "off") +
   tit_theme
 
-# Gathering all parts
 
+# Combine plots -----------------------------------------------------------
+cat("Combine plots... \n\n", sep = "")
+
+# Gathering all parts
 design <- 
 "AAAB#
  CCCCC
@@ -356,11 +367,11 @@ design <-
 comb_right <- plot_spain + wrap_elements(subtitle) + plot_grid_map +
   plot_layout(design = design)
 
-combined_plot  <- plot_ccaa | cc
+combined_plot  <- plot_ccaa | comb_right
 
 combined_plot <- combined_plot +
   plot_annotation(
-    title = "Personas según dificultades para llegar a fin de mes",
+    title = "Personas según dificultades para llegar a fin de mes en 2023",
     caption = caption_text,
     theme = theme(
       plot.title = element_text(
@@ -368,17 +379,32 @@ combined_plot <- combined_plot +
         vjust = 2,
         color = title_font_color,
         family = font_base,
-        size = 22,
+        size = 42,
         face = "bold"
       ),
       plot.caption = element_markdown(
         hjust = 1,
-        size = 6,
+        size = 22,
         color = font_color,
+        family = font_base,
         lineheight = 1.2
       ),
       plot.margin = margin(1, 1, 1, 1, "cm"),
       plot.background = element_rect(color = background, fill = background)
     )
   )
+
+
+# Save --------------------------------------------------------------------
+cat("Save... \n\n", sep = "")
+
+ggsave(
+  filename = "end_of_month_difficulties.png",
+  path = normalizePath("R/2024/week_09/"),
+  plot = combined_plot,
+  units = "mm",
+  width = 297,
+  height = 210,
+  dpi = 320
+)
 
