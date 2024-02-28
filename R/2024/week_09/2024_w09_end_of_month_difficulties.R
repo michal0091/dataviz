@@ -230,6 +230,41 @@ plot_spain <-
     legend.position = "none"
   )
 
+# Waffle chart Spain
+plot_spain_leg <-
+  ggplot(waffle_spain, aes(xvals, yvals, color = fill)) +
+  geom_text(label = fontawesome('fa-male'),
+            family = 'fontawesome-webfont',
+            size = 6) +
+  coord_equal(expand = TRUE) +
+  lims(x  = c(min(waffle_spain$xvals) - 1, max(waffle_spain$xvals) + 1),
+       y  = c(min(waffle_spain$yvals) - 1, max(waffle_spain$yvals) + 1)) +
+  scale_color_manual(values = scale_palette) +
+  labs(title = "Total Nacional", color = NULL) +
+  theme_void() +
+  theme(
+    axis.title = element_blank(),
+    plot.margin = margin(1, 1, 1, 1, "cm"),
+    plot.background = element_rect(fill = background, color  = NA),
+    plot.title = element_text(
+      color = font_color,
+      family = font_base,
+      size = 32,
+      hjust = 0.5,
+      vjust = -1,
+      face = "bold"
+    ),
+    panel.background = element_rect(color = background, fill = background),
+    legend.position = "bottom",
+    legend.text = element_text(
+      color = font_color,
+      family = font_base,
+      size = 22),
+    strip.background = element_rect(colour = background,
+                                    fill = background)
+  )
+
+
 # Waffle chart CCAA
 plot_ccaa <- 
   ggplot(waffle_ccaa, aes(xvals, yvals, color = fill)) +
@@ -408,3 +443,37 @@ ggsave(
   dpi = 320
 )
 
+# Save individual plots
+
+# CCAA waffle chart
+ggsave(
+  filename = "end_of_month_difficulties_ccaa.png",
+  path = normalizePath("R/2024/week_09/"),
+  plot = plot_ccaa,
+  units = "mm",
+  width = 185,
+  height = 185,
+  dpi = 320
+)
+
+# Spain waffle chart
+ggsave(
+  filename = "end_of_month_difficulties_spain.png",
+  path = normalizePath("R/2024/week_09/"),
+  plot = plot_spain_leg,
+  units = "mm",
+  width = 100,
+  height = 100,
+  dpi = 320
+)
+
+# Choropleth map
+ggsave(
+  filename = "end_of_month_difficulties_map.png",
+  path = normalizePath("R/2024/week_09/"),
+  plot = plot_grid_map,
+  units = "mm",
+  width = 114,
+  height = 185,
+  dpi = 320
+)
