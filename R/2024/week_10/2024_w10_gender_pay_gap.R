@@ -48,4 +48,13 @@ cat("Load data... \n\n", sep = "")
 gender <- fread("R/2024/week_10/gender_pay_gap_2022.csv", dec = ",") 
 
 
+# Styles ------------------------------------------------------------------
+cat("Setting style... \n\n", sep = "")
+
+# Color palette
+color_background <- "#2f2a3a"
+color_font <- "#f6f5f1"
+color_positive <- "#498867"
+color_negative <- "#ea3b1e"
+
 
