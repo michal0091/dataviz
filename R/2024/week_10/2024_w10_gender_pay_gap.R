@@ -46,7 +46,7 @@ for(n in 1:n_packages){
 cat("Load data... \n\n", sep = "")
 
 gender <- fread("R/2024/week_10/gender_pay_gap_2022.csv", dec = ",") 
-
+gender[country == "European Union - 27 countries (from 2020)", country := "EU27"]
 
 # Styles ------------------------------------------------------------------
 cat("Setting style... \n\n", sep = "")
@@ -69,7 +69,7 @@ gender[, ggplot(.SD, aes(reorder(country, gender_pay_gap_2022), gender_pay_gap_2
          geom_point(shape = 17, color = color_font, size = 2) +
          geom_point(aes(country, gender_pay_gap_2012), shape = 16, color = color_font, size = 2) +
          geom_hline(yintercept = 0, color = color_font, linetype = "solid", size = 1.2) +
-         scale_y_continuous(limits = c(-5, 25), breaks = seq(-5, 25, 5)) +
+         scale_y_continuous(limits = c(-5, 25), breaks = seq(-5, 30, 5)) +
          labs(title = "Unadjusted gender pay gap* in 2022 and change since 2012, EU-27",
               x = NULL,
               y = "Unadjusted gender pay gap (%)",
@@ -108,6 +108,11 @@ gender[, ggplot(.SD, aes(reorder(country, gender_pay_gap_2022), gender_pay_gap_2
              linewidth = .3), 
            axis.text = element_text(
              color = color_font,
-             family = font_base))
+             family = font_base),
+           axis.text.x = element_text(
+             color = color_font,
+             family = font_base,
+             angle = 45)
+           )
          ]
 
