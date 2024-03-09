@@ -57,4 +57,27 @@ color_font <- "#f6f5f1"
 color_positive <- "#498867"
 color_negative <- "#ea3b1e"
 
+# Fonts
+font_add_google("Yeseva One")
+font_base <- "Yeseva One"
 
+
+# Plot --------------------------------------------------------------------
+cat("Plot... \n\n", sep = "")
+
+gender[, ggplot(.SD, aes(reorder(country, gender_pay_gap_2022), gender_pay_gap_2022)) +
+         geom_point() +
+         labs(title = "Unadjusted gender pay gap* in 2022 and change since 2012, EU-27",
+              x = NULL,
+              y = "Unadjusted gender pay gap (%)",
+              caption = paste(
+                "*The unadjusted Gender Pay Gap that represents the difference\n",
+                "between average gross hourly earnings of male paid employees and\n",
+                "of female paid employees as a percentage of average gross hourly\n",
+                "earnings of male paid employees. The population consists of all\n",
+                "paid employees in enterprises with 10 employees or more in NACE\n",
+                "Rev. 2 aggregate B to S (excluding O) - before reference year 2008:\n",
+                "NACE Rev. 1.1 aggregate C to O (excluding L)\n",
+                "Source: Eurostat\n",
+                "@michal0091"))
+         ]
