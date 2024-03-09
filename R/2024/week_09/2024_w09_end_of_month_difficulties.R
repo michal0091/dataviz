@@ -25,7 +25,7 @@ options(encoding = "UTF-8") # sets string encoding to UTF-8 instead of ANSI
 cat("Install packages & load libraries... \n\n", sep = "")
 packages <- c("ggplot2", "data.table", "zoo", "showtext", "fontawesome",
               "emojifont", "sf", "raster", "dplyr", "patchwork", "stringr",
-              "ggtext") # list of packages to load
+              "ggtext", "sysfonts") # list of packages to load
 n_packages <- length(packages) # count how many packages are required
 
 new_pkg <- packages[!(packages %in% installed.packages())] # determine which packages aren't installed
