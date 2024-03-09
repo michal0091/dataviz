@@ -24,7 +24,7 @@ options(encoding = "UTF-8") # sets string encoding to UTF-8 instead of ANSI
 
 # Install packages & load libraries ---------------------------------------
 cat("Install packages & load libraries... \n\n", sep = "")
-packages <- c("tidyverse", "data.table", "sysfonts") # list of packages to load
+packages <- c("tidyverse", "data.table", "showtext") # list of packages to load
 n_packages <- length(packages) # count how many packages are required
 
 new_pkg <- packages[!(packages %in% installed.packages())] # determine which packages aren't installed
@@ -58,15 +58,18 @@ color_positive <- "#498867"
 color_negative <- "#ea3b1e"
 
 # Fonts
-font_add_google("Yeseva One")
+font_add_google(name = "Yeseva One")
 font_base <- "Yeseva One"
-
+showtext_auto()
 
 # Plot --------------------------------------------------------------------
 cat("Plot... \n\n", sep = "")
 
 gender[, ggplot(.SD, aes(reorder(country, gender_pay_gap_2022), gender_pay_gap_2022)) +
-         geom_point() +
+         geom_point(shape = 17, color = color_font, size = 2) +
+         geom_point(aes(country, gender_pay_gap_2012), shape = 16, color = color_font, size = 2) +
+         geom_hline(yintercept = 0, color = color_font, linetype = "solid", size = 1.2) +
+         scale_y_continuous(limits = c(-5, 25), breaks = seq(-5, 25, 5)) +
          labs(title = "Unadjusted gender pay gap* in 2022 and change since 2012, EU-27",
               x = NULL,
               y = "Unadjusted gender pay gap (%)",
@@ -79,5 +82,32 @@ gender[, ggplot(.SD, aes(reorder(country, gender_pay_gap_2022), gender_pay_gap_2
                 "Rev. 2 aggregate B to S (excluding O) - before reference year 2008:\n",
                 "NACE Rev. 1.1 aggregate C to O (excluding L)\n",
                 "Source: Eurostat\n",
-                "@michal0091"))
+                "@michal0091")) +
+         theme_void() +
+         theme(
+           plot.margin = margin(1, 1, 1, 1, "cm"),
+           plot.background = element_rect(fill = color_background, color  = NA),
+           plot.title = element_text(
+             color = color_font,
+             family = font_base,
+             size = 28,
+             hjust = 0.5,
+             vjust = 6,
+             face = "bold"
+           ),
+           plot.caption = element_text(
+             color = color_font,
+             family = font_base,
+             size = 12,
+             hjust = 0,
+             vjust = -12
+           ),
+           panel.grid.major.y = element_line(
+             colour = color_font,
+             linetype = "dotted",
+             linewidth = .3), 
+           axis.text = element_text(
+             color = color_font,
+             family = font_base))
          ]
+
