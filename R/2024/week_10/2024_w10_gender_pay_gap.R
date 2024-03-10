@@ -58,15 +58,17 @@ color_positive <- "#498867"
 color_negative <- "#ea3b1e"
 
 # Fonts
-font_add_google(name = "Yeseva One")
-font_base <- "Yeseva One"
+font_add_google(name = "Lato")
+font_base <- "Lato"
 showtext_auto()
 
 # Plot --------------------------------------------------------------------
 cat("Plot... \n\n", sep = "")
 
-colors <- c("2012" = color_font, "2022" = color_font)
-
+colors <- c("2012" = color_font, "2022" = color_font, "GPG decrease" = color_positive, "GPG increase" = color_negative)
+gender[, arrow_direction := fifelse(gender_pay_gap_2022 < gender_pay_gap_2012,
+                                    "GPG decrease",
+                                    "GPG increase")]
 
 plot <- gender[, ggplot(.SD) +
          # Add arrows from 2012 to 2022
@@ -74,21 +76,16 @@ plot <- gender[, ggplot(.SD) +
            aes(
              x = reorder(country, gender_pay_gap_2022),
              xend = reorder(country, gender_pay_gap_2022),
-             y = fifelse(
-               gender_pay_gap_2022 < gender_pay_gap_2012,
-               gender_pay_gap_2012 - 1 ,
-               gender_pay_gap_2012 + 1
-             ),
-             yend = fifelse(
-               gender_pay_gap_2022 < gender_pay_gap_2012,
-               gender_pay_gap_2022 + 1 ,
-               gender_pay_gap_2022 - 1
-             )
-           ),
-           size = 1.1,
-           color = fifelse(gender_pay_gap_2022 < gender_pay_gap_2012,
-                           color_positive, 
-                           color_negative),
+             y = fcase(
+               (gender_pay_gap_2022 - gender_pay_gap_2012 > 3), gender_pay_gap_2012 + 1,
+               (gender_pay_gap_2022 - gender_pay_gap_2012 < -3), gender_pay_gap_2012 - 1,
+               between((gender_pay_gap_2022 - gender_pay_gap_2012), -3, 3), gender_pay_gap_2012 + 0.5),
+             yend = fcase(
+               (gender_pay_gap_2022 - gender_pay_gap_2012 > 3), gender_pay_gap_2022 - 1,
+               (gender_pay_gap_2022 - gender_pay_gap_2012 < -3), gender_pay_gap_2022 + 1,
+               between((gender_pay_gap_2022 - gender_pay_gap_2012), -3, 3), gender_pay_gap_2022 - 0.5),
+           color = arrow_direction),
+           size = 1,
            arrow = arrow(
              length = unit(0.1, "cm"),
              type = "closed")) +
