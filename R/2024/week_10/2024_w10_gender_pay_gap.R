@@ -70,120 +70,133 @@ gender[, arrow_direction := fifelse(gender_pay_gap_2022 < gender_pay_gap_2012,
                                     "GPG decrease",
                                     "GPG increase")]
 
-plot <- gender[, ggplot(.SD) +
-         # Add arrows from 2012 to 2022
-         geom_segment(
-           aes(
-             x = reorder(country, gender_pay_gap_2022),
-             xend = reorder(country, gender_pay_gap_2022),
-             y = fcase(
-               (gender_pay_gap_2022 - gender_pay_gap_2012 > 3), gender_pay_gap_2012 + 1,
-               (gender_pay_gap_2022 - gender_pay_gap_2012 < -3), gender_pay_gap_2012 - 1,
-               between((gender_pay_gap_2022 - gender_pay_gap_2012), -3, 3), gender_pay_gap_2012 + 0.5),
-             yend = fcase(
-               (gender_pay_gap_2022 - gender_pay_gap_2012 > 3), gender_pay_gap_2022 - 1,
-               (gender_pay_gap_2022 - gender_pay_gap_2012 < -3), gender_pay_gap_2022 + 1,
-               between((gender_pay_gap_2022 - gender_pay_gap_2012), -3, 3), gender_pay_gap_2022 - 0.5),
-           color = arrow_direction),
-           size = 1,
-           arrow = arrow(
-             length = unit(0.1, "cm"),
-             type = "closed")) +
 
-         geom_point(
-           aes(country, gender_pay_gap_2022, color = "2022"),
-           shape = 17,
-           size = 1.2) +
-         geom_point(
-           aes(country, gender_pay_gap_2012, color = "2012"),
-           shape = 16,
-           size = 1.2
-         ) +
-         geom_hline(
-           yintercept = 0,
-           color = color_font,
-           linetype = "solid",
-           size = 1.2
-         ) +
-           scale_y_continuous(limits = c(-5, 30), breaks = seq(-5, 30, 5)) +
-           scale_color_manual(values = colors) +
-         labs(
-           title = "Unadjusted gender pay gap* in 2022 and change since 2012, EU-27",
-           x = NULL,
-           y = "Unadjusted gender pay gap (%)",
-           caption = paste(
-             "*The unadjusted Gender Pay Gap that represents the difference",
-             "between average gross hourly earnings of male paid employees and",
-             "of female paid employees as a percentage of average gross hourly",
-             "earnings of male paid employees.\nThe population consists of all",
-             "paid employees in enterprises with 10 employees or more in NACE",
-             "Rev. 2 aggregate B to S (excluding O) - before reference year 2008:\n",
-             "NACE Rev. 1.1 aggregate C to O (excluding L)\n",
-             "Source: Eurostat\n",
-             "@michal0091"
-           ),
-           color = NULL
-         ) +
-         theme_void() +
-         theme(
-           plot.margin = margin(1, 1, 1, 1, "cm"),
-           plot.background = element_rect(fill = color_background, color  = NA),
-           plot.title = element_text(
-             color = color_font,
-             family = font_base,
-             size = 46,
-             hjust = 0.5,
-             vjust = 6,
-             face = "bold"
-           ),
-           plot.caption = element_text(
-             color = color_font,
-             family = font_base,
-             size = 16,
-             hjust = 0,
-             vjust = -12
-           ),
-           panel.grid.major.y = element_line(
-             colour = color_font,
-             linetype = "dotted",
-             linewidth = .3
-           ),
-           legend.position = "bottom",
-           legend.text = element_text(
-             color = color_font,
-             family = font_base,
-             size = 18,
-             face = "bold"),
-           axis.text = element_text(
-             color = color_font,
-             family = font_base,
-             size = 16,
-             face = "bold"),
-           axis.text.x = element_text(
-             color = color_font,
-             family = font_base,
-             angle = 45
-           ),
-           axis.title.y = element_text(
-             color = color_font,
-             family = font_base,
-             size = 20,
-             angle = 90,
-             vjust = 4,
-             face = "bold"
-           )
-         )]
+plot <- gender[, ggplot(.SD) +
+                 # Add arrows from 2012 to 2022
+                 geom_segment(
+                   aes(
+                     x = reorder(country, gender_pay_gap_2022),
+                     xend = reorder(country, gender_pay_gap_2022),
+                     y = fcase(
+                       (gender_pay_gap_2022 - gender_pay_gap_2012 > 2),
+                       gender_pay_gap_2012 + 1,
+                       (gender_pay_gap_2022 - gender_pay_gap_2012 < -2),
+                       gender_pay_gap_2012 - 1,
+                       between((
+                         gender_pay_gap_2022 - gender_pay_gap_2012
+                       ),-2, 2),
+                       gender_pay_gap_2012
+                     ),
+                     yend = fcase(
+                       (gender_pay_gap_2022 - gender_pay_gap_2012 > 2),
+                       gender_pay_gap_2022 - 1,
+                       (gender_pay_gap_2022 - gender_pay_gap_2012 < -2),
+                       gender_pay_gap_2022 + 1,
+                       between((
+                         gender_pay_gap_2022 - gender_pay_gap_2012
+                       ),-2, 2),
+                       gender_pay_gap_2022
+                     ),
+                     color = arrow_direction
+                   ),
+                   size = 0.8,
+                   arrow = arrow(length = unit(0.08, "cm"),
+                                 type = "closed")
+                 ) +
+                 
+                 geom_point(aes(country, gender_pay_gap_2022, color = "2022"),
+                            shape = 17,
+                            size = 1.2) +
+                 geom_point(aes(country, gender_pay_gap_2012, color = "2012"),
+                            shape = 16,
+                            size = 1.2) +
+                 geom_hline(
+                   yintercept = 0,
+                   color = color_font,
+                   linetype = "solid",
+                   size = 0.5
+                 ) +
+                 scale_y_continuous(limits = c(-5, 30), breaks = seq(-5, 30, 5)) +
+                 scale_color_manual(values = colors) +
+                 labs(
+                   title = "Unadjusted gender pay gap* in 2022 and change since 2012, EU-27",
+                   x = NULL,
+                   y = "Unadjusted gender pay gap (%)",
+                   caption = paste(
+                     "*The unadjusted Gender Pay Gap that represents the difference",
+                     "between average gross hourly earnings of male paid employees and",
+                     "of female paid employees as a percentage of average gross hourly",
+                     "earnings of male paid employees.\nThe population consists of all",
+                     "paid employees in enterprises with 10 employees or more in NACE",
+                     "Rev. 2 aggregate B to S (excluding O) - before reference year 2008:\n",
+                     "NACE Rev. 1.1 aggregate C to O (excluding L)\n",
+                     "Source: Eurostat\n",
+                     "@michal0091"
+                   ),
+                   color = NULL
+                 ) +
+                 theme_void() +
+                 theme(
+                   plot.margin = margin(1, 1, 1, 1, "cm"),
+                   plot.background = element_rect(fill = color_background, color  = NA),
+                   plot.title = element_text(
+                     color = color_font,
+                     family = font_base,
+                     size = 46,
+                     hjust = 0.5,
+                     vjust = 6,
+                     face = "bold"
+                   ),
+                   plot.caption = element_text(
+                     color = color_font,
+                     family = font_base,
+                     size = 16,
+                     hjust = 0,
+                     vjust = -12,
+                     lineheight = 0.5
+                   ),
+                   panel.grid.major.y = element_line(
+                     colour = color_font,
+                     linetype = "dotted",
+                     linewidth = .3
+                   ),
+                   legend.position = "bottom",
+                   legend.text = element_text(
+                     color = color_font,
+                     family = font_base,
+                     size = 18,
+                     face = "bold"
+                   ),
+                   axis.text = element_text(
+                     color = color_font,
+                     family = font_base,
+                     size = 16,
+                     face = "bold"
+                   ),
+                   axis.text.x = element_text(
+                     color = color_font,
+                     family = font_base,
+                     angle = 45
+                   ),
+                   axis.title.y = element_text(
+                     color = color_font,
+                     family = font_base,
+                     size = 20,
+                     angle = 90,
+                     vjust = 4,
+                     face = "bold"
+                   )
+                 )]
 
 # Save plot ---------------------------------------------------------------
 cat("Saving plot... \n\n", sep = "")
 
 ggsave(
   filename = "gender_pay_gap.png",
-  path = normalizePath("R/2024/week_10/"), 
+  path = normalizePath("R/2024/week_10/"),
   plot = plot,
   device = "png",
   units = "cm",
   width = 21,
   height = 13
 )
-
