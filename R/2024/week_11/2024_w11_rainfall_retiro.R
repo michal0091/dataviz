@@ -41,3 +41,23 @@ for(n in 1:n_packages){
 }
 
 
+# Load data ---------------------------------------------------------------
+cat("Load data... \n\n", sep = "")
+rainfall <- fread("R/2024/week_11/rainfall_retiro.csv", dec = ",")
+
+rainfall[, year := nafill(year, "locf")]
+rainfall[, month := nafill(month, fill = 0)]
+
+
+# Plot --------------------------------------------------------------------
+cat("Plot... \n\n", sep = "")
+
+rainfall[, ggplot(.SD, aes(x = reorder(factor(month), -month), y = mm, color = year)) +
+           geom_jitter(position = position_jitter(seed = 1991, width = 0.2), size = 2, alpha = 0.25) +
+           stat_summary(data = .SD[year <= 2000], fun = mean, geom = "point", size = 5) +
+           stat_summary(data = .SD[year > 2000], fun = mean, geom = "point", size = 5) +
+           coord_flip() +
+           scale_y_continuous(limits = c(0, 220), expand = c(0.08, 0))]
+
+
+
