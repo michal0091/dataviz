@@ -151,19 +151,32 @@ sum_year <- rainfall[, .(sum_year = sum(mm, na.rm = TRUE)), year]
 sum_year[, rolling_mean_10y := frollmean(sum_year, 10, align = "right", fill = NA)]
 sum_year[, rolling_sd_10y := frollapply(sum_year, 10, sd, align = "right", fill = NA)]
 
-plot_2 <- sum_year[, ggplot(.SD, aes(year, sum_year)) +
-                     geom_line(color = color_gradient_low) +
-                     geom_line(aes(year, rolling_mean_10y), color = color_gradient_high) +
+plot_2 <- sum_year[, ggplot(.SD, aes(year, sum_year, color = "Yearly rainfall")) +
+                     geom_line() +
+                     geom_line(aes(year, rolling_mean_10y, color = "10y roll mean")) +
                      geom_ribbon(aes(y = sum_year, 
                                      ymin = rolling_mean_10y - rolling_sd_10y, 
-                                     ymax = rolling_mean_10y + rolling_sd_10y), 
-                                 fill = color_gradient_high, 
-                                 alpha = .2) +
+                                     ymax = rolling_mean_10y + rolling_sd_10y,
+                                     fill = "± sd"),
+                                 alpha = .2, 
+                                 color = NA) +
                      scale_x_continuous(breaks = seq(1923, 2023, 20), 
                                         limits = c(1923, 2023), 
                                         expand = c(.02, .02)) +
                      scale_y_continuous(limits = c(0, 800),
                                         breaks = seq(0, 800, 100)) +
+                     scale_color_manual(values = c("Yearly rainfall" = color_gradient_low,
+                                                   "10y roll mean" = color_gradient_high)) +
+                     scale_fill_manual(values = c("± sd" = color_gradient_high)) +
+                     labs(
+                       title = "Rainfall in Retiro, Madrid",
+                       subtitle = "Yearly rainfall in Retiro, Madrid, 1923-2023",
+                       caption = "Source: AEMET",
+                       x = "Year",
+                       y = "Rainfall (mm)",
+                       color = NULL,
+                       fill = NULL
+                     ) +
                      theme_void() +
                      theme(
                        text = element_text(
@@ -173,6 +186,7 @@ plot_2 <- sum_year[, ggplot(.SD, aes(year, sum_year)) +
                        ),
                        plot.margin = margin(1, 1, 1, 1, "cm"),
                        plot.background = element_rect(fill = color_background, color  = NA),
+                       legend.position = "bottom",
                        axis.text = element_text(
                          color = color_font,
                          family = font_base,
