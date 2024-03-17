@@ -57,7 +57,7 @@ cat("Styles... \n\n", sep = "")
 # Color palette
 color_background <- "#fcfbf9"
 color_font <- "#252b35"
-color_accent_1 <- "#79253B"
+color_accent_1 <- "#392579"
 color_accent_2 <- "#3B7925"
 color_gradient_low <- "#253b79"
 color_gradient_high <- "#94cfcb"
@@ -95,7 +95,7 @@ plot_1 <- rainfall[, ggplot(.SD, aes(
     fun = mean,
     geom = "point",
     aes(shape = "> 1990"),
-    size = 3,
+    size = 2.9,
     color = color_accent_1
   ) +
   scale_shape_manual("Mean", values =  c("≤ 1955" = 5, "> 1990" = 18)) +
@@ -241,13 +241,13 @@ social_caption <- glue::glue(
   "<span style='color: {text_color}'>Source: {source_text}</span><br>
   <span style='font-family:\"fa-brands\";
                 color: {highlight_color}'>{github_icon};</span>
-  <span style='color: {text_color}'>{github_username}</span>
+  <span style='color: {text_color}'>{github_username} </span>
   <span style='font-family:\"fa-brands\";
                 color: {highlight_color}'>{twitter_icon};</span>
-  <span style='color: {text_color}'>{twitter_username}</span>
+  <span style='color: {text_color}'>{twitter_username} </span>
   <span style='font-family:\"fa-brands\";
                 color: {highlight_color}'>{linkedin_icon};</span>
-  <span style='color: {text_color}'>{linkedin_username}</span>
+  <span style='color: {text_color}'>{linkedin_username} </span>
   <span style='font-family:\"fa-brands\";
                 color: {highlight_color}'>{mastodon_icon};</span>
   <span style='color: {text_color}'>{mastodon_username}@<span><span style='color: {text_color}'>{mastodon_server}</span>"
