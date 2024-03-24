@@ -168,6 +168,12 @@ theme_my <- function(font_regular = "inter_regular",
         family = "inter_bold",
         color = color_text_1
       ),
+      axis.title.y = element_text(
+        size = 12,
+        family = "inter_bold",
+        color = color_text_1,
+        angle = 90
+      ),
       axis.text = element_text(
         size = 10,
         family = "inter_light",
