@@ -1,0 +1,151 @@
+default:
+  day_1:
+    day: 1
+    theme: part-to-whole
+    category: Comparisons
+    source: OECD
+  day_2:
+    day: 2
+    theme: neo
+    category: Comparisons
+    source: Determine source
+  day_3:
+    day: 3
+    theme: makeover
+    category: Comparisons
+    source: Determine source
+  day_4:
+    day: 4
+    theme: waffle
+    category: Comparisons
+    source: Determine source
+  day_5:
+    day: 5
+    theme: diverging
+    category: Comparisons
+    source: Determine source
+  day_6:
+    day: 6
+    theme: data day OECD
+    category: Comparisons
+    source: OECD
+  day_7:
+    day: 7
+    theme: hazards
+    category: Distributions
+    source: Determine source
+  day_8:
+    day: 8
+    theme: circular
+    category: Distributions
+    source: Determine source
+  day_9:
+    day: 9
+    theme: major/minor
+    category: Distributions
+    source: Determine source
+  day_10:
+    day: 10
+    theme: physical
+    category: Distributions
+    source: Determine source
+  day_11:
+    day: 11
+    theme: mobile-friendly
+    category: Distributions
+    source: Determine source
+  day_12:
+    day: 12
+    theme: theme day- Reuters Graphics
+    category: Distributions
+    source: Reuters
+  day_13:
+    day: 13
+    theme: family
+    category: Relationships
+    source: Asian Development Bank
+  day_14:
+    day: 14
+    theme: heatmap
+    category: Relationships
+    source: Determine source
+  day_15:
+    day: 15
+    theme: historical
+    category: Relationships
+    source: Determine source
+  day_16:
+    day: 16
+    theme: weather
+    category: Relationships
+    source: Determine source
+  day_17:
+    day: 17
+    theme: networks
+    category: Relationships
+    source: Determine source
+  day_18:
+    day: 18
+    theme: data day- Asian Development Bank
+    category: Relationships
+    source: Asian Development Bank
+  day_19:
+    day: 19
+    theme: dinosaurs
+    category: Timeseries
+    source: Determine source
+  day_20:
+    day: 20
+    theme: correlation
+    category: Timeseries
+    source: Determine source
+  day_21:
+    day: 21
+    theme: green energy
+    category: Timeseries
+    source: Determine source
+  day_22:
+    day: 22
+    theme: mobility
+    category: Timeseries
+    source: Determine source
+  day_23:
+    day: 23
+    theme: tiles
+    category: Timeseries
+    source: Determine source
+  day_24:
+    day: 24
+    theme: theme day- ILO Africa
+    category: Timeseries
+    source: ILO Africa
+  day_25:
+    day: 25
+    theme: global change
+    category: Uncertainties
+    source: Determine source
+  day_26:
+    day: 26
+    theme: AI
+    category: Uncertainties
+    source: Determine source
+  day_27:
+    day: 27
+    theme: good/bad
+    category: Uncertainties
+    source: Determine source
+  day_28:
+    day: 28
+    theme: trend
+    category: Uncertainties
+    source: Determine source
+  day_29:
+    day: 29
+    theme: black & white
+    category: Uncertainties
+    source: Determine source
+  day_30:
+    day: 30
+    theme: theme day
+    category: Uncertainties
+    source: Determine source
