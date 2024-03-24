@@ -23,7 +23,8 @@ options(encoding = "UTF-8") # sets string encoding to UTF-8 instead of ANSI
 
 # Install packages & load libraries ---------------------------------------
 cat("Install packages & load libraries... \n\n", sep = "")
-packages <- c("tidyverse", "data.table", "zoo", "showtext", "sysfonts", "treemapify") # list of packages to load
+packages <- c("tidyverse", "data.table", "zoo", "showtext", "sysfonts", "treemapify",
+              "patchwork") # list of packages to load
 n_packages <- length(packages) # count how many packages are required
 
 new_pkg <- packages[!(packages %in% installed.packages())] # determine which packages aren't installed
@@ -60,11 +61,14 @@ pais[, name := factor(name, levels = pais$name)]
 
 # Pais  plot
 pais_plot <- pais %>%
-  ggplot(aes(area = prp, label = paste0(name, "\n", sprintf("%2.1f", prp), "%  "))) +
-  geom_treemap(fill = color_set_1, color = color_set_3, size = 2) +
+  ggplot(aes(area = prp, label = paste0(name, " ", sprintf("%2.0f", prp), "%  "))) +
+  geom_treemap(fill = color_set_1, color = color_background, layout = "scol") +
   geom_treemap_text(family = "inter_regular",
                     colour = color_background,
-                    grow = TRUE) +
+                    place = "centre",
+                    grow = TRUE, 
+                    layout = "scol",
+                    min.size = 7) +
   labs(subtitle = "Porcentaje de la cartera en cada país") +
   theme_my()
 
@@ -82,7 +86,7 @@ sector_base_plot <-
   facet_wrap(~ name, ncol = 1, scales = "free_y") +
   scale_x_continuous(name = "Porcentaje",
                      expand = c(0, 0),
-                     limits = c(0, 40)) +
+                     limits = c(0, 35)) +
   scale_y_discrete(guide = "none") +
   theme_my() +
   theme(
@@ -113,3 +117,30 @@ sector_plot <- sector_base_plot +
   scale_color_manual(values = c(color_text_1, color_background),
                      guide = "none") +
   labs(subtitle = "Porcentaje de la cartera en cada sector", y = NULL)
+
+
+# Combine plots -----------------------------------------------------------
+cat("Combine plots... \n\n", sep = "")
+combined_plot <-
+  pais_plot + sector_plot +
+  plot_layout(widths = c(1, 1)) +
+  plot_annotation(
+    title = "Distribución de la cartera de ETFs",
+    caption = caption_text(source_text = "Own elaboration"),
+    theme = theme_my()
+  )
+
+
+# Save plot ---------------------------------------------------------------
+cat("Save plot... \n\n", sep = "")
+
+ggsave(
+  filename = "portfolio_distr_plot.png",
+  path = normalizePath("R/2024/week_12"),
+  plot = combined_plot,
+  device = "png",
+  units = "mm",
+  width = 105*2,
+  height = 105,
+  dpi = 320
+)
