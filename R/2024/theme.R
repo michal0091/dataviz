@@ -7,6 +7,8 @@ library(ggtext)
 
 caption_text <- function(viz_author = "Michal Kinel",
                          source_text,
+                         color_text_1 = "#352725",
+                         color_text_2 = "#3f68e3",
                          github_icon = '&#xf113',
                          github_username = "michal0091",
                          twitter_icon = "&#xf081",
@@ -15,25 +17,20 @@ caption_text <- function(viz_author = "Michal Kinel",
                          linkedin_username = "michal-kinel",
                          mastodon_icon = "&#xf4f6",
                          mastodon_username = "miki_peltzer",
-                         mastodon_server = "techhub.social",
-                         day_type,
-                         day_hashtag) {
+                         mastodon_server = "techhub.social") {
   
   social_caption <- glue::glue(
     "
   <span style='color: {color_text_2}'><strong>Data Visualization</strong>:   {viz_author}  </span>
   <span style='color: {color_text_1}'><strong>Source</strong>:   {source_text}</span><br>
-  <span style='font-family:\"fa-brands\"; color: {highlight_color};'>{github_icon};</span>
-  <span style='color: {text_color}'>{github_username} </span>
-  <span style='font-family:\"fa-brands\"; color: {highlight_color}'>{twitter_icon};</span>
-  <span style='color: {text_color}'>{twitter_username} </span>
-  <span style='font-family:\"fa-brands\"; color: {highlight_color}'>{linkedin_icon};</span>
-  <span style='color: {text_color}'>{linkedin_username} </span>
-  <span style='font-family:\"fa-brands\"; color: {highlight_color}'>{mastodon_icon};</span>
-  <span style='color: {text_color}'>{mastodon_username}@<span><span style='color: {text_color}'>{mastodon_server}</span><br>
-  <span style='color: {color_text_2}'>#30DayChartChallenge </span>
-  <span style='color: {color_text_1}'><strong>{day_type}</strong> </span>
-  <span style='color: {color_text_2}'>{day_hashtag}</span>
+  <span style='font-family:\"fa-brands\"; color: {color_text_2};'>{github_icon};</span>
+  <span style='color: {color_text_1}'>{github_username} </span>
+  <span style='font-family:\"fa-brands\"; color: {color_text_2}'>{twitter_icon};</span>
+  <span style='color: {color_text_1}'>{twitter_username} </span>
+  <span style='font-family:\"fa-brands\"; color: {color_text_2}'>{linkedin_icon};</span>
+  <span style='color: {color_text_1}'>{linkedin_username} </span>
+  <span style='font-family:\"fa-brands\"; color: {color_text_2}'>{mastodon_icon};</span>
+  <span style='color: {color_text_1}'>{mastodon_username}@<span><span style='color: {color_text_1}'>{mastodon_server}</span>
   "
   )
   
