@@ -144,3 +144,37 @@ ggsave(
   height = 105,
   dpi = 320
 )
+
+# Save separately
+pais_plot_solo <- pais_plot +
+  labs(
+    title = "Distribución de la cartera de ETFs",
+    caption = caption_text(source_text = "Elaboración propia")) 
+ggsave(
+    filename = "portfolio_distr_pais_plot.png",
+    path = normalizePath("R/2024/week_12"), 
+    plot = pais_plot_solo,
+    device = "png",
+    units = "mm",
+    width = 105,
+    height = 105,
+    dpi = 320
+  )
+    
+    
+pais_sector_solo <- sector_plot +
+  labs(
+    title = "Distribución de la cartera de ETFs",
+    caption = caption_text(source_text = "Elaboración propia")) 
+ggsave(
+  filename = "portfolio_distr_sector_plot.png",
+  path = normalizePath("R/2024/week_12"), 
+  plot = pais_sector_solo,
+  device = "png",
+  units = "mm",
+  width = 105,
+  height = 105,
+  dpi = 320
+)
+    
+
