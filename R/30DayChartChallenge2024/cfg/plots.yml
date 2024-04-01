@@ -3,12 +3,12 @@ default:
     day: 1
     theme: part-to-whole
     category: Comparisons
-    source: OECD
+    source: [Marcelo Aizen et al. (2019) and Alexandra-Maria Klein et al. (2006). | WorldinData.org]
   day_2:
     day: 2
     theme: neo
     category: Comparisons
-    source: Determine source
+    source: [Markandya & Wilkinson (2007); Sovacool et al. (2016); UNSCEAR (2008; & 2018) | OurWorldInData.org/energy]
   day_3:
     day: 3
     theme: makeover

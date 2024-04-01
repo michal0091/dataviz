@@ -5,10 +5,11 @@ library(ggtext)
 library(tidyverse)
 
 
-
 # Caption text ------------------------------------------------------------
 caption_text <- function(viz_author = "Michal Kinel",
                          source_text,
+                         color_text_1 = "#352725",
+                         color_text_2 = "#3f68e3",
                          github_icon = '&#xf113',
                          github_username = "michal0091",
                          twitter_icon = "&#xf081",
@@ -19,23 +20,25 @@ caption_text <- function(viz_author = "Michal Kinel",
                          mastodon_username = "miki_peltzer",
                          mastodon_server = "techhub.social",
                          day_type,
-                         day_hashtag) {
+                         day_hashtag,
+                         day) {
   
   social_caption <- glue::glue(
     "
   <span style='color: {color_text_2}'><strong>Data Visualization</strong>:   {viz_author}  </span>
   <span style='color: {color_text_1}'><strong>Source</strong>:   {source_text}</span><br>
-  <span style='font-family:\"fa-brands\"; color: {highlight_color};'>{github_icon};</span>
-  <span style='color: {text_color}'>{github_username} </span>
-  <span style='font-family:\"fa-brands\"; color: {highlight_color}'>{twitter_icon};</span>
-  <span style='color: {text_color}'>{twitter_username} </span>
-  <span style='font-family:\"fa-brands\"; color: {highlight_color}'>{linkedin_icon};</span>
-  <span style='color: {text_color}'>{linkedin_username} </span>
-  <span style='font-family:\"fa-brands\"; color: {highlight_color}'>{mastodon_icon};</span>
-  <span style='color: {text_color}'>{mastodon_username}@<span><span style='color: {text_color}'>{mastodon_server}</span><br>
+  <span style='font-family:\"fa-brands\"; color: {color_text_2};'>{github_icon};</span>
+  <span style='color: {color_text_1}'>{github_username} </span>
+  <span style='font-family:\"fa-brands\"; color: {color_text_2}'>{twitter_icon};</span>
+  <span style='color: {color_text_1}'>{twitter_username} </span>
+  <span style='font-family:\"fa-brands\"; color: {color_text_2}'>{linkedin_icon};</span>
+  <span style='color: {color_text_1}'>{linkedin_username} </span>
+  <span style='font-family:\"fa-brands\"; color: {color_text_2}'>{mastodon_icon};</span>
+  <span style='color: {color_text_1}'>{mastodon_username}@<span><span style='color: {color_text_1}'>{mastodon_server}</span><br>
   <span style='color: {color_text_2}'>#30DayChartChallenge </span>
   <span style='color: {color_text_1}'><strong>{day_type}</strong> </span>
-  <span style='color: {color_text_2}'>{day_hashtag}</span>
+  <span style='color: {color_text_2}'>#{day_hashtag}</span>
+  <span style='color: {color_text_1}'>#Day{day}</span>
   "
   )
   
@@ -93,14 +96,20 @@ scale_fill_my <-
 
 
 # Theme functions ---------------------------------------------------------
-theme_my <- function() {
+theme_my <- function(font_regular = "inter_regular",
+                     font_bold = "inter_bold",
+                     font_light = "inter_light",
+                     color_text_1 = "#352725",
+                     color_text_2 = "#3f68e3",
+                     color_background = "#fbfdfe",
+                     title_size = 26) {
   theme_void()  %+replace%
     theme(
       #--- General: text
       text = element_text(family = "inter_regular", color = color_text_1),
       #--- Plot
       plot.title = element_text(
-        size = 26,
+        size = title_size,
         family = "inter_bold",
         color = color_text_1,
         face = "bold",
@@ -108,20 +117,20 @@ theme_my <- function() {
         vjust = 4
       ),
       plot.subtitle = element_text(
-        size = 22,
+        size = round((1 - 0.16 * 1) * title_size),
         family = "inter_bold",
         color = color_text_2,
         hjust = 0,
         vjust = 4
       ),
       plot.caption =  element_textbox_simple(
-        size = 10.5,
+        size = round((1 - 0.16 * 3.6) * title_size),
         lineheight = .5,
         padding = margin(.1, .1, .1, .1, "cm"),
-        margin = margin(.1, .1, .1, .1, "cm"),
+        margin = margin(1.5, 0, 0, 0, "lines"),
       ),
       plot.tag = element_text(
-        size = 14,
+        size = round((1 - 0.16 * 2) * title_size),
         family = "inter_bold",
         color = color_text_2
       ),
@@ -130,16 +139,22 @@ theme_my <- function() {
       #--- Panel
       panel.background = element_rect(fill = color_background, color = NA),
       panel.grid.major = element_line(
-        colour = color_text,
+        colour = color_text_1,
         linetype = "dotted",
         linewidth = .3
       ),
       panel.grid.minor = element_blank(),
       #--- Axis
       axis.title = element_text(
-        size = 12,
+        size = round((1 - 0.16 * 3) * title_size),
         family = "inter_bold",
         color = color_text_1
+      ),
+      axis.title.y = element_text(
+        size = round((1 - 0.16 * 3.4) * title_size),
+        family = "inter_bold",
+        color = color_text_1,
+        angle = 90
       ),
       axis.text = element_text(
         size = 10,
@@ -150,19 +165,19 @@ theme_my <- function() {
       strip.background = element_rect(fill = color_text_1, color = color_text_1),
       strip.text = element_text(
         color = color_background,
-        size = 14,
+        size = round((1 - 0.16 * 2) * title_size),
         family = "inter_bold"
       ),
       strip.placement = "outside",
       strip.clip = "off",
       #--- Legend
       legend.title = element_text(
-        size = 14,
+        size = round((1 - 0.16 * 2) * title_size),
         family = "inter_bold",
         color = color_text_1
       ),
       legend.text = element_text(
-        size = 12,
+        size = round((1 - 0.16 * 3) * title_size),
         family = "inter_regular",
         color = color_text_1
       ),
@@ -176,13 +191,18 @@ theme_my <- function() {
 
 
 # Test plot ---------------------------------------------------------------
+social_caption <- caption_text(source_text = "Test",
+                               day_type = "Daytest",
+                               day_hashtag = "#part_to_whole",
+                               day = 1)
+
 plot <- ggplot(mpg, aes(displ, hwy, colour = class)) +
   geom_point(size = 2) +
   labs(
     title = "Title of the plot",
     subtitle = "Subtitle of the plot",
     caption = social_caption,
-    tag = "Tag tex"
+    tag = "Tag tex",
   ) +
   theme_my() +
   scale_color_my()
