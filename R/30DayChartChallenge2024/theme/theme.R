@@ -36,9 +36,9 @@ caption_text <- function(viz_author = "Michal Kinel",
   <span style='font-family:\"fa-brands\"; color: {color_text_2}'>{mastodon_icon};</span>
   <span style='color: {color_text_1}'>{mastodon_username}@<span><span style='color: {color_text_1}'>{mastodon_server}</span><br>
   <span style='color: {color_text_2}'>#30DayChartChallenge </span>
-  <span style='color: {color_text_1}'><strong>{day_type}</strong> </span>
+  <span style='color: {color_text_1}'><strong>{day_type}</strong></span>
   <span style='color: {color_text_2}'>#{day_hashtag}</span>
-  <span style='color: {color_text_1}'>#Day{day}</span>
+  <span style='color: {color_text_1}'><strong>#Day{day}</strong></span>
   "
   )
   
@@ -124,7 +124,7 @@ theme_my <- function(font_regular = "inter_regular",
         vjust = 4
       ),
       plot.caption =  element_textbox_simple(
-        size = round((1 - 0.16 * 3.6) * title_size),
+        size = round((1 - 0.16 * 3.4) * title_size),
         lineheight = .5,
         padding = margin(.1, .1, .1, .1, "cm"),
         margin = margin(1.5, 0, 0, 0, "lines"),

@@ -46,5 +46,6 @@ font_add_google(name = "Inter", family = "inter_bold", regular.wt = 700, bold.wt
 font_add_google(name = "Inter", family = "inter_light", regular.wt = 300, bold.wt = 400)
 font_add_google(name = "Inter", family = "inter_thin", regular.wt = 100, bold.wt = 200)
 font_add(family = "fa-brands", regular = "R/30DayChartChallenge2024/theme/fa-brands-400.ttf")
+font_add(family = "fa-solid", regular = "R/30DayChartChallenge2024/theme/fa-solid-900.ttf")
 showtext_auto()
 
