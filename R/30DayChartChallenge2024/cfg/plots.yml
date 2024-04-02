@@ -12,8 +12,10 @@ default:
   day_3:
     day: 3
     theme: makeover
+    link: https://www.kff.org/other/issue-brief/data-note-public-awareness-antibiotic-resistance/
+    figure: Figure 8- Most Of The Public Unaware Antibiotic Resistance Is Unrelated To The Outbreak Of Viruses Such As Measles
     category: Comparisons
-    source: Determine source
+    source: KFF Health Tracking Poll (conducted May 30-June 4, 2019)
   day_4:
     day: 4
     theme: waffle
