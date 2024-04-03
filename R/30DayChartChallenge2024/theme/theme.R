@@ -25,8 +25,10 @@ caption_text <- function(viz_author = "Michal Kinel",
   
   social_caption <- glue::glue(
     "
-  <span style='color: {color_text_2}'><strong>Data Visualization</strong>:   {viz_author}  </span>
-  <span style='color: {color_text_1}'><strong>Source</strong>:   {source_text}</span><br>
+  <span style='color: {color_text_2}'><strong>Data Visualization:</strong></span>
+  <span style='color: {color_text_2}'>{viz_author}</span>
+  <span style='color: {color_text_1}'><strong>Source:</strong></span>
+  <span style='color: {color_text_1}'>{source_text}</span><br>
   <span style='font-family:\"fa-brands\"; color: {color_text_2};'>{github_icon};</span>
   <span style='color: {color_text_1}'>{github_username} </span>
   <span style='font-family:\"fa-brands\"; color: {color_text_2}'>{twitter_icon};</span>
