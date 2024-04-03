@@ -114,14 +114,18 @@ theme_my <- function(font_regular = "inter_regular",
         color = color_text_1,
         face = "bold",
         hjust = 0,
-        vjust = 4
+        vjust = 4.5,
+        lineheight = .34,
+        margin = margin(.2, .2, .2, .2, "lines")
       ),
       plot.subtitle = element_text(
         size = round((1 - 0.16 * 1) * title_size),
         family = "inter_bold",
         color = color_text_2,
         hjust = 0,
-        vjust = 4
+        vjust = 3,
+        lineheight = .3,
+        margin = margin(.2, .2, .2, .2, "lines")
       ),
       plot.caption =  element_textbox_simple(
         size = round((1 - 0.16 * 3.4) * title_size),
@@ -199,8 +203,8 @@ social_caption <- caption_text(source_text = "Test",
 plot <- ggplot(mpg, aes(displ, hwy, colour = class)) +
   geom_point(size = 2) +
   labs(
-    title = "Title of the plot",
-    subtitle = "Subtitle of the plot",
+    title = "Title of the plot\nTitle of the plot",
+    subtitle = "Subtitle of the plot\nSubtitle of the plot",
     caption = social_caption,
     tag = "Tag tex",
   ) +
@@ -213,9 +217,9 @@ ggsave(
   path = normalizePath("R/30DayChartChallenge2024/"),
   plot = plot,
   device = "png",
-  units = "mm",
-  width = 148,
-  height = 105,
-  dpi = 300
+  units = "px",
+  width = 1920,
+  height = 1080,
+  dpi = 320
 )
 
