@@ -25,7 +25,7 @@ default:
     day: 5
     theme: diverging
     category: Comparisons
-    source: Determine source
+    source: Spanish Sociological Research Center (CIS)
   day_6:
     day: 6
     theme: data day OECD
