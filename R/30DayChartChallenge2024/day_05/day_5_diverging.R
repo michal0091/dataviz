@@ -64,19 +64,17 @@ plot <-
           geom_text(
             aes(
               label = paste0("  ", sprintf("%2.0f", 100 * pct), "%  "),
-              hjust = 1.1,
-              vjust = "center"
+              hjust = fifelse(position == "Right", .65, 0.5),
             ),
             color = color_background,
             size = rel(5),
-            fontface = "bold",
             family = "inter_regular",
-            position = position_likert(vjust = .5)
+            position = position_likert(vjust = 0.5)
           ) +
           scale_fill_manual(values = colors) +
           facet_wrap( ~ age, scales = "fixed", ncol = 1) +
           coord_flip() +
-          scale_y_continuous(limits = c(-.75, .75), guide = "none") +
+          scale_y_continuous(limits = c(-.70, .70), guide = "none") +
           labs(
             title = "Ideological self-positioning in Spain (2023)",
             subtitle = "Percentage by age group and sex",
