@@ -41,6 +41,33 @@ dt_sub <-
 color_positive <- "#2d950c"
 color_negative <- "#dc1243"
 
+# Add text
+dt_sub[, diff := round(OBS_VALUE[2] - OBS_VALUE[1]), `Reference area`]
+dt_sub[, diff_label := fcase(
+  diff > 0,
+  paste0("+ $ ", formatC(
+    abs(diff), big.mark = ",", width = nchar(max(abs(diff))) + 1
+  )),
+  diff < 0,
+  paste0("- $ ", formatC(
+    abs(diff), big.mark = ",", width = nchar(max(abs(diff))) + 1
+  )),
+  diff == 0,
+  paste0("- $ ", formatC(
+    0, big.mark = ",", width = nchar(max(abs(diff))) + 1
+  ))
+)]
+
+
+# Add color
+dt_sub[, color := fcase(diff > 0,
+                        color_positive,
+                        diff < 0,
+                        color_negative,
+                        diff == 0,
+                        base_text)]
+
+
 plot <- dt_sub[,
                # Plot
                ggplot(.SD, aes(
@@ -59,18 +86,28 @@ plot <- dt_sub[,
                  ) +
                  geom_point(aes(color = TIME_PERIOD), size = .85) +
                  
+                 geom_text(
+                   aes(
+                     y = Inf,
+                     label = diff_label,
+                     family = "inter_regular",
+                     vjust = .5,
+                     hjust = "left"
+                   ),
+                   size = 3.5,
+                   color = color
+                 ) +
                  
                  # Scales
                  scale_color_manual(values = c(color_set_1, color_set_2)) +
                  scale_y_continuous(
-                   limits = c(15000, 90000),
-                   expand = c(0, 10),
+                   limits = c(15000, 80000),
                    breaks = seq(15000, 80000, 5000),
                    labels = scales::dollar_format(seq(15000, 80000, 5000))
                  ) +
                  
                  # Flip coordinates
-                 coord_flip() +
+                 coord_flip(clip = 'off') +
                  
                  # Labels
                  labs(
@@ -100,7 +137,7 @@ plot <- dt_sub[,
                      color = color_text_1, 
                      linewidth = .08, 
                      linetype = 5),
-                   plot.margin = margin(35, 0, 0, 5, "pt"),
+                   plot.margin = margin(35, 25, 10, 10, "pt"),
                    plot.title = element_text(
                      size = 24,
                      family = "inter_bold",
@@ -135,97 +172,12 @@ plot <- dt_sub[,
                    )
                  )]
 
-# Add text
-dt_diff <-
-  dt_sub[, .(diff = round(OBS_VALUE[2] - OBS_VALUE[1])), `Reference area`]
-dt_diff[, diff_label := fcase(
-  diff > 0,
-  paste0("+ $ ", formatC(
-    abs(diff), big.mark = ",", width = nchar(max(abs(diff))) + 1
-  )),
-  diff < 0,
-  paste0("- $ ", formatC(
-    abs(diff), big.mark = ",", width = nchar(max(abs(diff))) + 1
-  )),
-  diff == 0,
-  paste0("- $ ", formatC(
-    0, big.mark = ",", width = nchar(max(abs(diff))) + 1
-  ))
-)]
-
-
-
-# Convert to factor
-dt_diff[, `Reference area` := factor(`Reference area`,
-                                     levels = dt_sub[TIME_PERIOD == 2020][order(-OBS_VALUE)][, unique(`Reference area`)])]
-
-# Add color
-dt_diff[, color := fcase(diff > 0,
-                         color_positive,
-                         diff < 0,
-                         color_negative,
-                         diff == 0,
-                         base_text)]
-
-# Make plot box information with difference between 2020 and 2022
-plot_box <- dt_diff[, ggplot(.SD) +
-                      # Geoms
-                      geom_text(
-                        aes(
-                          x = reorder(`Reference area`, -as.numeric(`Reference area`)),
-                          y = 0,
-                          label = diff_label,
-                          family = "inter_regular",
-                          vjust = 1
-                        ),
-                        size = 3.5,
-                        color = color
-                      ) +
-                      scale_y_continuous(expand = c(1,-1)) +
-                      geom_text(
-                        aes(x = 36, y = 0),
-                        # 18 is the length + 1 of the x axis
-                        label = "dif.",
-                        nudge_y = .0,
-                        nudge_x = .8,
-                        color = color_text_1,
-                        family = "inter_regular",
-                        size = 3.5,
-                        vjust = "inward",
-                        hjust = "inward"
-                      ) +
-                      scale_x_discrete(guide = "none") +
-                      scale_y_continuous(guide = "none") +
-                      # Flip coordinates
-                      coord_flip() +
-                      labs(x = NULL, y = NULL) +
-                      theme_void() +
-                      # Theme
-                      theme_my() +
-                      theme(
-                        legend.position = "bottom",
-                        panel.grid.major = element_blank(),
-                        plot.margin = margin(0, 0, 0, 0, "pt")
-                        
-                      )]
-
-# Make combined plot
-plot_combined <-
-  plot + annotation_custom(
-    ggplotGrob(plot_box),
-    xmin = 1,
-    xmax = 37,
-    ymin = 85000,
-    ymax = 90000
-  ) +
-  plot_annotation(theme = theme_my() + theme(plot.margin = margin(0, 10, 5, 12.5, "pt")))
-
 
 # Save plot ---------------------------------------------------------------
 ggsave(
   filename = "day_6_data_day_OECD.png",
   path = normalizePath("R/30DayChartChallenge2024/day_06"),
-  plot = plot_combined,
+  plot = plot,
   device = "png",
   units = "px",
   width = 1440,
