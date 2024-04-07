@@ -35,7 +35,7 @@ default:
     day: 7
     theme: hazards
     category: Distributions
-    source: Determine source
+    source: Ministerio de Agricultura y Pesca, Alimentación y Medio Ambiente
   day_8:
     day: 8
     theme: circular
