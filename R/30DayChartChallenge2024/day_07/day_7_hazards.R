@@ -41,8 +41,8 @@ plot <- hbs[, ggplot(.SD, aes(hectares_burned)) +
               scale_x_continuous(labels = scales::comma) +
               scale_y_continuous(breaks = seq(0, 30, 5), limits = c(0, 30)) +
               labs(
-                title = "Wildfires in SpainHectares burned in Spain",
-                subtitle = "Number of hectares burned",
+                title = "Wildfires in Spain",
+                subtitle = "Number of hectares burned between 1961 and 2023",
                 x = "ha burned",
                 y = "Frequency",
                 caption = caption_text(
@@ -60,7 +60,7 @@ plot <- hbs[, ggplot(.SD, aes(hectares_burned)) +
                        color_text_1     = c2_color_text_1,
                        color_text_2     = c2_color_text_2,
                        color_background = c2_color_background,
-                       title_size       = 28) +
+                       title_size       = 30) +
               theme(plot.margin = margin(25, 5, 5, 5, "pt"))
     ]
 
