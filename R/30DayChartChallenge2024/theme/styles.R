@@ -13,6 +13,17 @@ color_set_2 <- "#f9ad0d"
 color_set_3 <- "#67deb0" 
 
 
+c2_color_background <- "#0e0204"
+c2_color_text_1   <- "#f1f2f4"
+c2_color_text_2   <- "#d2f796"
+c2_color_accent_1   <- "#00f1bc"
+c2_color_accent_2   <- "#fe686c"
+c2_color_set_1 <- "#5c175a"
+c2_color_set_2 <- "#ba3339"
+c2_color_set_3 <- "#636567" 
+
+
+
 #  ** pallettes ------------------------------------------------------------
 gradient <-
   c(color_set_1,
@@ -45,6 +56,14 @@ font_add_google(name = "Inter", family = "inter_regular", regular.wt = 400, bold
 font_add_google(name = "Inter", family = "inter_bold", regular.wt = 700, bold.wt = 900)
 font_add_google(name = "Inter", family = "inter_light", regular.wt = 300, bold.wt = 400)
 font_add_google(name = "Inter", family = "inter_thin", regular.wt = 100, bold.wt = 200)
+
+# Roboto
+font_add_google(name = "Roboto", family = "roboto_regular", regular.wt = 400, bold.wt = 700)
+font_add_google(name = "Roboto", family = "roboto_bold", regular.wt = 700, bold.wt = 900)
+font_add_google(name = "Roboto", family = "roboto_light", regular.wt = 300, bold.wt = 400)
+font_add_google(name = "Roboto", family = "roboto_thin", regular.wt = 100, bold.wt = 200)
+
+# Font Awesome
 font_add(family = "fa-brands", regular = "R/30DayChartChallenge2024/theme/fa-brands-400.ttf")
 font_add(family = "fa-solid", regular = "R/30DayChartChallenge2024/theme/fa-solid-900.ttf")
 showtext_auto()
