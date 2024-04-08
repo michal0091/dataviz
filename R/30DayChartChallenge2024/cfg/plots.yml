@@ -40,7 +40,7 @@ default:
     day: 8
     theme: circular
     category: Distributions
-    source: Determine source
+    source: Portal de datos abiertos del Ayuntamiento de Madrid
   day_9:
     day: 9
     theme: major/minor
