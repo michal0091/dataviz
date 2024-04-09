@@ -45,7 +45,7 @@ default:
     day: 9
     theme: major/minor
     category: Distributions
-    source: Determine source
+    source: Wikipedia
   day_10:
     day: 10
     theme: physical
