@@ -18,7 +18,7 @@ c2_color_text_1   <- "#f1f2f4"
 c2_color_text_2   <- "#d2f796"
 c2_color_accent_1   <- "#00f1bc"
 c2_color_accent_2   <- "#fe686c"
-c2_color_set_1 <- "#5c175a"
+c2_color_set_1 <- "#992696"
 c2_color_set_2 <- "#ba3339"
 c2_color_set_3 <- "#636567" 
 

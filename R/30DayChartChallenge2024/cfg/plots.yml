@@ -50,7 +50,7 @@ default:
     day: 10
     theme: physical
     category: Distributions
-    source: Determine source
+    source: Billboard Database
   day_11:
     day: 11
     theme: mobile-friendly
