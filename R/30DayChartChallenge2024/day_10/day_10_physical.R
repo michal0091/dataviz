@@ -63,7 +63,7 @@ plot <- dt[, ggplot(.SD, aes(date, position)) +
                color_text_1     = c2_color_text_1,
                color_text_2     = c2_color_text_2,
                color_background = c2_color_background,
-               title_size       = 28
+               title_size       = 36
              ) +
              theme(
                plot.margin = margin(25, 10, 0, 15, "pt"),
