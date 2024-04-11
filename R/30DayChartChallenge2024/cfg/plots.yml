@@ -55,7 +55,7 @@ default:
     day: 11
     theme: mobile-friendly
     category: Distributions
-    source: Determine source
+    source: Prepared by the author, based on The Collatz Conjecture
   day_12:
     day: 12
     theme: theme day- Reuters Graphics
