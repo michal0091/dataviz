@@ -108,11 +108,11 @@ theme_my <- function(font_regular = "inter_regular",
   theme_void()  %+replace%
     theme(
       #--- General: text
-      text = element_text(family = "inter_regular", color = color_text_1),
+      text = element_text(family = font_regular, color = color_text_1),
       #--- Plot
       plot.title = element_text(
         size = title_size,
-        family = "inter_bold",
+        family = font_bold,
         color = color_text_1,
         face = "bold",
         hjust = 0,
@@ -122,7 +122,7 @@ theme_my <- function(font_regular = "inter_regular",
       ),
       plot.subtitle = element_text(
         size = round((1 - 0.16 * 1) * title_size),
-        family = "inter_bold",
+        family = font_bold,
         color = color_text_2,
         hjust = 0,
         vjust = 3,
@@ -137,7 +137,7 @@ theme_my <- function(font_regular = "inter_regular",
       ),
       plot.tag = element_text(
         size = round((1 - 0.16 * 2) * title_size),
-        family = "inter_bold",
+        family = font_bold,
         color = color_text_2
       ),
       plot.background = element_rect(fill = color_background, color = NA),
@@ -153,18 +153,18 @@ theme_my <- function(font_regular = "inter_regular",
       #--- Axis
       axis.title = element_text(
         size = round((1 - 0.16 * 3) * title_size),
-        family = "inter_bold",
+        family = font_bold,
         color = color_text_1
       ),
       axis.title.y = element_text(
         size = round((1 - 0.16 * 3.4) * title_size),
-        family = "inter_bold",
+        family = font_bold,
         color = color_text_1,
         angle = 90
       ),
       axis.text = element_text(
         size = 10,
-        family = "inter_light",
+        family = font_light,
         color = color_text_1
       ),
       #--- Strip
@@ -172,19 +172,19 @@ theme_my <- function(font_regular = "inter_regular",
       strip.text = element_text(
         color = color_background,
         size = round((1 - 0.16 * 2) * title_size),
-        family = "inter_bold"
+        family = font_bold
       ),
       strip.placement = "outside",
       strip.clip = "off",
       #--- Legend
       legend.title = element_text(
         size = round((1 - 0.16 * 2) * title_size),
-        family = "inter_bold",
+        family = font_bold,
         color = color_text_1
       ),
       legend.text = element_text(
         size = round((1 - 0.16 * 3) * title_size),
-        family = "inter_regular",
+        family = font_regular,
         color = color_text_1
       ),
       legend.background = element_rect(fill = color_background, color = NA),

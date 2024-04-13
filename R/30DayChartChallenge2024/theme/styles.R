@@ -24,6 +24,15 @@ c2_color_set_3 <- "#636567"
 
 
 
+c3_color_background <- "#23938d"
+c3_color_text_1   <- "#ffdf20"
+c3_color_text_2   <- "#504c3c"
+c3_color_accent_1   <- "#d6762c"
+c3_color_accent_2   <- "#deedf9"
+c3_color_set_1 <- "#869b97"
+c3_color_set_2 <- "#ff9a9b"
+c3_color_set_3 <- "#44bcc6" 
+
 #  ** pallettes ------------------------------------------------------------
 gradient <-
   c(color_set_1,
@@ -62,6 +71,15 @@ font_add_google(name = "Roboto", family = "roboto_regular", regular.wt = 400, bo
 font_add_google(name = "Roboto", family = "roboto_bold", regular.wt = 700, bold.wt = 900)
 font_add_google(name = "Roboto", family = "roboto_light", regular.wt = 300, bold.wt = 400)
 font_add_google(name = "Roboto", family = "roboto_thin", regular.wt = 100, bold.wt = 200)
+
+# Red Hat Mono
+font_add_google(name = "Red Hat Mono", family = "redhat_regular", regular.wt = 500, bold.wt = 600)
+font_add_google(name = "Red Hat Mono", family = "redhat_bold", regular.wt = 700, bold.wt = 900)
+font_add_google(name = "Red Hat Mono", family = "redhat_light", regular.wt = 400, bold.wt = 500)
+
+
+
+
 
 # Font Awesome
 font_add(family = "fa-brands", regular = "R/30DayChartChallenge2024/theme/fa-brands-400.ttf")
