@@ -66,7 +66,8 @@ plot <- dt[,
      labs(
        x = "Week of the month",
        y = NULL,
-       title = "Nitrogen dioxide concentration by day of the week",
+       title = "Nitrogen dioxide concentration in the city of Madrid",
+       subtitle = "Average concentration of NO2 in the air by day of the week",
        fill = paste(unique(nom_abv), unique(ud_med)),
        caption = caption_text(
          source_text = cfg_day_14$source,
