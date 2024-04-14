@@ -24,9 +24,9 @@ c2_color_set_3 <- "#636567"
 
 
 
-c3_color_background <- "#23938d"
-c3_color_text_1   <- "#ffdf20"
-c3_color_text_2   <- "#504c3c"
+c3_color_background <- "#1A7070"
+c3_color_text_1   <- "#FFE44D"
+c3_color_text_2   <- "#DEEDF9"
 c3_color_accent_1   <- "#d6762c"
 c3_color_accent_2   <- "#deedf9"
 c3_color_set_1 <- "#869b97"
