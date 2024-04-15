@@ -58,8 +58,8 @@ plot <- dt_sub[, ggplot(.SD, aes(UNRATE, CPIAUCSL_PC1)) +
                      day_type =  cfg_day_15$category,
                      day_hashtag = cfg_day_15$theme,
                      day = cfg_day_15$day,
-                     color_text_1 = c3_color_text_1,
-                     color_text_2 = c3_color_text_2
+                     color_text_1 = c3_color_text_2,
+                     color_text_2 = c3_color_text_1
                    )
                  ) +
                  theme_my(
@@ -107,3 +107,4 @@ ggsave(
   units = "px",
   dpi = 320
 )
+
