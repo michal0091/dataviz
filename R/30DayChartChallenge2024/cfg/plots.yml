@@ -75,7 +75,7 @@ default:
     day: 15
     theme: historical
     category: Relationships
-    source: Determine source
+    source: U.S. Bureau of Labor Statistics
   day_16:
     day: 16
     theme: weather
