@@ -80,7 +80,7 @@ default:
     day: 16
     theme: weather
     category: Relationships
-    source: Determine source
+    source: Spanish Meteorological Agency (AEMET)
   day_17:
     day: 17
     theme: networks
