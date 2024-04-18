@@ -32,7 +32,7 @@ blood_igraph <- graph_from_data_frame(d = blood$edges,  directed = TRUE)
 data <-
   ggnetwork(blood.igraph,
             layout = layout_in_circle(blood_igraph),
-            arrow.gap = 0.025)
+            arrow.gap = 0.05)
 
 
 # Plot --------------------------------------------------------------------
@@ -101,7 +101,7 @@ ggsave(
   filename = "R/30DayChartChallenge2024/day_17/day_17_networks.png",
   plot = plot,
   width = 1080,
-  height = 1350,
+  height = 1296,
   units = "px",
   dpi = 320
 )
