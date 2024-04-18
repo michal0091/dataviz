@@ -88,7 +88,7 @@ default:
     source: "{ggnetwork}: blood"
   day_18:
     day: 18
-    theme: data day- Asian Development Bank
+    theme: DataDay
     category: Relationships
     source: Asian Development Bank
   day_19:
