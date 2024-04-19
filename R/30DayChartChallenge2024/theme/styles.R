@@ -33,6 +33,25 @@ c3_color_set_1 <- "#869b97"
 c3_color_set_2 <- "#ff9a9b"
 c3_color_set_3 <- "#44bcc6" 
 
+
+
+c4_color_background <- "#cddfe0"
+c4_color_text_1 <- "#0e130b"
+c4_color_text_2 <- "#103c43"
+
+
+c4_color_set_1 <- "#db4726"
+c4_color_set_2 <- "#4170ab"
+c4_color_set_3 <- "#f4c14c"
+c4_color_set_3 <- "#e7c2ba"
+
+c4_color_accent_1 <- "#18984b"
+c4_color_accent_2 <- "#e6c51b"
+c4_color_accent_3 <- "#ed0c29"
+
+
+
+
 #  ** pallettes ------------------------------------------------------------
 gradient <-
   c(color_set_1,
@@ -77,6 +96,11 @@ font_add_google(name = "Red Hat Mono", family = "redhat_regular", regular.wt = 5
 font_add_google(name = "Red Hat Mono", family = "redhat_bold", regular.wt = 700, bold.wt = 900)
 font_add_google(name = "Red Hat Mono", family = "redhat_light", regular.wt = 400, bold.wt = 500)
 
+# Josefin Sans
+font_add_google(name = "Josefin Sans", family = "josefin_regular", regular.wt = 400, bold.wt = 700)
+font_add_google(name = "Josefin Sans", family = "josefin_bold", regular.wt = 700, bold.wt = 900)
+font_add_google(name = "Josefin Sans", family = "josefin_light", regular.wt = 300, bold.wt = 400)
+font_add_google(name = "Josefin Sans", family = "josefin_thin", regular.wt = 100, bold.wt = 200)
 
 
 
