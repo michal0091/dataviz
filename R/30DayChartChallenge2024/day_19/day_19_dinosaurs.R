@@ -127,9 +127,7 @@ plot <- dinos[, ggplot(.SD, aes(date, searches)) +
       linetype = "dotted",
       size = .3, 
       
-    ),
-    
-    
+    )
   )]
 
 

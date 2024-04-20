@@ -100,7 +100,7 @@ default:
     day: 20
     theme: correlation
     category: Timeseries
-    source: Determine source
+    source: INE | Insee
   day_21:
     day: 21
     theme: green energy
