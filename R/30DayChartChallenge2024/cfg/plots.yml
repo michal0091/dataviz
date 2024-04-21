@@ -103,9 +103,9 @@ default:
     source: INE | Insee
   day_21:
     day: 21
-    theme: green energy
+    theme: GreenEnergy
     category: Timeseries
-    source: Determine source
+    source: Eurostat
   day_22:
     day: 22
     theme: mobility
