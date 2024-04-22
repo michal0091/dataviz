@@ -110,7 +110,7 @@ default:
     day: 22
     theme: mobility
     category: Timeseries
-    source: Determine source
+    source: Eurostat
   day_23:
     day: 23
     theme: tiles

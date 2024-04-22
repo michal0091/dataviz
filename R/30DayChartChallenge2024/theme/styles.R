@@ -43,7 +43,7 @@ c4_color_text_2 <- "#103c43"
 c4_color_set_1 <- "#db4726"
 c4_color_set_2 <- "#4170ab"
 c4_color_set_3 <- "#f4c14c"
-c4_color_set_3 <- "#e7c2ba"
+c4_color_set_4 <- "#e7c2ba"
 
 c4_color_accent_1 <- "#18984b"
 c4_color_accent_2 <- "#e6c51b"
