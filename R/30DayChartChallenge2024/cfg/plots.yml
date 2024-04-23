@@ -115,7 +115,7 @@ default:
     day: 23
     theme: tiles
     category: Timeseries
-    source: Determine source
+    source: GHSL Data Package 2023
   day_24:
     day: 24
     theme: theme day- ILO Africa
