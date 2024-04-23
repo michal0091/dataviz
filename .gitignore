@@ -8,9 +8,19 @@
 
 # Plots
 *.png
+*.svg
+*.tiff
 
 # User-specific files
 .Ruserdata
+*.pdf
+*.zip
+*.tif
+*.ovr
+*.rds
+*.cpp
+*.qs
+*.xlsx
 
 # Example code in package build process
 *-Ex.R
