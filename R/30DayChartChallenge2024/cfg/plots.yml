@@ -118,7 +118,7 @@ default:
     source: GHSL Data Package 2023
   day_24:
     day: 24
-    theme: theme day- ILO Africa
+    theme: DataDay
     category: Timeseries
     source: ILO Africa
   day_25:

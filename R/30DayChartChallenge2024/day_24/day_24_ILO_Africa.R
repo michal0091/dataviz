@@ -51,8 +51,8 @@ plot <- dt[, ggplot(.SD, aes(time, obs_value / 100, color = ref_area.label )) +
      scale_color_manual(values = c4_col_set) +
      scale_y_continuous(labels = scales::percent_format(accuracy = 1)) +
      labs(
-       title = " Working poverty rate (percentage of employed living below US$2.15 PPP)",
-       subtitle = "Age (Youth, adults): 15+ years",
+       title = "Working poverty rate in African Regions",
+       subtitle = "% of employed adults and youth (15+) living below US$2.15 PPP",
        caption = caption_text(
          source_text  = cfg_day_24$source,
          day_type     = cfg_day_24$category,
