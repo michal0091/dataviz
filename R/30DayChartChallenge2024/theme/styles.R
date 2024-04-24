@@ -45,6 +45,13 @@ c4_color_set_2 <- "#4170ab"
 c4_color_set_3 <- "#f4c14c"
 c4_color_set_4 <- "#e7c2ba"
 
+c4_col_set <- c(
+  "#387c2b", "#fa6400",
+  "#ffa100", "#949494", 
+  "#0099c4", "#6e3ab7"
+)
+
+
 c4_color_accent_1 <- "#18984b"
 c4_color_accent_2 <- "#e6c51b"
 c4_color_accent_3 <- "#ed0c29"
