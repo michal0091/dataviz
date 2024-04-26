@@ -10,6 +10,7 @@
 *.png
 *.svg
 *.tiff
+*.gif
 
 # User-specific files
 .Ruserdata
@@ -21,6 +22,14 @@
 *.cpp
 *.qs
 *.xlsx
+*.xls
+*.shp
+*.shx
+*.dbf
+*.prj
+*.cpg
+
+
 
 # Example code in package build process
 *-Ex.R

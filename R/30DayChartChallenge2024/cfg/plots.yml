@@ -123,9 +123,9 @@ default:
     source: ILO Africa
   day_25:
     day: 25
-    theme: global change
+    theme: GlobalChange
     category: Uncertainties
-    source: Determine source
+    source: NSIDC
   day_26:
     day: 26
     theme: AI
