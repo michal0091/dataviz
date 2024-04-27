@@ -133,9 +133,9 @@ default:
     source: UK ONS
   day_27:
     day: 27
-    theme: good/bad
+    theme: GoodBad
     category: Uncertainties
-    source: Determine source
+    source: FUNCAS
   day_28:
     day: 28
     theme: trend
