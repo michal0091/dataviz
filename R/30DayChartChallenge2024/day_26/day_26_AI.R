@@ -39,7 +39,7 @@ plot <- ggplot(data = dt, aes(x = Group, y = value, fill = variable)) +
   
   scale_fill_manual(values = c("#00f1bc", "#81d8d0", "#ea899a")) +
   labs(
-    title = "Awareness of AI use",
+    title = "Awareness of AI use in UK",
     subtitle = "Proportion of adults reporting how often they think\nthey can recognise when they are using AI\nGreat Britain, 26 July to 1 October 2023",
     x = NULL,
     y = "Proportion (%)",
@@ -69,6 +69,7 @@ plot <- ggplot(data = dt, aes(x = Group, y = value, fill = variable)) +
   # Avoid overlapping x-axis labels if needed (consider rotating or wrapping)
   coord_flip() + # Flips x and y axes for better readability
   facet_grid(Type ~ ., scales = "free", space = "free") +
+  scale_y_continuous(labels = scales::percent_format()) +
   guides(fill = guide_legend(nrow = 3, theme = theme(legend.byrow = TRUE))) +
   theme_my(
     font_regular = "roboto_regular",
