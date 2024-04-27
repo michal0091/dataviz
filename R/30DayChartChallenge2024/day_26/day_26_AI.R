@@ -39,8 +39,8 @@ plot <- ggplot(data = dt, aes(x = Group, y = value, fill = variable)) +
   
   scale_fill_manual(values = c("#00f1bc", "#81d8d0", "#ea899a")) +
   labs(
-    title = "Proportion of adults reporting how often they think they can recognise when they are using AI",
-    subtitle = " Great Britain, 26 July to 1 October 2023",
+    title = "Awareness of AI use",
+    subtitle = "Proportion of adults reporting how often they think\nthey can recognise when they are using AI\nGreat Britain, 26 July to 1 October 2023",
     x = NULL,
     y = "Proportion (%)",
     fill = "Frequency",
@@ -102,7 +102,7 @@ ggsave(
   "R/30DayChartChallenge2024/day_26/day_26_AI.png",
   plot,
   width = 1920,
-  height = 1920,
+  height = 2560,
   units = "px",
   dpi = 320
 )
