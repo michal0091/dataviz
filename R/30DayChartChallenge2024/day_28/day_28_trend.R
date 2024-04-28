@@ -199,6 +199,12 @@ tit_theme <-
   theme(plot.background = element_rect(color = color_background, fill =
                                          color_background))
 
+
+
+n_visitors <- dt[date >= "2020-01-01" & date <= "2022-01-01", sum(trend_fitted) - sum(trend_original)]
+
+n_visitors <- formatC(as.integer(n_visitors), big.mark = ",")
+
 subtitle_text <- data.table(
   x = 0,
   y = 0,
@@ -208,7 +214,9 @@ subtitle_text <- data.table(
     "the number of foreign visitors and their trend, excluding the",
     "influence of the COVID-19 pandemic. This estimate incorporates",
     "time series models such as ARIMA and a Seasonal-Trend-Loess (STL)",
-    "decomposition model that is used to estimate the underlying trend in arrivals."
+    "decomposition model that is used to estimate the underlying trend in arrivals.",
+    "As a consequence between January 2020 and January 2022 there is an estimated gap of",
+    n_visitors, "arrivals."
   )
 )
 
@@ -222,7 +230,7 @@ subtitle <-
     family = "roboto_regular",
     box.r = unit(0, "pt"),
     width = unit(22, "cm"),
-    size = rel(12),
+    size = rel(11),
     lineheight = .5,
     color = "#1f2937"
   ) +
