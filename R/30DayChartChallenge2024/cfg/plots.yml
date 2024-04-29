@@ -145,7 +145,7 @@ default:
     day: 29
     theme: black_n_white
     category: Uncertainties
-    source: Determine source
+    source: Prepared by the author
   day_30:
     day: 30
     theme: theme day
