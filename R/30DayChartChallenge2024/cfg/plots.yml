@@ -148,6 +148,6 @@ default:
     source: Prepared by the author
   day_30:
     day: 30
-    theme: theme day
+    theme: FiveThirtyEight
     category: Uncertainties
-    source: Determine source
+    source: FiveThirtyEight
