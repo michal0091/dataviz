@@ -121,6 +121,7 @@ plot <-
                         ),
                         family = "lato_bold",
                         hjust = 0,
+                        nudge_x = 1,
                         nudge_y = c(0, .02, 0, 0),
                         size = rel(14),
                         inherit.aes = FALSE
@@ -138,7 +139,7 @@ plot <-
                       scale_fill_manual(values = prim_palette) +
                       labs(
                         title = "2024 Presidential Election Polls",
-                        subtitle = "Top 4 candidates",
+                        subtitle = "Top 4 candidates\nTransparency score ≥ 5",
                         x = NULL,
                         y = NULL,
                         caption = caption_text(
@@ -165,12 +166,14 @@ plot <-
                         plot.margin = margin(25, 55, 5, 15, "pt"),
                         plot.title = element_text(
                           family = "lato_bold",
+                          face = "bold",
                           color = color_text_1,
                           size = 52
                         ),
                         plot.subtitle = element_text(
                           family = "lato_bold",
                           color = color_text_1,
+                          lineheight = .3,
                           size = 42
                         ),
                         plot.caption = element_textbox_simple(
@@ -178,7 +181,7 @@ plot <-
                           lineheight = .5,
                           fill = "#5b5e5f",
                           padding = margin(10, 10, 10, 15, "pt"),
-                          margin = margin(10,-55,-6,-15, "pt")
+                          margin = margin(10, -55, -6, -15, "pt")
                         ),
                         plot.caption.position = "plot"
                       ) +
