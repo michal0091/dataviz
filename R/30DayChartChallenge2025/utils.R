@@ -1,0 +1,78 @@
+# --- utils.R ---
+
+library(glue)
+library(ggtext)
+library(sysfonts)
+library(showtext)
+library(ggplot2)
+
+font_add(family = "fa-brands", regular = "fonts/fa-brands-400.ttf")
+font_add(family = "fa-solid", regular = "fonts/fa-solid-900.ttf")
+
+showtext_auto()
+
+#' Genera el texto del pie de foto (caption) para los gráficos del #30DayChartChallenge
+#'
+#' Utiliza la información del archivo de configuración YAML y los detalles específicos del día.
+#' Requiere que ggtext esté instalado y una fuente de iconos (ej. Font Awesome) configurada con showtext.
+#'
+#' @param day El número del día (1-30).
+#' @param source_text El texto que describe la fuente de los datos para ese día.
+#' @param config El objeto de configuración cargado desde el archivo YAML.
+#' @param color_text_author Color para el autor y hashtags principales (predeterminado: azul).
+#' @param color_text_source Color para la fuente y nombres de usuario (predeterminado: negro/gris).
+#' @param icon_font_family Nombre de la familia de la fuente de iconos (predeterminado: 'Font Awesome 6 Brands').
+#'
+#' @return Una cadena de texto formateada en HTML/Markdown lista para usar con ggtext::element_markdown().
+#'
+generate_caption <- function(day,
+  source_text,
+  config,
+  color_text_author = "#286e8c", # Azul de tu paleta semana 1
+  color_text_source = "#373737", # Gris oscuro de tu paleta semana 1
+  icon_font_family = "fa-brands") { # Asegúrate de que este nombre coincide con cómo lo carga showtext
+
+# Extraer información por defecto del config
+defaults <- config$defaults
+author <- defaults$author_name
+social_media <- defaults$social_media
+main_hashtag <- defaults$main_hashtag
+
+# Extraer información del día específico del config
+daily_info <- config$daily_prompts[[day]]
+if (is.null(daily_info)) {
+stop(paste("No se encontró información para el día", day, "en el archivo de configuración."))
+}
+theme_name <- daily_info$theme
+day_hashtag <- paste0("#Day", day) # Hashtag #DayN
+
+# Construir la parte de redes sociales dinámicamente
+social_parts <- character() # Vector para guardar cada parte social (icono + usuario)
+
+# GitHub
+if (!is.null(social_media$github_username) && !is.null(social_media$github_icon)) {
+social_parts <- c(social_parts, glue("<span style='font-family:{icon_font_family}; color: {color_text_author};'>{social_media$github_icon};</span><span style='color:{color_text_source};'> {social_media$github_username}</span>   "))
+}
+# Bluesky
+if (!is.null(social_media$bluesky_username) && !is.null(social_media$bluesky_icon)) {
+social_parts <- c(social_parts, glue("<span style='font-family:{icon_font_family}; color: {color_text_author};'>{social_media$bluesky_icon};</span><span style='color:{color_text_source};'> {social_media$bluesky_username}</span>   "))
+}
+# LinkedIn
+if (!is.null(social_media$linkedin_username) && !is.null(social_media$linkedin_icon)) {
+social_parts <- c(social_parts, glue("<span style='font-family:{icon_font_family}; color: {color_text_author};'>{social_media$linkedin_icon};</span><span style='color:{color_text_source};'> {social_media$linkedin_username}</span>   "))
+}
+# Añadir otras redes si las incluyes en el YAML (ej. Mastodon, Twitter como tenías antes)
+
+# Unir las partes sociales con un separador (ej. un espacio o un punto)
+social_string <- paste(social_parts, collapse = "  ") # Dos espacios como separador
+
+# Construir el caption final usando glue
+caption <- glue::glue(
+"<span style='color: {color_text_author};'><strong>Viz:</strong></span> <span style='color: {color_text_source};'>{author}</span>   |    ",
+"<span style='color: {color_text_author};'><strong>Source:</strong></span> <span style='color: {color_text_source};'>{source_text}</span><br>",
+"{social_string}<br>",
+"<span style='color: {color_text_author};'><strong>{main_hashtag}</strong></span>   |   <span style='color: {color_text_author};'>{day_hashtag}: {theme_name}</span>"
+)
+
+return(caption)
+}
