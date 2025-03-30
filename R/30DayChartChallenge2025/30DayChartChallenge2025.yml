@@ -1,0 +1,229 @@
+# -----------------------------------------------------
+# Archivo de Configuración para #30DayChartChallenge 2025
+# -----------------------------------------------------
+
+# Información por defecto/global
+defaults:
+  author_name: "Michal Kinel"
+  social_media:
+    github_icon: "&#xf113"
+    github_username: "michal0091"
+    bluesky_icon: "&#xe671"
+    bluesky_username: "mikipe.bsky.social"
+    linkedin_icon: "&#xf08c"
+    linkedin_username: "michal-kinel"
+  main_hashtag: "#30DayChartChallenge"
+  year: 2025
+
+# Prompts diarios (Abril 2025)
+daily_prompts:
+  1:
+    day: 1
+    category: "Comparisons"
+    theme: "Fractions"
+    hashtag: "#Day1"
+    data_source_url: null
+    notes: ""
+  2:
+    day: 2
+    category: "Comparisons"
+    theme: "Slope"
+    hashtag: "#Day2"
+    data_source_url: null
+    notes: ""
+  3:
+    day: 3
+    category: "Comparisons"
+    theme: "Circular"
+    hashtag: "#Day3"
+    data_source_url: null
+    notes: ""
+  4:
+    day: 4
+    category: "Comparisons"
+    theme: "Big or Small"
+    hashtag: "#Day4"
+    data_source_url: null
+    notes: ""
+  5:
+    day: 5
+    category: "Comparisons"
+    theme: "Ranking"
+    hashtag: "#Day5"
+    data_source_url: null
+    notes: ""
+  6:
+    day: 6
+    category: "Comparisons"
+    theme: "Florence Nightingale"
+    hashtag: "#Day6"
+    data_source_url: null
+    notes: "Theme day"
+  7:
+    day: 7
+    category: "Distributions"
+    theme: "Outliers"
+    hashtag: "#Day7"
+    data_source_url: null
+    notes: ""
+  8:
+    day: 8
+    category: "Distributions"
+    theme: "Histogram"
+    hashtag: "#Day8"
+    data_source_url: null
+    notes: ""
+  9:
+    day: 9
+    category: "Distributions"
+    theme: "Diverging"
+    hashtag: "#Day9"
+    data_source_url: null
+    notes: ""
+  10:
+    day: 10
+    category: "Distributions"
+    theme: "Multi-modal"
+    hashtag: "#Day10"
+    data_source_url: null
+    notes: ""
+  11:
+    day: 11
+    category: "Distributions"
+    theme: "Stripes"
+    hashtag: "#Day11"
+    data_source_url: null
+    notes: ""
+  12:
+    day: 12
+    category: "Distributions"
+    theme: "Data.gov"
+    hashtag: "#Day12"
+    data_source_url: "https://www.data.gov/" # Portal principal
+    notes: "Data day"
+  13:
+    day: 13
+    category: "Relationships"
+    theme: "Clusters"
+    hashtag: "#Day13"
+    data_source_url: null
+    notes: ""
+  14:
+    day: 14
+    category: "Relationships"
+    theme: "Kinship"
+    hashtag: "#Day14"
+    data_source_url: null
+    notes: ""
+  15:
+    day: 15
+    category: "Relationships"
+    theme: "Complicated"
+    hashtag: "#Day15"
+    data_source_url: null
+    notes: ""
+  16:
+    day: 16
+    category: "Relationships"
+    theme: "Negative"
+    hashtag: "#Day16"
+    data_source_url: null
+    notes: ""
+  17:
+    day: 17
+    category: "Relationships"
+    theme: "Birds"
+    hashtag: "#Day17"
+    data_source_url: null # Posibles fuentes: eBird, GBIF
+    notes: ""
+  18:
+    day: 18
+    category: "Relationships"
+    theme: "El País"
+    hashtag: "#Day18"
+    data_source_url: null # Buscar datos en El País o relacionados
+    notes: "Theme day"
+  19:
+    day: 19
+    category: "Time Series"
+    theme: "Smooth"
+    hashtag: "#Day19"
+    data_source_url: null
+    notes: ""
+  20:
+    day: 20
+    category: "Time Series"
+    theme: "Urbanization"
+    hashtag: "#Day20"
+    data_source_url: null # Posibles fuentes: ONU, Banco Mundial, INE
+    notes: ""
+  21:
+    day: 21
+    category: "Time Series"
+    theme: "Fossils"
+    hashtag: "#Day21"
+    data_source_url: null
+    notes: ""
+  22:
+    day: 22
+    category: "Time Series"
+    theme: "Stars"
+    hashtag: "#Day22"
+    data_source_url: null # Posibles fuentes: NASA, ESA
+    notes: ""
+  23:
+    day: 23
+    category: "Time Series"
+    theme: "Log Scale"
+    hashtag: "#Day23"
+    data_source_url: null
+    notes: ""
+  24:
+    day: 24
+    category: "Time Series"
+    theme: "World Health Organization"
+    hashtag: "#Day24"
+    data_source_url: "https://www.who.int/data/gho" # Portal de datos GHO de la OMS
+    notes: "Data day"
+  25:
+    day: 25
+    category: "Uncertainties"
+    theme: "Risk"
+    hashtag: "#Day25"
+    data_source_url: null
+    notes: ""
+  26:
+    day: 26
+    category: "Uncertainties"
+    theme: "Monochrome"
+    hashtag: "#Day26"
+    data_source_url: null
+    notes: ""
+  27:
+    day: 27
+    category: "Uncertainties"
+    theme: "Noise"
+    hashtag: "#Day27"
+    data_source_url: null
+    notes: ""
+  28:
+    day: 28
+    category: "Uncertainties"
+    theme: "Inclusion"
+    hashtag: "#Day28"
+    data_source_url: null
+    notes: ""
+  29:
+    day: 29
+    category: "Uncertainties"
+    theme: "Extraterrestrial"
+    hashtag: "#Day29"
+    data_source_url: null
+    notes: ""
+  30:
+    day: 30
+    category: "Uncertainties"
+    theme: "National Geographic"
+    hashtag: "#Day30"
+    data_source_url: null # Buscar datos o inspiración en NatGeo
+    notes: "Theme day"
