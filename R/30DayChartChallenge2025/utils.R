@@ -68,11 +68,47 @@ social_string <- paste(social_parts, collapse = "  ") # Dos espacios como separa
 
 # Construir el caption final usando glue
 caption <- glue::glue(
-"<span style='color: {color_text_author};'><strong>Viz:</strong></span> <span style='color: {color_text_source};'>{author}</span>   |    ",
-"<span style='color: {color_text_author};'><strong>Source:</strong></span> <span style='color: {color_text_source};'>{source_text}</span><br>",
+"<span style='color: {color_text_author};'><strong>Viz:</strong></span> <span style='color: {color_text_source};'>{author}     </span> | ",
+"<span style='color: {color_text_author};'><strong>     Source:</strong></span> <span style='color: {color_text_source};'>{source_text}</span><br>",
 "{social_string}<br>",
-"<span style='color: {color_text_author};'><strong>{main_hashtag}</strong></span>   |   <span style='color: {color_text_author};'>{day_hashtag}: {theme_name}</span>"
+"<span style='color: {color_text_author};'><strong>{main_hashtag}          </strong></span> | <span style='color: {color_text_author};'>     {day_hashtag}: {theme_name}</span>"
 )
 
 return(caption)
+}
+
+# --- Función para Configurar Fuentes ---
+
+#' Carga las fuentes necesarias para el #30DayChartChallenge usando showtext
+#'
+#' Carga Roboto, Baumans desde Google Fonts y Font Awesome Brands desde un archivo local.
+#' Activa showtext para su uso en gráficos.
+#'
+#' @param fa_brands_path Ruta al archivo .ttf o .otf de Font Awesome Brands.
+#'                       Por defecto, busca en "./fonts/fa-brands-400.ttf" relativo
+#'                       al directorio de trabajo actual. ¡AJUSTA SI ES NECESARIO!
+#'
+setup_fonts <- function(fa_brands_path = "fonts/fa-brands-400.ttf") {
+
+  # Cargar fuentes de Google Fonts
+  font_add_google("Roboto", "Roboto")
+  font_add_google("Baumans", "Baumans")
+
+  # Cargar fuente de iconos local (Font Awesome Brands)
+  # ¡¡VERIFICA QUE LA RUTA 'fa_brands_path' ES CORRECTA!!
+  # Puedes pasar una ruta absoluta si la relativa da problemas.
+  if (file.exists(fa_brands_path)) {
+    font_add(family = "fa-brands", regular = fa_brands_path)
+  } else {
+    warning(paste("Archivo de fuente Font Awesome Brands no encontrado en:",
+                  normalizePath(fa_brands_path, mustWork = FALSE),
+                  "\nLos iconos no se mostrarán correctamente."))
+  }
+
+  # Activar showtext para que ggplot use estas fuentes
+  showtext_auto()
+
+  # Opcional: Imprimir familias cargadas para verificar
+  # print("Familias de fuentes disponibles para showtext:")
+  # print(font_families())
 }
