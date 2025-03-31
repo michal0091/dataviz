@@ -83,7 +83,7 @@ scale_color_challenge <- function(palette = "week1", # Cambiado default
   pal <- challenge_pal(palette = palette, reverse = reverse) # Obtener la función interpoladora
 
   if (discrete) {
-    ggplot2::discrete_scale(aesthetics = "colour", scale_name = palette, palette = pal, ...)
+    ggplot2::discrete_scale(aesthetics = "colour", palette = pal, ...)
   } else {
     ggplot2::scale_color_gradientn(colours = pal(256), ...) # Usar paleta continua
   }
@@ -102,7 +102,7 @@ scale_fill_challenge <- function(palette = "week1", # Cambiado default
   pal <- challenge_pal(palette = palette, reverse = reverse) # Obtener la función interpoladora
 
   if (discrete) {
-    ggplot2::discrete_scale(aesthetics = "fill", scale_name = palette, palette = pal, ...)
+    ggplot2::discrete_scale(aesthetics = "fill", palette = pal, ...)
   } else {
     ggplot2::scale_fill_gradientn(colours = pal(256), ...) # Usar paleta continua
   }
@@ -143,38 +143,42 @@ theme_week1 <- function(base_size = 11, base_family = "Roboto") {
       # --- Textos ---
       text = element_text(color = text_col_main, family = base_family), # Texto general
       plot.title = element_text(family = "Baumans", # Fuente específica para título
-                                size = rel(1.6), # Tamaño relativo al base_size
-                                hjust = 0.5, # Centrado horizontal
-                                margin = margin(b = 10), # Margen inferior
+                                size = rel(3.2), # Tamaño relativo al base_size
+                                hjust = 0, # Centrado horizontal
+                                margin = margin(5, 10, 10, 0), # Margen inferior
+                                lineheight = 0.3, # Ajustal altura de linea
                                 color = text_col_main),
       plot.subtitle = element_text(family = base_family, # Fuente Roboto
-                                   size = rel(1.1),
-                                   hjust = 0.5,
-                                   margin = margin(b = 15), # Margen inferior
+                                   size = rel(2),
+                                   hjust =0,
+                                   margin = margin(0, 15, 15, 0), # Margen inferior
+                                   lineheight = 0.3, # Ajustal altura de linea
                                    color = text_col_main),
-      axis.text = element_text(color = text_col_main, size = rel(0.8)), # Texto de ejes
-      axis.title = element_text(color = text_col_main, size = rel(1.0), hjust = 0.5), # Títulos de ejes
+      axis.text = element_text(color = text_col_main, size = rel(1.4)), # Texto de ejes
+      axis.title = element_text(color = text_col_main, size = rel(1.6), hjust = 0.5), # Títulos de ejes
 
       # --- Leyenda ---
       legend.position = "top", # Posición de la leyenda
       legend.background = element_rect(fill = background_col, color = NA), # Fondo transparente
       legend.box.background = element_rect(fill = background_col, color = NA), # Caja transparente
       legend.key = element_rect(fill = background_col, color = NA), # Claves transparentes
-      legend.text = element_text(color = text_col_main, size = rel(0.8)),
-      legend.title = element_text(color = text_col_main, size = rel(0.9), face = "bold"),
+      legend.key.size = unit(0.8, 'lines'), # Controla el tamaño de la clave 
+      legend.text = element_text(color = text_col_main, size = rel(1.4)),
+      legend.title = element_text(color = text_col_main, size = rel(1.6), face = "bold"),
 
       # --- Caption ---
       plot.caption.position = "plot", # Posición relativa al gráfico completo
       plot.caption = element_markdown( # ¡IMPORTANTE! Usar element_markdown
                                        color = text_col_main, # Color base (puede ser sobreescrito por HTML)
-                                       size = rel(0.75),
-                                       hjust = 0.5, # Centrado horizontal (0=izq, 1=der)
+                                       size = rel(1.6),
+                                       hjust = 0.5, # Centrado horizontal 
                                        halign = 0.5, # Alineación horizontal del bloque de texto
-                                       margin = margin(t = 15, b = 5) # Margen superior e inferior
+                                       lineheight = 0.5, # Ajustal altura de lines
+                                       margin = margin(t = 10, b = 2) # Margen superior e inferior
                                       ),
 
       # --- Márgenes y Bordes ---
-      plot.margin = margin(15, 15, 10, 15), # Márgenes generales del gráfico (arriba, der, abj, izq)
+      plot.margin = margin(15, 15, 15, 15), # Márgenes generales del gráfico (arriba, der, abj, izq)
       panel.border = element_blank(), # Sin borde del panel
       axis.ticks = element_blank(), # Sin marcas de los ejes
 
@@ -183,14 +187,3 @@ theme_week1 <- function(base_size = 11, base_family = "Roboto") {
     )
 }
 
-
-
-ggplot(mpg, aes(displ, hwy, colour = class)) +
-  geom_point(size = 2) +
-  labs(
-    title = "Title of the plot\nTitle of the plot",
-    subtitle = "Subtitle of the plot\nSubtitle of the plot",
-    caption = "social_caption",
-    tag = "Tag tex",
-  ) +
-    theme_week1() 
