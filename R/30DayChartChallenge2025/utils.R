@@ -47,25 +47,32 @@ theme_name <- daily_info$theme
 day_hashtag <- paste0("#Day", day) # Hashtag #DayN
 
 # Construir la parte de redes sociales dinámicamente
-social_parts <- character() # Vector para guardar cada parte social (icono + usuario)
+social_html_parts <- character()
+build_social_part <- function(icon_code_html, username) {
+  glue(" <span style='font-family:\"{icon_font_family}\"; color: {color_text_author};'>{icon_code_html};</span><span style='color: {color_text_source}'> {username}</span>     ")
+}
+  
+build_mastodon_part <- function(icon_code_html, username, server) {
+  glue("<span style='font-family:\"{icon_font_family}\"; color: {color_text_author};'>{icon_code_html};</span><span style='color: {color_text_source}'> {username}@</span><span style='color: {color_text_source}'>{server}</span>     ")
+  }
 
-# GitHub
 if (!is.null(social_media$github_username) && !is.null(social_media$github_icon)) {
-social_parts <- c(social_parts, glue("<span style='font-family:{icon_font_family}; color: {color_text_author};'>{social_media$github_icon};</span><span style='color:{color_text_source};'> {social_media$github_username}</span>   "))
+  social_html_parts <- c(social_html_parts, build_social_part(social_media$github_icon, social_media$github_username))
 }
-# Bluesky
-if (!is.null(social_media$bluesky_username) && !is.null(social_media$bluesky_icon)) {
-social_parts <- c(social_parts, glue("<span style='font-family:{icon_font_family}; color: {color_text_author};'>{social_media$bluesky_icon};</span><span style='color:{color_text_source};'> {social_media$bluesky_username}</span>   "))
-}
-# LinkedIn
+
 if (!is.null(social_media$linkedin_username) && !is.null(social_media$linkedin_icon)) {
-social_parts <- c(social_parts, glue("<span style='font-family:{icon_font_family}; color: {color_text_author};'>{social_media$linkedin_icon};</span><span style='color:{color_text_source};'> {social_media$linkedin_username}</span>   "))
+  social_html_parts <- c(social_html_parts, build_social_part(social_media$linkedin_icon, social_media$linkedin_username))
 }
-# Añadir otras redes si las incluyes en el YAML (ej. Mastodon, Twitter como tenías antes)
 
-# Unir las partes sociales con un separador (ej. un espacio o un punto)
-social_string <- paste(social_parts, collapse = "  ") # Dos espacios como separador
+if (!is.null(social_media$mastodon_username) && !is.null(social_media$mastodon_icon) && !is.null(social_media$mastodon_server)) {
+   social_html_parts <- c(social_html_parts, build_mastodon_part(social_media$mastodon_icon, social_media$mastodon_username, social_media$mastodon_server))
+}
 
+
+# Separador entre redes sociales: varios espacios sin ruptura
+social_string <- paste(social_html_parts, collapse = "&nbsp;&nbsp;&nbsp;") 
+
+  
 # Construir el caption final usando glue
 caption <- glue::glue(
 "<span style='color: {color_text_author};'><strong>Viz:</strong></span> <span style='color: {color_text_source};'>{author}     </span> | ",

@@ -8,8 +8,9 @@ defaults:
   social_media:
     github_icon: "&#xf113"
     github_username: "michal0091"
-    bluesky_icon: "&#xe671"
-    bluesky_username: "mikipe.bsky.social"
+    mastodon_icon: "&#xf4f6"
+    mastodon_username: "miki_peltzer"
+    mastodon_server: "techhub.social"
     linkedin_icon: "&#xf08c"
     linkedin_username: "michal-kinel"
   main_hashtag: "#30DayChartChallenge"
