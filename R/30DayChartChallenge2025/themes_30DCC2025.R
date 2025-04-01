@@ -125,9 +125,9 @@ scale_fill_challenge <- function(palette = "week1", # Cambiado default
 theme_week1 <- function(base_size = 11, base_family = "Roboto") {
 
   # Colores definidos para la semana 1
-  background_col <- "#b4a08c"
+  background_col <- "#c8baab"
   text_col_main <- "#000000" # Fuente principal negra
-  grid_col <- "#9e8a7a" # Color sutil para la rejilla, derivado del fondo
+  grid_col <- "#b4a08c" # Color sutil para la rejilla, derivado del fondo
 
   # Empezar con theme_minimal y la fuente base Roboto
   theme_minimal(base_size = base_size, base_family = base_family) %+replace%
