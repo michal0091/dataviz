@@ -56,8 +56,8 @@ dt_distritos_ranking[, Tipo := factor(Tipo, levels = c("Superior a la Media", "I
 
 # Definir textos
 plot_title <- "Ranking de Distritos de Madrid"
-plot_subtitle <- paste0("Diferencia del precio medio (€/m²) de cada distrito\nrespecto a la media de Madrid\n(Media Madrid = ",
-                       number(precio_medio_madrid, accuracy=1, big.mark=".", decimal.mark=","), " €/m² | Datos: Idealista, Mar 2025)")
+plot_subtitle <- paste0("Diferencia del precio medio (€/m²) de cada distrito\nrespecto a la media de Madrid (Media Madrid = ",
+                       number(precio_medio_madrid, accuracy=1, big.mark=".", decimal.mark=","), " €/m²)")
 
 # Generar caption
 caption_day5 <- generate_caption(
@@ -108,7 +108,7 @@ gg_day5 <- dt_distritos_ranking[,
   theme(
     panel.grid.major.y = element_blank(), # Sin líneas grid horizontales
     panel.grid.minor.x = element_blank(), # Sin grids menores en X
-    axis.text.y = element_text(size = rel(0.85)),
+    axis.text.y = element_text(size = rel(1)),
     plot.margin = margin(15, 30, 10, 15)
   )]
 
