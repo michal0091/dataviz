@@ -7,7 +7,7 @@ Puedes seguir el reto oficial aquí: [Official #30DayChartChallenge GitHub](http
 ---
 
 ### Day 1: Comparisons - Fractions
-<a data-flickr-embed="true" href="https://www.flickr.com/photos/200169402@N03/54424879969/in/dateposted-public/" title="day_1_fractions_tenencia"><img src="https://live.staticflickr.com/65535/54424879969_c7334e0f0f_c.jpg" width="800" height="800" alt="day_1_fractions_tenencia"/></a>
+<a data-flickr-embed="true" href="https://www.flickr.com/photos/200169402@N03/54433939425/in/dateposted-public/" title="day_1_fractions_tenencia"><img src="https://live.staticflickr.com/65535/54433939425_4e37757f47_c.jpg" width="800" height="800" alt="day_1_fractions_tenencia"/></a>
 
 [Código](30DayChartChallenge2025/category_1_comparisons/day_1_fractions)
 
