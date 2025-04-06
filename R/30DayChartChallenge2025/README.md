@@ -14,27 +14,37 @@ Puedes seguir el reto oficial aquí: [Official #30DayChartChallenge GitHub](http
 ---
 
 ### Day 2: Comparisons - Slope
+<a data-flickr-embed="true" href="https://www.flickr.com/photos/200169402@N03/54433807778/in/dateposted-public/" title="day_2_slope_ipv_vs_salario_HM"><img src="https://live.staticflickr.com/65535/54433807778_2e64675662_c.jpg" width="800" height="800" alt="day_2_slope_ipv_vs_salario_HM"/></a>
 
+[Código](30DayChartChallenge2025/category_1_comparisons/day_2_slope)
 
 ---
 
 ### Day 3: Comparisons - Circular
+<a data-flickr-embed="true" href="https://www.flickr.com/photos/200169402@N03/54433932260/in/dateposted-public/" title="day_3_circular_radar_ggradar"><img src="https://live.staticflickr.com/65535/54433932260_cfcaf27e3c_c.jpg" width="800" height="800" alt="day_3_circular_radar_ggradar"/></a>
 
+[Código](30DayChartChallenge2025/category_1_comparisons/day_3_circular)
 
 ---
 
 ### Day 4: Comparisons - Big or Small
+<a data-flickr-embed="true" href="https://www.flickr.com/photos/200169402@N03/54432704882/in/dateposted-public/" title="day_4_big_small_madrid_mapa"><img src="https://live.staticflickr.com/65535/54432704882_aa9c1c9e2f_c.jpg" width="800" height="800" alt="day_4_big_small_madrid_mapa"/></a>
 
+[Código](30DayChartChallenge2025/category_1_comparisons/day_4_big_or_small)
 
 ---
 
 ### Day 5: Comparisons - Ranking
+<a data-flickr-embed="true" href="https://www.flickr.com/photos/200169402@N03/54433749509/in/dateposted-public/" title="day_5_ranking_madrid_diverging_lollipop"><img src="https://live.staticflickr.com/65535/54433749509_11aede9a57_c.jpg" width="800" height="800" alt="day_5_ranking_madrid_diverging_lollipop"/></a>
 
+[Código](30DayChartChallenge2025/category_1_comparisons/day_5_ranking)
 
 ---
 
 ### Day 6: Comparisons - Florence Nightingale (theme day)
+<a data-flickr-embed="true" href="https://www.flickr.com/photos/200169402@N03/54433559371/in/dateposted-public/" title="day_6_nightingale_sales_patchwork"><img src="https://live.staticflickr.com/65535/54433559371_13f8a7067d_c.jpg" width="800" height="800" alt="day_6_nightingale_sales_patchwork"/></a>
 
+[Código](30DayChartChallenge2025/category_1_comparisons/day_6_florence_nightingale)
 
 ---
 
