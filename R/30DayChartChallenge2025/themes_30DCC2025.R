@@ -40,6 +40,7 @@ gradient_blue <- c("#FFFFFF", "#324b64")
 #    Agrupa todas las paletas definidas arriba con un nombre clave.
 challenge_palettes <- list(
   `week1`    = paleta_week1,
+  `week2_tech` = paleta_week2_tech, 
   `gradient` = generic_gradient,
   `gradient_blue` = gradient_blue
   # `week2` = paleta_week2
@@ -195,3 +196,65 @@ theme_week1 <- function(base_size = 11, base_family = "Roboto") {
     )
 }
 
+# --- Función de Tema para Semana 2 (Tech Oscuro) ---
+
+#' Tema ggplot2 estilo "Tech" (oscuro) para Semana 2 (Distributions)
+#'
+#' @param base_size Tamaño base fuente (default: 11).
+#' @param base_family Familia fuente base (default: 'Roboto Mono').
+#'
+theme_week2_tech <- function(base_size = 11, base_family = "Roboto Mono") {
+
+  # Colores base del tema oscuro
+  bg_col <- "#202124"        # Fondo plot (gris muy oscuro Google)
+  panel_col <- "#303134"     # Fondo panel (ligeramente más claro)
+  text_col <- "#E8EAED"      # Texto principal (gris claro Google)
+  grid_col <- "#5F6368"      # Rejillas (gris medio Google)
+  title_font_family <- "Exo 2" # Fuente para títulos
+
+  theme_minimal(base_size = base_size, base_family = base_family) %+replace%
+    theme(
+      # --- Aspect Ratio Cuadrado ---
+      aspect.ratio = 1,
+
+      # --- Fondos ---
+      plot.background = element_rect(fill = bg_col, color = NA),
+      panel.background = element_rect(fill = panel_col, color = NA),
+
+      # --- Rejilla ---
+      panel.grid.major = element_line(color = grid_col, linewidth = 0.25), # Más fina
+      panel.grid.minor = element_blank(),
+
+      # --- Textos ---
+      text = element_text(color = text_col, family = base_family),
+      plot.title = element_text(family = title_font_family, size = rel(1.6), hjust = 0.5,
+                                margin = margin(b = 10), color = text_col, face="bold"),
+      plot.subtitle = element_text(family = base_family, size = rel(1.1), hjust = 0.5,
+                                   margin = margin(b = 15), color = text_col),
+      axis.text = element_text(color = text_col, size = rel(0.8)),
+      axis.title = element_text(color = text_col, size = rel(1.0), hjust = 0.5),
+
+      # --- Leyenda ---
+      legend.position = "top",
+      legend.background = element_rect(fill = bg_col, color = NA),
+      legend.box.background = element_rect(fill = bg_col, color = NA),
+      legend.key = element_rect(fill = panel_col, color = NA), # Fondo clave como panel
+      legend.text = element_text(color = text_col, size = rel(0.8)),
+      legend.title = element_text(color = text_col, size = rel(0.9), face = "bold"),
+      legend.key.size = unit(0.5, 'cm'), # Mantenemos ajuste anterior
+
+      # --- Caption ---
+      plot.caption.position = "plot",
+      plot.caption = element_markdown(color = text_col, size = rel(0.9), hjust = 0, # Alineado izquierda
+                                      halign = 0, margin = margin(t = 15, b = 5),
+                                      lineheight = 1.0),
+
+      # --- Márgenes y Bordes ---
+      plot.margin = margin(15, 15, 10, 15),
+      panel.border = element_blank(),
+      axis.line = element_line(color = grid_col, linewidth = 0.5), # Línea de ejes sutil
+      axis.ticks = element_blank(),
+
+      complete = TRUE
+    )
+}
