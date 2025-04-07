@@ -18,6 +18,14 @@ paleta_semana1 <- c("#324b64", "#373737", "#b4783c", "#963c3c", "#286e8c")
 
 # Paleta para la Semana 1 (Categoría: Comparisons)
 paleta_week1 <- c("#324b64", "#373737", "#b4783c", "#963c3c", "#286e8c")
+paleta_week2_tech <- c(
+  "#4FC3F7", # Cyan claro
+  "#81C784", # Verde claro
+  "#F06292", # Rosa
+  "#FFD54F", # Amarillo/Ámbar
+  "#BA68C8"  # Púrpura claro
+)
+
 
 # Paleta de gradiente genérico  
 generic_gradient <- c("#f7fcfd", "#e0ecf4", "#bfd3e6", "#9ebcda", "#8c96c6", "#8c6bb1", "#88419d", "#6e016b")
