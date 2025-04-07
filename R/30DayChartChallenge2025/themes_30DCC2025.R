@@ -227,32 +227,32 @@ theme_week2_tech <- function(base_size = 11, base_family = "Roboto Mono") {
 
       # --- Textos ---
       text = element_text(color = text_col, family = base_family),
-      plot.title = element_text(family = title_font_family, size = rel(1.6), hjust = 0.5,
+      plot.title = element_text(family = title_font_family, size = rel(2.2), hjust = 0.5,
                                 margin = margin(b = 10), color = text_col, face="bold"),
-      plot.subtitle = element_text(family = base_family, size = rel(1.1), hjust = 0.5,
+      plot.subtitle = element_text(family = base_family, size = rel(1.4), hjust = 0.5,
                                    margin = margin(b = 15), color = text_col),
-      axis.text = element_text(color = text_col, size = rel(0.8)),
-      axis.title = element_text(color = text_col, size = rel(1.0), hjust = 0.5),
+      axis.text = element_text(color = text_col, size = rel(1.2)),
+      axis.title = element_text(color = text_col, size = rel(1.4), hjust = 0.5),
 
       # --- Leyenda ---
       legend.position = "top",
       legend.background = element_rect(fill = bg_col, color = NA),
       legend.box.background = element_rect(fill = bg_col, color = NA),
       legend.key = element_rect(fill = panel_col, color = NA), # Fondo clave como panel
-      legend.text = element_text(color = text_col, size = rel(0.8)),
-      legend.title = element_text(color = text_col, size = rel(0.9), face = "bold"),
+      legend.text = element_text(color = text_col, size = rel(1.2)),
+      legend.title = element_text(color = text_col, size = rel(1.4), face = "bold"),
       legend.key.size = unit(0.5, 'cm'), # Mantenemos ajuste anterior
 
       # --- Caption ---
       plot.caption.position = "plot",
-      plot.caption = element_markdown(color = text_col, size = rel(0.9), hjust = 0, # Alineado izquierda
+      plot.caption = element_markdown(color = text_col, size = rel(1.0), hjust = 0, # Alineado izquierda
                                       halign = 0, margin = margin(t = 15, b = 5),
                                       lineheight = 1.0),
 
       # --- Márgenes y Bordes ---
-      plot.margin = margin(15, 15, 10, 15),
+      plot.margin = margin(15, 15, 10, 10),
       panel.border = element_blank(),
-      axis.line = element_line(color = grid_col, linewidth = 0.5), # Línea de ejes sutil
+      axis.line = element_line(color = grid_col, linewidth = 0.6), # Línea de ejes sutil
       axis.ticks = element_blank(),
 
       complete = TRUE
