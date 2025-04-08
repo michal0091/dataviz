@@ -193,4 +193,3 @@ ggsave(
 message("Gráfico del Día 9 (Diverging TSLA vs BYD) guardado en: ", normalizePath(output_file, mustWork = FALSE))
 
 # --- Fin day_9.R ---
-lubridate::make_difftime(max(dt_plot$Date) - min(dt_plot$Date), units = "days")
