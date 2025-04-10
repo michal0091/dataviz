@@ -49,21 +49,31 @@ Puedes seguir el reto oficial aquí: [Official #30DayChartChallenge GitHub](http
 ---
 
 ### Day 7: Distributions - Outliers
+<a data-flickr-embed="true" href="https://www.flickr.com/photos/200169402@N03/54442782676/in/dateposted-public/" title="day_7_outliers_indices_boxplot"><img src="https://live.staticflickr.com/65535/54442782676_0ea1b769bc_c.jpg" width="800" height="800" alt="day_7_outliers_indices_boxplot"/></a>
 
+[Código](30DayChartChallenge2025/category_1_comparisons/category_2_distributions/day_7_outliers)
 
 ---
 
 ### Day 8: Distributions - Histogram
+<a data-flickr-embed="true" href="https://www.flickr.com/photos/200169402@N03/54442782666/in/dateposted-public/" title="day_8_histogram_indices"><img src="https://live.staticflickr.com/65535/54442782666_1f93e9ec51_c.jpg" width="800" height="800" alt="day_8_histogram_indices"/></a>
 
+[Código](30DayChartChallenge2025/category_1_comparisons/category_2_distributions/day_8_histogram)
 
 ---
 
 ### Day 9: Distributions - Diverging
+<a data-flickr-embed="true" href="https://www.flickr.com/photos/200169402@N03/54442969164/in/dateposted-public/" title="day_9_diverging_tsla_byd"><img src="https://live.staticflickr.com/65535/54442969164_b7018dca25_c.jpg" width="800" height="800" alt="day_9_diverging_tsla_byd"/></a>
+
+[Código](30DayChartChallenge2025/category_1_comparisons/category_2_distributions/day_9_diverging)
 
 
 ---
 
 ### Day 10: Distributions - Multi-modal
+<a data-flickr-embed="true" href="https://www.flickr.com/photos/200169402@N03/54443027493/in/dateposted-public/" title="day_10_multimodal_vix_presidents_ridges"><img src="https://live.staticflickr.com/65535/54443027493_ffd4c73d1c_c.jpg" width="800" height="800" alt="day_10_multimodal_vix_presidents_ridges"/></a>
+
+[Código](30DayChartChallenge2025/category_1_comparisons/category_2_distributions/day_10_multimodal)
 
 
 ---
@@ -71,10 +81,15 @@ Puedes seguir el reto oficial aquí: [Official #30DayChartChallenge GitHub](http
 ### Day 11: Distributions - Stripes
 
 
+[Código](30DayChartChallenge2025/category_1_comparisons/category_2_distributions/)
+
+
 ---
 
 ### Day 12: Distributions - Data.gov (data day)
 
+
+[Código](30DayChartChallenge2025/category_1_comparisons/category_2_distributions/)
 
 ---
 
