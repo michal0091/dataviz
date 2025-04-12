@@ -267,3 +267,68 @@ theme_week2_tech <- function(base_size = 11, base_family = "Roboto Mono") {
       complete = TRUE
     )
 }
+
+#' Tema ggplot2 estilo "Naturaleza/Animales" para Semana 3 (Relationships)
+#'
+#' @param base_size Tamaño base fuente (default: 11).
+#' @param base_family
+#' 
+theme_week3_animals <- function(base_size = 11, base_family = "Cabin") {
+
+  # Colores base del tema "Animales"
+  bg_col <- "#FAF0E6"      # Fondo Lino/Beige muy claro
+  panel_col <- alpha(bg_col, 0.7) # Panel ligeramente transparente o igual
+  text_col <- "#5D4037"      # Texto Marrón Oscuro
+  grid_col <- "#D2B48C"      # Rejillas Tan/Arena claro (más sutil)
+  line_col <- "#A0522D"      # Color para líneas importantes (Sienna)
+  title_font_family <- "Cabin" # Podría ser "Cabin Condensed" si la cargas
+
+  theme_minimal(base_size = base_size, base_family = base_family) %+replace%
+    theme(
+      # --- Aspect Ratio Cuadrado ---
+      aspect.ratio = 1,
+
+      # --- Fondos ---
+      plot.background = element_rect(fill = bg_col, color = NA),
+      panel.background = element_rect(fill = panel_col, color = NA), # Puede ser igual a bg_col
+
+      # --- Rejilla ---
+      panel.grid.major = element_line(color = alpha(grid_col, 0.5), linewidth = 0.3), # Rejilla suave
+      panel.grid.minor = element_blank(),
+
+      # --- Textos ---
+      text = element_text(color = text_col, family = base_family),
+      plot.title = element_text(family = title_font_family, size = rel(2.2), hjust = 0.5,
+                                  margin = margin(b = 10), color = text_col, face="bold"),
+      plot.subtitle = element_text(family = base_family, size = rel(1.4), hjust = 0.5,
+                                     margin = margin(b = 15), color = text_col),
+      axis.text = element_text(color = text_col, size = rel(1.2)),
+      axis.title = element_text(color = text_col, size = rel(1.4), hjust = 0.5),
+
+      # --- Leyenda ---
+      legend.position = "top",
+      legend.background = element_rect(fill = bg_col, color = NA),
+      legend.box.background = element_rect(fill = bg_col, color = NA),
+      legend.key = element_rect(fill = panel_col, color = NA), # Fondo clave como panel
+      legend.text = element_text(color = text_col, size = rel(1.2)),
+      legend.title = element_text(color = text_col, size = rel(1.4), face = "bold"),
+      legend.key.size = unit(0.5, 'cm'),
+
+      # --- Caption ---
+      plot.caption.position = "plot",
+      plot.caption = element_markdown(color = text_col, size = rel(1.0), hjust = 0,
+                                      halign = 0, margin = margin(t = 15, b = 5),
+                                      lineheight = 1.0),
+
+      # --- Márgenes y Bordes ---
+      plot.margin = margin(15, 15, 10, 10),
+      panel.border = element_blank(),
+      axis.line = element_line(color = line_col, linewidth = 0.6), # Línea de ejes visible
+      axis.ticks = element_blank(), # Sin ticks
+
+      complete = TRUE
+    )
+}
+
+
+# --- Fin themes_30DCC2025.R ---
