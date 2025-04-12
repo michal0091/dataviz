@@ -25,6 +25,14 @@ paleta_week2_tech <- c(
   "#FFD54F", # Amarillo/Ámbar
   "#BA68C8"  # Púrpura claro
 )
+paleta_week3_animals <- c(
+  "#6B8E23", # Verde Oliva Intenso
+  "#BDB76B", # Caqui Oscuro / Musgo
+  "#CD853F", # Ocre / Peru
+  "#A0522D", # Sienna / Marrón Tierra
+  "#8FBC8F", # Verde Mar Oscuro (más apagado)
+  "#668096"  # Azul Pizarra Apagado
+)
 
 
 # Paleta de gradiente genérico  
@@ -41,6 +49,7 @@ gradient_blue <- c("#FFFFFF", "#324b64")
 challenge_palettes <- list(
   `week1`    = paleta_week1,
   `week2_tech` = paleta_week2_tech, 
+  `week3_animals` = paleta_week3_animals,
   `gradient` = generic_gradient,
   `gradient_blue` = gradient_blue
   # `week2` = paleta_week2
