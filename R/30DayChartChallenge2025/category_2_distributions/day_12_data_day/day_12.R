@@ -89,7 +89,9 @@ plot_subtitle <- paste0("Histograma y curva de densidad del spread diario desde 
 caption_day12 <- generate_caption(
   day = 12,
   source_text = source_text_day12,
-  config = config
+  config = config,
+  color_text_source = "#E8EAED",
+  color_text_author = "#4FC3F7"
 )
 
 # Colores y tema
