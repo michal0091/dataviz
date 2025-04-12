@@ -82,8 +82,8 @@ source_text_day12 <- paste0("FRED (Federal Reserve Economic Data: DGS10, DGS2) /
                            format(max(yields_dt$Date), "%Y-%m"))
 plot_title <- "Distribución del Spread de Tipos del Tesoro USA (10 Años - 2 Años)"
 plot_subtitle <- paste0("Histograma y curva de densidad del spread diario desde ",
-                       format(min(yields_dt$Date), "%Y"),
-                       ".\nValores < 0 indican curva de tipos invertida.")
+                       format(min(yields_dt$Date), "%Y"), "\n",
+                       "Valores < 0 indican curva de tipos invertida.")
 
 # Generar caption
 caption_day12 <- generate_caption(
@@ -141,10 +141,7 @@ gg_day12 <- ggplot(yields_dt, aes(x = Spread_10Y_2Y, y = after_stat(density))) +
     x = "Spread 10Y - 2Y (Puntos Porcentuales, %)",
     y = "Densidad",
     caption = caption_day12
-  ) +
-  # Añadir formato de ejes si se desea (ej, sufijo %)
-   theme(plot.subtitle = element_markdown(lineheight = 1.2))
-
+  )
 
 # --- 6. Guardar Gráfico ---
 output_file <- file.path(output_path, "day_12_distribution_yield_spread.png")
