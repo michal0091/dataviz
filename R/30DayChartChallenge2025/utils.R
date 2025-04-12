@@ -91,9 +91,7 @@ return(caption)
 #' Carga Roboto, Baumans desde Google Fonts y Font Awesome Brands desde un archivo local.
 #' Activa showtext para su uso en gráficos.
 #'
-#' @param fa_brands_path Ruta al archivo .ttf o .otf de Font Awesome Brands.
-#'                       Por defecto, busca en "./fonts/fa-brands-400.ttf" relativo
-#'                       al directorio de trabajo actual. ¡AJUSTA SI ES NECESARIO!
+#' @param fa_brands_path 
 #'
 setup_fonts <- function(fa_brands_path = "fonts/fa-brands-400.ttf") {
 
@@ -105,8 +103,6 @@ setup_fonts <- function(fa_brands_path = "fonts/fa-brands-400.ttf") {
   font_add_google("Cabin", "Cabin")
 
   # Cargar fuente de iconos local (Font Awesome Brands)
-  # ¡¡VERIFICA QUE LA RUTA 'fa_brands_path' ES CORRECTA!!
-  # Puedes pasar una ruta absoluta si la relativa da problemas.
   if (file.exists(fa_brands_path)) {
     font_add(family = "fa-brands", regular = fa_brands_path)
   } else {
@@ -117,8 +113,4 @@ setup_fonts <- function(fa_brands_path = "fonts/fa-brands-400.ttf") {
 
   # Activar showtext para que ggplot use estas fuentes
   showtext_auto()
-
-  # Opcional: Imprimir familias cargadas para verificar
-  # print("Familias de fuentes disponibles para showtext:")
-  # print(font_families())
 }
