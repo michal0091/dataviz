@@ -36,7 +36,6 @@ setup_fonts(fa_brands_path = font_path_fa)
 
 # --- 4. Cargar y Preparar Datos de Rasgos Animales ---
 
-# Ajusta la ruta si guardaste el archivo en otro lugar
 data_file <- "R/30DayChartChallenge2025/data/Animals_information.csv" 
 if (!file.exists(data_file)) {
   stop("Archivo de datos animales no encontrado en: ", data_file)
