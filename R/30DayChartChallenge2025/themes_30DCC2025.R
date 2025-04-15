@@ -33,6 +33,14 @@ paleta_week3_animals <- c(
   "#8FBC8F", # Verde Mar Oscuro (más apagado)
   "#668096"  # Azul Pizarra Apagado
 )
+paleta_el_pais <- c(
+  `text` = "#333333",
+  `accent1` = "#0056B3", # Azul El País aprox.
+  `accent2` = "#DE1D1A", # Rojo El País aprox.
+  `grid` = "#E0E0E0",   # Gris claro para rejilla
+  `bg` = "#FFFFFF"       # Fondo blanco
+)
+
 
 
 # Paleta de gradiente genérico  
@@ -50,6 +58,7 @@ challenge_palettes <- list(
   `week1`    = paleta_week1,
   `week2_tech` = paleta_week2_tech, 
   `week3_animals` = paleta_week3_animals,
+  `el_pais` = paleta_el_pais,
   `gradient` = generic_gradient,
   `gradient_blue` = gradient_blue
   # `week2` = paleta_week2
@@ -330,5 +339,65 @@ theme_week3_animals <- function(base_size = 11, base_family = "Cabin") {
     )
 }
 
+#' Tema ggplot2 inspirado en El País
+#'
+#' @param base_size Tamaño base fuente (default: 11).
+#' @param base_family Familia fuente base (default: 'Lato').
+#'
+theme_el_pais <- function(base_size = 11, base_family = "Lato") {
+
+  # Colores de la paleta El País
+  bg_col <- challenge_palettes$el_pais['bg']
+  text_col <- challenge_palettes$el_pais['text']
+  grid_col <- challenge_palettes$el_pais['grid']
+  line_col <- challenge_palettes$el_pais['text'] # Líneas de eje oscuras
+
+  theme_minimal(base_size = base_size, base_family = base_family) %+replace%
+    theme(
+      # --- Fondos ---
+      plot.background = element_rect(fill = bg_col, color = NA),
+      panel.background = element_rect(fill = bg_col, color = NA),
+
+      # --- Rejilla ---
+      panel.grid.major = element_line(color = grid_col, linewidth = 0.3), # Solo rejilla principal suave
+      panel.grid.minor = element_blank(),
+
+      # --- Textos ---
+      text = element_text(color = text_col, family = base_family),
+      plot.title = element_text(family = base_family, size = rel(1.8), hjust = 0, # Título a la izquierda
+                                  margin = margin(b = 8), face="bold"),
+      plot.subtitle = element_text(family = base_family, size = rel(1.2), hjust = 0,
+                                     margin = margin(b = 15)),
+      axis.text = element_text(color = text_col, size = rel(1.0)),
+      axis.title = element_text(color = text_col, size = rel(1.1), hjust = 0.5),
+
+      # --- Leyenda ---
+      legend.position = "top",
+      legend.justification = "left", # Leyenda alineada a la izquierda
+      legend.background = element_rect(fill = bg_col, color = NA),
+      legend.box.background = element_rect(fill = bg_col, color = NA),
+      legend.key = element_rect(fill = bg_col, color = NA),
+      legend.text = element_text(color = text_col, size = rel(1.0)),
+      legend.title = element_text(color = text_col, size = rel(1.1), face = "bold"),
+
+      # --- Caption ---
+      plot.caption.position = "plot",
+      plot.caption = element_markdown(color = text_col, size = rel(0.9), hjust = 0, # Alineado izquierda
+                                      halign = 0, margin = margin(t = 15, b = 5),
+                                      lineheight = 1.1),
+
+      # --- Márgenes y Bordes ---
+      plot.margin = margin(15, 15, 10, 10),
+      panel.border = element_blank(),
+      axis.line = element_line(color = line_col, linewidth = 0.5), # Línea de ejes visible
+      axis.ticks = element_line(color = grid_col, linewidth = 0.3), # Ticks sutiles
+
+      # --- Títulos Facetas (si se usan) ---
+       strip.background = element_blank(), # Sin fondo
+       strip.text = element_text(face = "bold", color = text_col, size = rel(1.1), hjust = 0), # Texto strip a la izq.
+
+      complete = TRUE
+    )
+}
 
 # --- Fin themes_30DCC2025.R ---
