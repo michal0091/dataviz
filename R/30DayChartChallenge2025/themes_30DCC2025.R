@@ -34,8 +34,9 @@ paleta_week3_animals <- c(
   "#668096"  # Azul Pizarra Apagado
 )
 paleta_el_pais <- c(
-  `text` = "#333333",
-  `accent1` = "#0056B3", # Azul El País aprox.
+  `text` = "#1f1f1f",
+  `text2` = "#9c9c9c",
+  `accent1` = "#0e6290", # Azul El País aprox.
   `accent2` = "#DE1D1A", # Rojo El País aprox.
   `grid` = "#E0E0E0",   # Gris claro para rejilla
   `bg` = "#FFFFFF"       # Fondo blanco
@@ -349,6 +350,7 @@ theme_el_pais <- function(base_size = 11, base_family = "Lato") {
   # Colores de la paleta El País
   bg_col <- challenge_palettes$el_pais['bg']
   text_col <- challenge_palettes$el_pais['text']
+  text2_col <- challenge_palettes$el_pais['text2']
   grid_col <- challenge_palettes$el_pais['grid']
   line_col <- challenge_palettes$el_pais['text'] # Líneas de eje oscuras
 
@@ -364,12 +366,12 @@ theme_el_pais <- function(base_size = 11, base_family = "Lato") {
 
       # --- Textos ---
       text = element_text(color = text_col, family = base_family),
-      plot.title = element_text(family = base_family, size = rel(1.8), hjust = 0, # Título a la izquierda
+      plot.title = element_text(family = base_family, size = rel(2.2), hjust = 0, # Título a la izquierda
                                   margin = margin(b = 8), face="bold"),
-      plot.subtitle = element_text(family = base_family, size = rel(1.2), hjust = 0,
-                                     margin = margin(b = 15)),
-      axis.text = element_text(color = text_col, size = rel(1.0)),
-      axis.title = element_text(color = text_col, size = rel(1.1), hjust = 0.5),
+      plot.subtitle = element_text(family = base_family, size = rel(1.8), hjust = 0,
+                                     margin = margin(b = 15), color = text2_col),
+      axis.text = element_text(color = text2_col, size = rel(1.2)),
+      axis.title = element_text(color = text_col, size = rel(1.4), hjust = 0.5),
 
       # --- Leyenda ---
       legend.position = "top",
@@ -377,24 +379,24 @@ theme_el_pais <- function(base_size = 11, base_family = "Lato") {
       legend.background = element_rect(fill = bg_col, color = NA),
       legend.box.background = element_rect(fill = bg_col, color = NA),
       legend.key = element_rect(fill = bg_col, color = NA),
-      legend.text = element_text(color = text_col, size = rel(1.0)),
-      legend.title = element_text(color = text_col, size = rel(1.1), face = "bold"),
+      legend.text = element_text(color = text2_col, size = rel(1.4)),
+      legend.title = element_text(color = text_col, size = rel(1.6), face = "bold", hjust = 0.5),
 
       # --- Caption ---
       plot.caption.position = "plot",
-      plot.caption = element_markdown(color = text_col, size = rel(0.9), hjust = 0, # Alineado izquierda
+      plot.caption = element_markdown(color = text2_col, size = rel(1.2), hjust = 0, # Alineado izquierda
                                       halign = 0, margin = margin(t = 15, b = 5),
                                       lineheight = 1.1),
 
       # --- Márgenes y Bordes ---
-      plot.margin = margin(15, 15, 10, 10),
+      plot.margin = margin(15, 15, 15, 15),
       panel.border = element_blank(),
       axis.line = element_line(color = line_col, linewidth = 0.5), # Línea de ejes visible
-      axis.ticks = element_line(color = grid_col, linewidth = 0.3), # Ticks sutiles
+      axis.ticks = element_line(color = grid_col, linewidth = 0.35), # Ticks sutiles
 
       # --- Títulos Facetas (si se usan) ---
        strip.background = element_blank(), # Sin fondo
-       strip.text = element_text(face = "bold", color = text_col, size = rel(1.1), hjust = 0), # Texto strip a la izq.
+       strip.text = element_text(face = "bold", color = text_col, size = rel(1.6), hjust = 0, vjust = 0.5), # Texto strip a la izq.
 
       complete = TRUE
     )
