@@ -77,7 +77,7 @@ print(levels(madrid_clean_dt$year_f))
 # Definir textos
 source_text_day18 <- "Fuente: Portal de Datos Abiertos Ayto. Madrid / INE (elaboración propia)"
 plot_title <- "¿El Ladrillo ahoga a la Cigüeña? Mascotas y Esfuerzo Inmobiliario"
-plot_subtitle <- "Relación positiva en distritos de Madrid (2015-2022):\nA más años para pagar el piso, ¿más 'perrhijos' por niño?"
+plot_subtitle <- "Relación positiva en distritos de Madrid (2015-2022): A más años para pagar el piso, ¿más 'perrhijos' por niño?"
 
 # Generar caption
 caption_day18 <- generate_caption(

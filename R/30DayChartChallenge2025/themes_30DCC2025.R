@@ -42,7 +42,24 @@ paleta_el_pais <- c(
   `bg` = "#FFFFFF"       # Fondo blanco
 )
 
+paleta_week4_social <- c(
+  `indigo`   = "#3F51B5",
+  `pink`     = "#FF4081",
+  `teal`     = "#009688", 
+  `orange`   = "#FF9800", 
+  `bluegrey` = "#607D8B", 
+  `grey`     = "#757575"   
+)
 
+
+# Colores base
+colores_base_social <- list(
+  bg = "#F2F2F2",
+  text = "#333333",
+  grid = "#DCDCDC", 
+  primary = "#3F51B5",
+  accent = "#FF4081" 
+)
 
 # Paleta de gradiente genérico  
 generic_gradient <- c("#f7fcfd", "#e0ecf4", "#bfd3e6", "#9ebcda", "#8c96c6", "#8c6bb1", "#88419d", "#6e016b")
@@ -60,6 +77,7 @@ challenge_palettes <- list(
   `week2_tech` = paleta_week2_tech, 
   `week3_animals` = paleta_week3_animals,
   `el_pais` = paleta_el_pais,
+  `week4_social`    = paleta_week4_social,
   `gradient` = generic_gradient,
   `gradient_blue` = gradient_blue
   # `week2` = paleta_week2
@@ -401,5 +419,69 @@ theme_el_pais <- function(base_size = 11, base_family = "Lato") {
       complete = TRUE
     )
 }
+
+
+#' Tema ggplot2 para Semana 4 (Timeseries - Social Themes)
+#'
+#' @param base_size Tamaño base fuente (default: 11).
+#' @param base_family Familia fuente base (default: 'Lato').
+#'
+theme_week4_social <- function(base_size = 11, base_family = "Lato") {
+
+  # Usar los colores base definidos previamente
+  bg_col <- "#F2F2F2"
+  text_col <- "#333333"
+  grid_col <- "#DCDCDC"
+  line_col <- "#757575" 
+
+  theme_minimal(base_size = base_size, base_family = base_family) %+replace%
+    theme(
+    
+      # --- Fondos ---
+      plot.background = element_rect(fill = bg_col, color = NA),
+      panel.background = element_rect(fill = bg_col, color = NA), # Fondo panel igual
+
+      # --- Rejilla ---
+      panel.grid.major = element_line(color = grid_col, linewidth = 0.35), # Rejilla principal clara
+      panel.grid.minor = element_blank(), # Sin rejilla menor
+
+      # --- Textos ---
+      text = element_text(color = text_col, family = base_family),
+      plot.title = element_text(family = base_family, size = rel(1.8), hjust = 0, # Título a la izquierda
+                                  margin = margin(b = 8), face = "bold"),
+      plot.subtitle = element_text(family = base_family, size = rel(1.2), hjust = 0,
+                                     margin = margin(b = 15)),
+      axis.text = element_text(color = text_col, size = rel(1.0)),
+      axis.title = element_text(color = text_col, size = rel(1.1), hjust = 0.5),
+
+      # --- Leyenda ---
+      legend.position = "top", # Arriba o 'bottom' suele ir bien en timeseries
+      legend.justification = "left",
+      legend.background = element_rect(fill = bg_col, color = NA),
+      legend.box.background = element_rect(fill = bg_col, color = NA),
+      legend.key = element_rect(fill = bg_col, color = NA), # Clave transparente
+      legend.text = element_text(color = text_col, size = rel(1.0)),
+      legend.title = element_text(color = text_col, size = rel(1.1), face = "bold"),
+
+      # --- Caption ---
+      plot.caption.position = "plot",
+      plot.caption = element_markdown(color = text_col, size = rel(0.9), hjust = 0,
+                                      halign = 0, margin = margin(t = 15, b = 5),
+                                      lineheight = 1.1),
+
+      # --- Márgenes y Bordes ---
+      plot.margin = margin(15, 15, 10, 10),
+      panel.border = element_blank(), # Sin borde de panel
+      axis.line = element_line(color = line_col, linewidth = 0.5), # Línea de ejes visible
+      axis.ticks = element_line(color = grid_col, linewidth = 0.3), # Ticks visibles pero claros
+
+     # --- Títulos Facetas (si se usan) ---
+     strip.background = element_rect(fill = alpha(grid_col, 0.5), color=NA), # Fondo suave para strips
+     strip.text = element_text(face = "bold", color = text_col, size = rel(1.1), hjust = 0.5), # Texto strip centrado
+
+      complete = TRUE
+    )
+}
+
 
 # --- Fin themes_30DCC2025.R ---
