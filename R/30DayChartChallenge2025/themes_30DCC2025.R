@@ -47,8 +47,8 @@ paleta_week4_social <- c(
   `pink`     = "#FF4081",
   `teal`     = "#009688", 
   `orange`   = "#FF9800", 
-  `bluegrey` = "#607D8B", 
-  `grey`     = "#757575"   
+  `purpureus` = "#9f499b", 
+  `satin_gold` = "#c09822"   
 )
 
 
@@ -430,9 +430,10 @@ theme_week4_social <- function(base_size = 11, base_family = "Lato") {
 
   # Usar los colores base definidos previamente
   bg_col <- "#F2F2F2"
-  text_col <- "#333333"
-  grid_col <- "#DCDCDC"
-  line_col <- "#757575" 
+  text_col <- "#5c5c5c"
+  title_col <- "#757de8"
+  grid_col <- "#bfbfbf"
+  line_col <- "#333333" 
 
   theme_minimal(base_size = base_size, base_family = base_family) %+replace%
     theme(
@@ -447,12 +448,12 @@ theme_week4_social <- function(base_size = 11, base_family = "Lato") {
 
       # --- Textos ---
       text = element_text(color = text_col, family = base_family),
-      plot.title = element_text(family = base_family, size = rel(1.8), hjust = 0, # Título a la izquierda
-                                  margin = margin(b = 8), face = "bold"),
-      plot.subtitle = element_text(family = base_family, size = rel(1.2), hjust = 0,
+      plot.title = element_text(family = base_family, size = rel(2.2), hjust = 0, # Título a la izquierda
+                                  margin = margin(b = 8), face = "bold", color = title_col),
+      plot.subtitle = element_text(family = base_family, size = rel(1.8), hjust = 0,
                                      margin = margin(b = 15)),
-      axis.text = element_text(color = text_col, size = rel(1.0)),
-      axis.title = element_text(color = text_col, size = rel(1.1), hjust = 0.5),
+      axis.text = element_text(color = text_col, size = rel(1.4)),
+      axis.title = element_text(color = text_col, size = rel(1.6), hjust = 0.5),
 
       # --- Leyenda ---
       legend.position = "top", # Arriba o 'bottom' suele ir bien en timeseries
@@ -460,12 +461,12 @@ theme_week4_social <- function(base_size = 11, base_family = "Lato") {
       legend.background = element_rect(fill = bg_col, color = NA),
       legend.box.background = element_rect(fill = bg_col, color = NA),
       legend.key = element_rect(fill = bg_col, color = NA), # Clave transparente
-      legend.text = element_text(color = text_col, size = rel(1.0)),
-      legend.title = element_text(color = text_col, size = rel(1.1), face = "bold"),
+      legend.text = element_text(color = text_col, size = rel(1.4)),
+      legend.title = element_text(color = text_col, size = rel(1.6), face = "bold"),
 
       # --- Caption ---
       plot.caption.position = "plot",
-      plot.caption = element_markdown(color = text_col, size = rel(0.9), hjust = 0,
+      plot.caption = element_markdown(color = text_col, size = rel(1.4), hjust = 0,
                                       halign = 0, margin = margin(t = 15, b = 5),
                                       lineheight = 1.1),
 
@@ -482,6 +483,5 @@ theme_week4_social <- function(base_size = 11, base_family = "Lato") {
       complete = TRUE
     )
 }
-
 
 # --- Fin themes_30DCC2025.R ---
