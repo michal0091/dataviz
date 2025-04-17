@@ -26,8 +26,8 @@
 2025-04-11;CBOS;Rafał Trzaskowski;PO (Plataforma Cívica);centro;socioliberalismo;0,33
 2025-04-11;CBOS;Karol Nawrocki;PiS (Ley y Justicia);extrema-derecha;nacionalconservadurismo;0,25
 2025-04-11;CBOS;Sławomir Mentzen;Konfederacja;extrema-derecha;liberalismo conservador;0,17
-2025-04-11;CBOS;Szymon Hołownia;PL2050;centro;centro democritiano;0,4
-2025-04-11;CBOS;Adrian Zandberg;Razem;izquierda;socialdemocracia;0,5
+2025-04-11;CBOS;Szymon Hołownia;PL2050;centro;centro democritiano;0,04
+2025-04-11;CBOS;Adrian Zandberg;Razem;izquierda;socialdemocracia;0,05
 2025-04-11;CBOS;Grzegorz Braun;KKP;extrema-derecha;monarquismo-nacionalismo;0,03
 2025-04-11;CBOS;Magdalena Biejat;Nowa Lewica;izquierda;socialdemocracia;0,02
 2025-04-11;CBOS;Krzysztof Stanowski;sin partido;derecha;populismo;0,01
@@ -194,7 +194,7 @@
 2025-02-21;Research Partner;Sławomir Mentzen;Konfederacja;extrema-derecha;liberalismo conservador;0,168
 2025-01-31;IBRiS;Rafał Trzaskowski;PO (Plataforma Cívica);centro;socioliberalismo;0,373
 2025-01-31;IBRiS;Karol Nawrocki;PiS (Ley y Justicia);extrema-derecha;nacionalconservadurismo;0,239
-2025-01-31;IBRiS;Sławomir Mentzen;Konfederacja;extrema-derecha;liberalismo conservador;0,89
+2025-01-31;IBRiS;Sławomir Mentzen;Konfederacja;extrema-derecha;liberalismo conservador;0,089
 2025-01-31;IBRiS;Szymon Hołownia;PL2050;centro;centro democritiano;0,068
 2025-01-31;IBRiS;Adrian Zandberg;Razem;izquierda;socialdemocracia;0,011
 2025-01-31;IBRiS;Grzegorz Braun;KKP;extrema-derecha;monarquismo-nacionalismo;0,017
@@ -248,3 +248,35 @@
 2025-01-07;United Surveys;Grzegorz Braun;KKP;extrema-derecha;monarquismo-nacionalismo;0
 2025-01-07;United Surveys;Magdalena Biejat;Nowa Lewica;izquierda;socialdemocracia;0,046
 2025-01-07;United Surveys;Krzysztof Stanowski;sin partido;derecha;populismo;0
+2025-02-24;IBRiS;Rafał Trzaskowski;PO (Plataforma Cívica);centro;socioliberalismo;0,352
+2025-02-24;IBRiS;Karol Nawrocki;PiS (Ley y Justicia);extrema-derecha;nacionalconservadurismo;0,265
+2025-02-24;IBRiS;Sławomir Mentzen;Konfederacja;extrema-derecha;liberalismo conservador;0,157
+2025-02-24;IBRiS;Szymon Hołownia;PL2050;centro;centro democritiano;0,06
+2025-02-24;IBRiS;Adrian Zandberg;Razem;izquierda;socialdemocracia;0,014
+2025-02-24;IBRiS;Grzegorz Braun;KKP;extrema-derecha;monarquismo-nacionalismo;0,004
+2025-02-24;IBRiS;Magdalena Biejat;Nowa Lewica;izquierda;socialdemocracia;0,033
+2025-02-24;IBRiS;Krzysztof Stanowski;sin partido;derecha;populismo;0,005
+2025-02-17;Opinia24;Rafał Trzaskowski;PO (Plataforma Cívica);centro;socioliberalismo;0,349
+2025-02-17;Opinia24;Karol Nawrocki;PiS (Ley y Justicia);extrema-derecha;nacionalconservadurismo;0,241
+2025-02-17;Opinia24;Sławomir Mentzen;Konfederacja;extrema-derecha;liberalismo conservador;0,136
+2025-02-17;Opinia24;Szymon Hołownia;PL2050;centro;centro democritiano;0,042
+2025-02-17;Opinia24;Adrian Zandberg;Razem;izquierda;socialdemocracia;0,027
+2025-02-17;Opinia24;Grzegorz Braun;KKP;extrema-derecha;monarquismo-nacionalismo;0,021
+2025-02-17;Opinia24;Magdalena Biejat;Nowa Lewica;izquierda;socialdemocracia;0,02
+2025-02-17;Opinia24;Krzysztof Stanowski;sin partido;derecha;populismo;0,013
+2025-02-10;Opinia24;Rafał Trzaskowski;PO (Plataforma Cívica);centro;socioliberalismo;0,0309
+2025-02-10;Opinia24;Karol Nawrocki;PiS (Ley y Justicia);extrema-derecha;nacionalconservadurismo;0,217
+2025-02-10;Opinia24;Sławomir Mentzen;Konfederacja;extrema-derecha;liberalismo conservador;0,168
+2025-02-10;Opinia24;Szymon Hołownia;PL2050;centro;centro democritiano;0,047
+2025-02-10;Opinia24;Adrian Zandberg;Razem;izquierda;socialdemocracia;0,02
+2025-02-10;Opinia24;Grzegorz Braun;KKP;extrema-derecha;monarquismo-nacionalismo;0
+2025-02-10;Opinia24;Magdalena Biejat;Nowa Lewica;izquierda;socialdemocracia;0,021
+2025-02-10;Opinia24;Krzysztof Stanowski;sin partido;derecha;populismo;0,016
+2025-02-07;United Surveys;Rafał Trzaskowski;PO (Plataforma Cívica);centro;socioliberalismo;0,367
+2025-02-07;United Surveys;Karol Nawrocki;PiS (Ley y Justicia);extrema-derecha;nacionalconservadurismo;0,253
+2025-02-07;United Surveys;Sławomir Mentzen;Konfederacja;extrema-derecha;liberalismo conservador;0,098
+2025-02-07;United Surveys;Szymon Hołownia;PL2050;centro;centro democritiano;0,066
+2025-02-07;United Surveys;Adrian Zandberg;Razem;izquierda;socialdemocracia;0,017
+2025-02-07;United Surveys;Grzegorz Braun;KKP;extrema-derecha;monarquismo-nacionalismo;0,015
+2025-02-07;United Surveys;Magdalena Biejat;Nowa Lewica;izquierda;socialdemocracia;0,05
+2025-02-07;United Surveys;Krzysztof Stanowski;sin partido;derecha;populismo;0
