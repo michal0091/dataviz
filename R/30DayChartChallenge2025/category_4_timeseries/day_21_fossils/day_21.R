@@ -189,6 +189,12 @@ if(any(checksum$TotalPct < 98.75 | checksum$TotalPct > 101.25)) {
     print(summary(checksum$TotalPct))
 }
 
+# Omitir NA's
+energy_agg_daily <- na.omit(energy_agg_daily)
+
+# Desde enero 2015
+energy_agg_daily <- energy_agg_daily[Date >= "2015-01-01"]
+
 message("Datos agregados por Grupo de Energía y Día listos.")
 print(tail(energy_agg_daily))
 
@@ -197,7 +203,7 @@ print(tail(energy_agg_daily))
 # Definir textos 
 source_text_day21 <- "Fuente: Red Eléctrica de España (REE) - Estructura de Generación Peninsular"
 plot_title <- "Evolución del Mix de Generación Eléctrica Peninsular"
-plot_subtitle <- paste0("Porcentaje de contribución de cada tecnología a la generación total.\nPeriodo: ",
+plot_subtitle <- paste0("Contribución porcentual (%) de cada tecnología (media móvil 30 días).\nPeriodo: ",
                        format(min(energy_agg_daily$Date), "%Y-%m"), " - ", format(max(energy_agg_daily$Date), "%Y-%m"))
 
 # Generar caption
