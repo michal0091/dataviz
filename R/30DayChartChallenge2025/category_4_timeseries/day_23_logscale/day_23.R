@@ -80,11 +80,10 @@ crisis_periods <- data.frame(
 
 # Definir textos
 source_text_day23 <- "Fuente: World Bank (Indicator: NY.GDP.PCAP.PP.KD) via WDI package"
-plot_title <- "Crecimiento Económico de España (1990-2023)"
+plot_title <- paste0("Crecimiento Económico de España (", min(gdp_dt$Year), "-", max(gdp_dt$Year),")")
 plot_subtitle <- paste0("Evolución del PIB per cápita (PPA, dólares const. 2017).\n",
                        "La escala logarítmica del eje Y revela cambios en la tasa de crecimiento.\n",
-                       "Las áreas sombreadas indican períodos de crisis económicas en España.",
-                       "Periodo: ", min(gdp_dt$Year), "-", max(gdp_dt$Year), ".")
+                       "Las áreas sombreadas indican períodos de crisis económicas en España.")
 # Generar caption
 caption_day23 <- generate_caption(
   day = 23,
