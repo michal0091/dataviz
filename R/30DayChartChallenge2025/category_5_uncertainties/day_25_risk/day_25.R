@@ -46,7 +46,7 @@ if (is.null(data_xts)) stop("No se pudieron descargar los datos de Yahoo Finance
 price_col <- Ad(data_xts) # Usar precio ajustado
 returns_xts <- periodReturn(price_col, period = "daily", type = "log")
 returns_xts <- returns_xts[-1, ] # Eliminar primer NA
-returns_xts <- PerformanceAnalytics::Return.clean(returns_xts) # Limpiar retornos
+returns_xts <- PerformanceAnalytics::Return.clean(returns_xts, method = "boudt") # Limpiar retornos
 
 # Convertir a data.table
 returns_dt <- data.table(
@@ -71,10 +71,12 @@ dens_dt <- data.table(x = dens$x, y = dens$y)
 # --- 5. Crear Gráfico de Densidad con VaR y ES ---
 
 # Definir textos
-source_text_day25 <- paste0("Fuente: Yahoo Finance (^IBEX) via quantmod. Periodo: ",
-                           format(min(returns_dt$Date), "%Y-%m"), " - ", format(max(returns_dt$Date), "%Y-%m"))
+source_text_day25 <-  paste0("Fuente: Yahoo Finance (^IBEX) via quantmod. Periodo: ",
+format(min(returns_dt$Date), "%Y-%m"), " - ", format(max(returns_dt$Date), "%Y-%m"),
+". Retornos limpiados con método Boudt.")
+
 plot_title <- paste0("Riesgo de Mercado: VaR y Expected Shortfall (", ticker_name, ")")
-plot_subtitle <- paste0("Distribución de retornos log. diarios y métricas de riesgo calculadas al ",
+plot_subtitle <- paste0("Distribución de retornos log. diarios y métricas de riesgo\ncalculadas al ",
                        (1-alpha_risk)*100, "% de confianza (VaR = Límite; ES = Pérdida media si se supera VaR).")
 
 # Generar caption
@@ -112,14 +114,14 @@ gg_day25 <- ggplot(returns_dt, aes(x = Log_Return)) +
   geom_vline(xintercept = es_level, color = risk_color, linetype = "dotted", linewidth = 1) +
 
   # Anotaciones para VaR y ES
-  annotate("text", x = var_level * 1.2, y = max(dens_dt$y)*0.8, angle=90, hjust=1.1, vjust=0.5, size=4.5, family="Roboto bold",
-           label = paste0("VaR ", (1-alpha_risk)*100, "% = ", scales::percent(var_level, accuracy=0.01)), color = risk_color,
-           face = "bold") +
-  annotate("text", x = es_level * 1.2, y = max(dens_dt$y)*0.5, angle=90, hjust=1.1, vjust=0.5, size=4.5, family="Roboto bold",
+  annotate("text", x = var_level * 1.1, y = max(dens_dt$y)*0.8, angle=90, hjust=1.1, vjust=0.5, size=4.5, family="Roboto bold",
+           label = paste0("VaR ", (1-alpha_risk)*100, "% = ", scales::percent(var_level, accuracy=0.01)), color = risk_color) +
+  annotate("text", x = es_level * 1.1, y = max(dens_dt$y)*0.5, angle=90, hjust=1.1, vjust=0.5, size=4.5, family="Roboto bold",
            label = paste0("ES ", (1-alpha_risk)*100, "% = ", scales::percent(es_level, accuracy=0.01)), color = risk_color) +
 
   # Formato ejes
-  scale_x_continuous(labels = scales::percent_format(scale = 100, accuracy = 0.1), name = "Retorno Logarítmico Diario (%)") +
+  scale_x_continuous(labels = scales::percent_format(scale = 100, accuracy = 1), name = "Retorno Logarítmico Diario (%)", 
+                     breaks = seq(dens_dt[, round(min(x) - 0.01, 2)], dens_dt[, round(max(x) + 0.01, 2)], 0.01)) +
   scale_y_continuous(name = "Densidad de Probabilidad") +
 
   # Aplicar tema Semana 5
@@ -144,3 +146,4 @@ ggsave(
 message("Gráfico del Día 25 (Risk VaR/ES) guardado en: ", normalizePath(output_file, mustWork = FALSE))
 
 # --- Fin day_25_risk_var.R ---
+
