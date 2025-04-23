@@ -130,7 +130,7 @@ gg_day24 <- ggplot(vacc_clean_dt, aes(x = Year, y = Coverage_Pct, color = Income
                      labels = scales::label_percent(scale = 1),
                      expand = expansion(mult=c(0, 0.05)),
                      name = "Cobertura Estimada (%)") +
-  scale_x_continuous(n.breaks = 10) + # Ajustar breaks
+  scale_x_continuous(breaks = seq(min(vacc_clean_dt$Year), max(vacc_clean_dt$Year), 3)) + 
 
   # Aplicar tema
   theme_week4_social(base_family = "Lato", base_size = 10) +
