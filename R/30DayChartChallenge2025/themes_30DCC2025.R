@@ -525,23 +525,23 @@ theme_week5_uncertainty <- function(base_size = 11, base_family = "Lato") {
 
       # --- Textos ---
       text = element_text(color = text_col, family = base_family),
-      plot.title = element_text(size = rel(2.4), hjust = 0, # Título a la izquierda
+      plot.title = element_text(size = rel(2.2), hjust = 0, # Título a la izquierda
                                   margin = margin(b = 8), face = "bold", color =  text_col_title),
-      plot.subtitle = element_text(size = rel(2), hjust = 0,
+      plot.subtitle = element_text(size = rel(1.8), hjust = 0,
                                      margin = margin(b = 15)),
-      axis.text = element_text(color = text_col, size = rel(1.4)),
-      axis.title = element_text(color = text_col, size = rel(1.8), hjust = 0.5),
+      axis.text = element_text(color = text_col, size = rel(1.2)),
+      axis.title = element_text(color = text_col, size = rel(1.4), hjust = 0.5),
 
       # --- Leyenda ---
       legend.position = "bottom", # Abajo para dejar espacio al gráfico
       legend.background = element_rect(fill = bg_col, color = NA),
       legend.key = element_rect(fill = bg_col, color = NA),
-      legend.text = element_text(color = text_col, size = rel(1.4)),
-      legend.title = element_text(color = text_col, size = rel(1.8), face = "bold"),
+      legend.text = element_text(color = text_col, size = rel(1.2)),
+      legend.title = element_text(color = text_col, size = rel(1.4), face = "bold"),
 
       # --- Caption ---
       plot.caption.position = "plot",
-      plot.caption = element_markdown(color = text_col, size = rel(1.8), hjust = 0,
+      plot.caption = element_markdown(color = text_col, size = rel(1.2), hjust = 0,
                                       halign = 0, margin = margin(t = 15, b = 5),
                                       lineheight = 1.1),
 

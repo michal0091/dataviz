@@ -97,6 +97,7 @@ setup_fonts <- function(fa_brands_path = "fonts/fa-brands-400.ttf") {
 
   # Cargar fuentes de Google Fonts
   font_add_google("Roboto", "Roboto")
+  font_add_google("Roboto", "Roboto bold", regular.wt = 700)
   font_add_google("Baumans", "Baumans")
   font_add_google("Roboto Mono", "Roboto Mono") 
   font_add_google("Exo 2", "Exo 2") 
