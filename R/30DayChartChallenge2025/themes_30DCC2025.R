@@ -52,6 +52,16 @@ paleta_week4_social <- c(
 )
 
 
+paleta_week5_uncertainty <- c(
+  `dark_grey`  = "#455A64",  # Azul Grisáceo 700
+  `medium_grey`= "#78909C",  # Azul Grisáceo 500
+  `light_grey` = "#B0BEC5",  # Azul Grisáceo 200
+  `teal_accent`= "#4DB6AC",  # Teal 300
+  `orange_accent`= "#FF8A65",  # Naranja Intenso 300
+  `indigo_accent`= "#3F51B5"   # Índigo 500 (de Wk4)
+)
+
+
 # Colores base
 colores_base_social <- list(
   bg = "#F2F2F2",
@@ -78,6 +88,7 @@ challenge_palettes <- list(
   `week3_animals` = paleta_week3_animals,
   `el_pais` = paleta_el_pais,
   `week4_social`    = paleta_week4_social,
+  `week5_uncertainty`= paleta_week5_uncertainty,
   `gradient` = generic_gradient,
   `gradient_blue` = gradient_blue
   # `week2` = paleta_week2
@@ -483,5 +494,69 @@ theme_week4_social <- function(base_size = 11, base_family = "Lato") {
       complete = TRUE
     )
 }
+
+#' Tema ggplot2 para Semana 5 (Uncertainties)
+#' Base clara, limpia, enfocada en legibilidad y visualización de incertidumbre.
+#'
+#' @param base_size Tamaño base fuente (default: 11).
+#' @param base_family Familia fuente base (default: 'Lato').
+#'
+theme_week5_uncertainty <- function(base_size = 11, base_family = "Lato") {
+
+  # Colores base (se pueden sobreescribir en cada gráfico si es necesario)
+  text_col <- "#333333"  # Texto gris oscuro
+  grid_col <- "#E5E5E5"  # Rejilla gris claro
+  bg_col <- "#FFFFFF"    # Fondo blanco (o F7F7F7 si prefieres off-white)
+
+  # Usar theme_light como base por sus ejes y panel definidos
+  theme_light(base_size = base_size, base_family = base_family) %+replace%
+    theme(
+      # --- Sin Aspect Ratio Fijo ---
+       aspect.ratio = NULL,
+
+      # --- Fondos ---
+      plot.background = element_rect(fill = bg_col, color = NA),
+      panel.background = element_rect(fill = bg_col, color = NA),
+
+      # --- Rejilla ---
+      panel.grid.major = element_line(color = grid_col, linewidth = 0.3),
+      panel.grid.minor = element_blank(),
+
+      # --- Textos ---
+      text = element_text(color = text_col, family = base_family),
+      plot.title = element_text(size = rel(1.6), hjust = 0, # Título a la izquierda
+                                  margin = margin(b = 8), face = "bold"),
+      plot.subtitle = element_text(size = rel(1.1), hjust = 0,
+                                     margin = margin(b = 15)),
+      axis.text = element_text(color = text_col, size = rel(0.9)),
+      axis.title = element_text(color = text_col, size = rel(1.0), hjust = 0.5),
+
+      # --- Leyenda ---
+      legend.position = "bottom", # Abajo para dejar espacio al gráfico
+      legend.background = element_rect(fill = bg_col, color = NA),
+      legend.key = element_rect(fill = bg_col, color = NA),
+      legend.text = element_text(color = text_col, size = rel(0.9)),
+      legend.title = element_text(color = text_col, size = rel(1.0), face = "bold"),
+
+      # --- Caption ---
+      plot.caption.position = "plot",
+      plot.caption = element_markdown(color = text_col, size = rel(0.8), hjust = 0,
+                                      halign = 0, margin = margin(t = 15, b = 5),
+                                      lineheight = 1.1),
+
+      # --- Márgenes y Bordes ---
+      plot.margin = margin(15, 15, 10, 15), # Un poco más de margen izquierdo/derecho
+      panel.border = element_rect(color = grid_col, fill=NA, linewidth=0.5), # Borde panel suave
+      axis.line = element_blank(), # theme_light ya tiene panel.border
+      axis.ticks = element_line(color = grid_col, linewidth = 0.3), # Ticks visibles
+
+     # --- Títulos Facetas (si se usan) ---
+     strip.background = element_rect(fill = alpha(grid_col, 0.3), color=NA), # Fondo suave para strips
+     strip.text = element_text(face = "bold", color = text_col, size = rel(1.0), hjust = 0.5),
+
+      complete = TRUE
+    )
+}
+
 
 # --- Fin themes_30DCC2025.R ---
