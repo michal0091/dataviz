@@ -70,3 +70,5 @@ po/*~
 # RStudio Connect folder
 rsconnect/
 R/30DayChartChallenge2025/data/poblacion_municipios_ine.csv
+R/30DayChartChallenge2025/data/pand-c-shp/pand_c.shp.xml
+R/30DayChartChallenge2025/data/pand-p-shp/pand_p.shp.xml
