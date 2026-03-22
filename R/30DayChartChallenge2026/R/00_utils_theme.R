@@ -1,88 +1,115 @@
 # =============================================================================
 # 00_utils_theme.R — Tema base para el #30DayChartChallenge 2026
 # =============================================================================
+library(ggplot2)
+library(ggtext)
+library(showtext)
+library(sysfonts)
+library(glue)
 
-#' Tema ggplot2 minimalista para storytelling limpio.
-#'
-#' Fondo blanco, sin panel gris, tipografía clara. Diseñado como base
-#' genérica que puede combinarse con cualquier tema semanal.
-#'
-#' @param base_size   Tamaño de fuente base (default: 11).
-#' @param base_family Familia tipográfica (default: "Lato").
-#' @param bg_col      Color de fondo (default: "#FFFFFF").
-#' @param text_col    Color principal del texto (default: "#222222").
-#' @param grid_col    Color de la cuadrícula (default: "#E8E8E8").
-#'
-#' @return Un objeto theme() de ggplot2.
-#'
-theme_30dcc <- function(base_size   = 11,
-                        base_family = "Lato",
-                        bg_col      = "#FFFFFF",
-                        text_col    = "#222222",
-                        grid_col    = "#E8E8E8") {
+# --- 1. CONFIGURACIÓN DE FUENTES ---
+#' @param extra_fonts Vector de caracteres con nombres exactos de Google Fonts
+setup_fonts_2026 <- function(extra_fonts = NULL) {
+  
+  # Fuentes base (las cargamos siempre por defecto)
+  font_add_google("Space Grotesk", "Space Grotesk")
+  font_add_google("Outfit", "Outfit")
+  
+  # Si el usuario pide más fuentes (ej. para un Theme Day), las iteramos
+  if (!is.null(extra_fonts)) {
+    for (font_name in extra_fonts) {
+      # Usamos tryCatch por si hay un error tipográfico en el nombre
+      tryCatch({
+        font_add_google(font_name, font_name)
+      }, error = function(e) {
+        warning(glue::glue("No se pudo cargar la fuente: {font_name}"))
+      })
+    }
+  }
+  
+  font_add(family = "fa-brands", regular = "fonts/fa-brands-400.ttf")
+  showtext_auto()
+}
 
-  ggplot2::theme_minimal(base_size = base_size, base_family = base_family) %+replace%
-    ggplot2::theme(
-      # Fondos —  sin panel gris
-      plot.background  = ggplot2::element_rect(fill = bg_col, color = NA),
-      panel.background = ggplot2::element_rect(fill = bg_col, color = NA),
+# --- 2. PALETA FUNK 2026 ---
+paleta_funk_2026 <- c(
+  lima = "#c0d10e",
+  azul_claro = "#4399ef",
+  cyan = "#00c8ef",
+  teja = "#c2562f",
+  naranja = "#e58131",
+  crema = "#e0c5ac",
+  oliva = "#688337",
+  mostaza = "#cfb423"
+)
 
-      # Cuadrícula: solo líneas mayores, muy sutiles
-      panel.grid.major = ggplot2::element_line(color = grid_col, linewidth = 0.3),
-      panel.grid.minor = ggplot2::element_blank(),
+# --- 3. FUNCIÓN DE CAPTION (Refactorizada) ---
+generar_caption_2026 <- function(dia, tema_dia, fuente_datos, color_autor, color_texto) {
+  github_icon <- "&#xf09b;"
+  twitter_icon <- "&#xf099;"
+  
+  glue(
+    "<span style='font-family:\"Space Grotesk\"; color:{color_autor};'><strong>#30DayChartChallenge2026</strong></span> | ",
+    "<span style='color:{color_texto};'>Día {dia}: {tema_dia}</span><br><br>",
+    "<span style='color:{color_texto};'><strong>Fuente:</strong> {fuente_datos}</span><br>",
+    "<span style='font-family:\"fa-brands\"; color:{color_autor};'>{github_icon}</span> ",
+    "<span style='color:{color_texto};'>@michal0091</span> &nbsp;&nbsp;&nbsp; ",
+    "<span style='font-family:\"fa-brands\"; color:{color_autor};'>{twitter_icon}</span> ",
+    "<span style='color:{color_texto};'>@tu_twitter</span>"
+  )
+}
 
-      # Tipografía general
-      text = ggplot2::element_text(color = text_col, family = base_family),
-
-      # Título: negrita, alineado a la izquierda
-      plot.title = ggplot2::element_text(
-        size   = ggplot2::rel(2.0),
-        face   = "bold",
-        hjust  = 0,
-        color  = text_col,
-        margin = ggplot2::margin(b = 6)
-      ),
-
-      # Subtítulo: más ligero, mayor interlineado
-      plot.subtitle = ggplot2::element_text(
-        size       = ggplot2::rel(1.3),
-        hjust      = 0,
-        color      = text_col,
-        lineheight = 1.3,
-        margin     = ggplot2::margin(b = 12)
-      ),
-
-      # Ejes: sin marcas, texto discreto
-      axis.text  = ggplot2::element_text(color = text_col, size = ggplot2::rel(1.1)),
-      axis.title = ggplot2::element_text(color = text_col, size = ggplot2::rel(1.2), hjust = 0.5),
-      axis.ticks = ggplot2::element_blank(),
-
-      # Leyenda: arriba, sin caja
-      legend.position      = "top",
+# --- 4. TEMA ESTRUCTURAL PARAMETRIZADO ---
+#' @param bg_color Color del fondo del gráfico y panel
+#' @param text_color Color principal para títulos, ejes y texto
+#' @param title_font Familia tipográfica para títulos
+#' @param text_font Familia tipográfica para el resto de textos
+theme_30dcc_base <- function(base_size = 12,
+                             bg_color = "#ffffff", 
+                             text_color = "#1a1a1a",
+                             title_font = "Space Grotesk",
+                             text_font = "Outfit") {
+  
+  theme_minimal(base_size = base_size, base_family = text_font) %+replace%
+    theme(
+      # Fondos dinámicos
+      plot.background = element_rect(fill = bg_color, color = NA),
+      panel.background = element_rect(fill = bg_color, color = NA),
+      
+      # Textos generales
+      text = element_text(color = text_color, family = text_font),
+      
+      # Títulos
+      plot.title = element_text(family = title_font, face = "bold", 
+                                size = rel(2.4), color = text_color, 
+                                margin = margin(t = 10, b = 5), hjust = 0),
+      plot.subtitle = element_text(family = text_font, size = rel(1.3), 
+                                   color = text_color, margin = margin(b = 20), hjust = 0),
+      
+      # Ejes
+      axis.text = element_text(color = text_color, size = rel(1.1)),
+      axis.title = element_text(family = title_font, color = text_color, 
+                                face = "bold", size = rel(1.2)),
+      
+      # Rejilla (Usa el color del texto pero con opacidad al 15%)
+      panel.grid.major.y = element_line(color = alpha(text_color, 0.15), linewidth = 0.4),
+      panel.grid.major.x = element_blank(),
+      panel.grid.minor = element_blank(),
+      
+      # Leyenda (Fondos transparentes para no romper el color de fondo)
+      legend.position = "top",
       legend.justification = "left",
-      legend.background    = ggplot2::element_rect(fill = bg_col, color = NA),
-      legend.key           = ggplot2::element_rect(fill = bg_col, color = NA),
-      legend.text          = ggplot2::element_text(color = text_col, size = ggplot2::rel(1.1)),
-      legend.title         = ggplot2::element_text(color = text_col, size = ggplot2::rel(1.2), face = "bold"),
-
-      # Facetas: sin recuadro gris
-      strip.background = ggplot2::element_blank(),
-      strip.text       = ggplot2::element_text(face = "bold", color = text_col, size = ggplot2::rel(1.1), hjust = 0),
-
-      # Caption: HTML/Markdown, alineado a la izquierda
-      plot.caption.position = "plot",
-      plot.caption = ggtext::element_markdown(
-        color      = text_col,
-        size       = ggplot2::rel(1.0),
-        hjust      = 0,
-        halign     = 0,
-        lineheight = 1.2,
-        margin     = ggplot2::margin(t = 12, b = 2)
-      ),
-
-      # Márgenes del plot
-      plot.margin = ggplot2::margin(15, 15, 10, 15),
-
-      complete = TRUE
+      legend.background = element_rect(fill = "transparent", color = NA),
+      legend.key = element_rect(fill = "transparent", color = NA),
+      legend.title = element_blank(),
+      legend.text = element_text(size = rel(1.1), color = text_color),
+      
+      # Caption
+      plot.caption = element_markdown(family = text_font, size = rel(1), 
+                                      color = text_color, hjust = 0, 
+                                      lineheight = 1.2, margin = margin(t = 20, b = 5)),
+      
+      # Márgenes para formato 4:5
+      plot.margin = margin(t = 20, r = 25, b = 20, l = 25)
     )
 }
