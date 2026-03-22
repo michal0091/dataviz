@@ -1,0 +1,328 @@
+# -----------------------------------------------------
+# Archivo de Configuración para #30DayChartChallenge 2026
+# -----------------------------------------------------
+
+defaults:
+  author_name: "Michal Kinel"
+  social_media:
+    github_icon:      "&#xf113"
+    github_username:  "michal0091"
+    mastodon_icon:    "&#xf4f6"
+    mastodon_username: "miki_peltzer"
+    mastodon_server:  "techhub.social"
+    linkedin_icon:    "&#xf08c"
+    linkedin_username: "michal-kinel"
+  main_hashtag: "#30DayChartChallenge"
+  year: 2026
+
+# Categorías del challenge
+categories:
+  1: "Comparisons"
+  2: "Distributions"
+  3: "Relationships"
+  4: "Timeseries"
+  5: "Uncertainties"
+
+# Prompts diarios (Abril 2026)
+# type: regular | data_day | theme_day
+daily_prompts:
+  1:
+    day: 1
+    category: "Comparisons"
+    category_number: 1
+    theme: "Part-to-Whole"
+    slug: "part_to_whole"
+    hashtag: "#Day1"
+    type: regular
+    data_source_url: null
+    notes: ""
+  2:
+    day: 2
+    category: "Comparisons"
+    category_number: 1
+    theme: "Pictogram"
+    slug: "pictogram"
+    hashtag: "#Day2"
+    type: regular
+    data_source_url: null
+    notes: ""
+  3:
+    day: 3
+    category: "Comparisons"
+    category_number: 1
+    theme: "Mosaic"
+    slug: "mosaic"
+    hashtag: "#Day3"
+    type: regular
+    data_source_url: null
+    notes: ""
+  4:
+    day: 4
+    category: "Comparisons"
+    category_number: 1
+    theme: "Slope"
+    slug: "slope"
+    hashtag: "#Day4"
+    type: regular
+    data_source_url: null
+    notes: ""
+  5:
+    day: 5
+    category: "Comparisons"
+    category_number: 1
+    theme: "Experimental"
+    slug: "experimental"
+    hashtag: "#Day5"
+    type: regular
+    data_source_url: null
+    notes: ""
+  6:
+    day: 6
+    category: "Comparisons"
+    category_number: 1
+    theme: "Reporters Without Borders"
+    slug: "reporters_without_borders"
+    hashtag: "#Day6"
+    type: data_day
+    data_source_url: "https://rsf.org/en/index"
+    notes: "Reporters Without Borders Data Day"
+  7:
+    day: 7
+    category: "Distributions"
+    category_number: 2
+    theme: "Multiscale"
+    slug: "multiscale"
+    hashtag: "#Day7"
+    type: regular
+    data_source_url: null
+    notes: ""
+  8:
+    day: 8
+    category: "Distributions"
+    category_number: 2
+    theme: "Circular"
+    slug: "circular"
+    hashtag: "#Day8"
+    type: regular
+    data_source_url: null
+    notes: ""
+  9:
+    day: 9
+    category: "Distributions"
+    category_number: 2
+    theme: "Wealth"
+    slug: "wealth"
+    hashtag: "#Day9"
+    type: regular
+    data_source_url: null
+    notes: ""
+  10:
+    day: 10
+    category: "Distributions"
+    category_number: 2
+    theme: "Pop Culture"
+    slug: "pop_culture"
+    hashtag: "#Day10"
+    type: regular
+    data_source_url: null
+    notes: ""
+  11:
+    day: 11
+    category: "Distributions"
+    category_number: 2
+    theme: "Physical"
+    slug: "physical"
+    hashtag: "#Day11"
+    type: regular
+    data_source_url: null
+    notes: ""
+  12:
+    day: 12
+    category: "Distributions"
+    category_number: 2
+    theme: "FlowingData"
+    slug: "flowingdata"
+    hashtag: "#Day12"
+    type: theme_day
+    data_source_url: "https://flowingdata.com"
+    notes: "FlowingData Theme Day"
+  13:
+    day: 13
+    category: "Relationships"
+    category_number: 3
+    theme: "Ecosystems"
+    slug: "ecosystems"
+    hashtag: "#Day13"
+    type: regular
+    data_source_url: null
+    notes: ""
+  14:
+    day: 14
+    category: "Relationships"
+    category_number: 3
+    theme: "Trade"
+    slug: "trade"
+    hashtag: "#Day14"
+    type: regular
+    data_source_url: null
+    notes: ""
+  15:
+    day: 15
+    category: "Relationships"
+    category_number: 3
+    theme: "Correlation"
+    slug: "correlation"
+    hashtag: "#Day15"
+    type: regular
+    data_source_url: null
+    notes: ""
+  16:
+    day: 16
+    category: "Relationships"
+    category_number: 3
+    theme: "Causation"
+    slug: "causation"
+    hashtag: "#Day16"
+    type: regular
+    data_source_url: null
+    notes: ""
+  17:
+    day: 17
+    category: "Relationships"
+    category_number: 3
+    theme: "Remake"
+    slug: "remake"
+    hashtag: "#Day17"
+    type: regular
+    data_source_url: null
+    notes: ""
+  18:
+    day: 18
+    category: "Relationships"
+    category_number: 3
+    theme: "UNICEF"
+    slug: "unicef"
+    hashtag: "#Day18"
+    type: data_day
+    data_source_url: "https://data.unicef.org"
+    notes: "UNICEF Data Day"
+  19:
+    day: 19
+    category: "Timeseries"
+    category_number: 4
+    theme: "Evolution"
+    slug: "evolution"
+    hashtag: "#Day19"
+    type: regular
+    data_source_url: null
+    notes: ""
+  20:
+    day: 20
+    category: "Timeseries"
+    category_number: 4
+    theme: "Global Change"
+    slug: "global_change"
+    hashtag: "#Day20"
+    type: regular
+    data_source_url: null
+    notes: ""
+  21:
+    day: 21
+    category: "Timeseries"
+    category_number: 4
+    theme: "Historical"
+    slug: "historical"
+    hashtag: "#Day21"
+    type: regular
+    data_source_url: null
+    notes: ""
+  22:
+    day: 22
+    category: "Timeseries"
+    category_number: 4
+    theme: "New Tool"
+    slug: "new_tool"
+    hashtag: "#Day22"
+    type: regular
+    data_source_url: null
+    notes: ""
+  23:
+    day: 23
+    category: "Timeseries"
+    category_number: 4
+    theme: "Seasons"
+    slug: "seasons"
+    hashtag: "#Day23"
+    type: regular
+    data_source_url: null
+    notes: ""
+  24:
+    day: 24
+    category: "Timeseries"
+    category_number: 4
+    theme: "South China Morning Post"
+    slug: "south_china_morning_post"
+    hashtag: "#Day24"
+    type: theme_day
+    data_source_url: "https://www.scmp.com/infographics"
+    notes: "South China Morning Post Theme Day"
+  25:
+    day: 25
+    category: "Uncertainties"
+    category_number: 5
+    theme: "Space"
+    slug: "space"
+    hashtag: "#Day25"
+    type: regular
+    data_source_url: null
+    notes: ""
+  26:
+    day: 26
+    category: "Uncertainties"
+    category_number: 5
+    theme: "Trend"
+    slug: "trend"
+    hashtag: "#Day26"
+    type: regular
+    data_source_url: null
+    notes: ""
+  27:
+    day: 27
+    category: "Uncertainties"
+    category_number: 5
+    theme: "Animation"
+    slug: "animation"
+    hashtag: "#Day27"
+    type: regular
+    data_source_url: null
+    notes: ""
+  28:
+    day: 28
+    category: "Uncertainties"
+    category_number: 5
+    theme: "Modeling"
+    slug: "modeling"
+    hashtag: "#Day28"
+    type: regular
+    data_source_url: null
+    notes: ""
+  29:
+    day: 29
+    category: "Uncertainties"
+    category_number: 5
+    theme: "Monochrome"
+    slug: "monochrome"
+    hashtag: "#Day29"
+    type: regular
+    data_source_url: null
+    notes: ""
+  30:
+    day: 30
+    category: "Uncertainties"
+    category_number: 5
+    theme: "Global Health Data Exchange"
+    slug: "global_health_data_exchange"
+    hashtag: "#Day30"
+    type: data_day
+    data_source_url: "https://ghdx.healthdata.org"
+    notes: "Global Health Data Exchange Data Day"
