@@ -441,3 +441,82 @@ prep_dia06_rsf <- function() {
   
   dt_raw[]
 }
+
+
+# =============================================================================
+# DÍA 07 — Multiscale (Distributions)
+# =============================================================================
+
+options(timeout = 600)
+prep_dia07_renta_aeat <- function() {
+  
+  log_info("Día 07: Leyendo microdatos de Renta Municipal (AEAT)...")
+  
+  link_csv <- "https://www.ine.es/jaxiT3/files/t/es/csv_bdsc/30824.csv?nocab=1"
+  dt_raw <- fread(link_csv, dec = ",")
+  
+  # Filtrar y limpiar
+  dt_municipios <- dt_raw[
+    Distritos == "" & 
+    Secciones == "" & 
+    Periodo == 2023 & 
+    `Indicadores de renta media` == "Renta neta media por persona"
+  ]
+
+  # Extraer los 2 primeros dígitos  Provincia
+  dt_municipios[, prov_code := str_extract(Municipios, "^\\d{2}")]
+
+  dic_ccaa <- data.table(
+    prov_code = sprintf("%02d", 1:52),
+    ccaa = c(
+      "País Vasco", "Castilla-La Mancha", "C. Valenciana", "Andalucía", "Castilla y León",
+      "Extremadura", "Islas Baleares", "Cataluña", "Castilla y León", "Extremadura",
+      "Andalucía", "C. Valenciana", "Castilla-La Mancha", "Andalucía", "Galicia",
+      "Castilla-La Mancha", "Cataluña", "Andalucía", "Castilla-La Mancha", "País Vasco",
+      "Andalucía", "Aragón", "Andalucía", "Castilla y León", "Cataluña",
+      "La Rioja", "Galicia", "Madrid", "Andalucía", "Murcia",
+      "Navarra", "Galicia", "Asturias", "Castilla y León", "Canarias",
+      "Galicia", "Castilla y León", "Canarias", "Cantabria", "Castilla y León",
+      "Andalucía", "Castilla y León", "Cataluña", "Aragón", "Castilla-La Mancha",
+      "C. Valenciana", "Castilla y León", "País Vasco", "Castilla y León", "Aragón",
+      "Ceuta", "Melilla"
+    )
+  )
+  dic_nuts1 <- data.table(
+    ccaa = c("Galicia", "Asturias", "Cantabria", 
+             "País Vasco", "Navarra", "La Rioja", "Aragón", 
+             "Madrid", 
+             "Castilla y León", "Castilla-La Mancha", "Extremadura", 
+             "Cataluña", "C. Valenciana", "Islas Baleares", 
+             "Andalucía", "Murcia", "Ceuta", "Melilla", 
+             "Canarias"),
+    nuts1 = c(rep("Noroeste", 3), 
+              rep("Noreste", 4), 
+              "Comunidad de Madrid", 
+              rep("Centro", 3), 
+              rep("Este", 3), 
+              rep("Sur", 4), 
+              "Canarias")
+  )
+  
+  dt_municipios <- merge(dt_municipios, dic_ccaa, by = "prov_code", all.x = TRUE)
+  dt_municipios <- merge(dt_municipios, dic_nuts1, by = "ccaa", all.x = TRUE)
+  
+  setnames(dt_municipios, "Total", "renta", skip_absent = TRUE)
+  dt_municipios[, renta :=as.numeric(gsub("\\.", "", renta))]
+  dt_municipios <- dt_municipios[!is.na(renta) & renta > 0]
+
+  # Total
+  dt_macro <- copy(dt_municipios)
+  dt_macro[, nuts1 := "TOTAL NACIONAL"]
+  
+  dt_final <- rbindlist(list(dt_macro, dt_municipios))
+  
+  # Ordenar de mayor a menor renta (aprox) para que visualmente el gráfico tenga sentido
+  orden <- c("TOTAL NACIONAL", "Comunidad de Madrid", "Noreste", "Este", "Noroeste", "Centro", "Canarias", "Sur")
+  dt_final[, nuts1 := factor(nuts1, levels = rev(orden))]
+  
+  log_success("Día 07: Agrupación NUTS 1 completada. {nrow(dt_final)} registros listos.")
+  
+  dt_final[]
+}
