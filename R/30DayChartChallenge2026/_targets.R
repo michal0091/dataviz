@@ -113,6 +113,23 @@ list(
     format = "file"
   ),
 
+  # Day 05 --- Experimental (Comparisons)
+  tar_target(
+    clean_dia05,
+    prep_dia05_experimental()
+  ),
+  tar_target(
+    plot_dia05,
+    plot_dia05_experimental(clean_dia05, paleta = paleta_funk_2026)
+  ),
+  tar_target(
+    save_dia05,
+    ggsave(paste0(OUTPUTS_DIR, "/dia05_experimental.png"), plot_dia05, 
+           width = 8, height = 10, dpi = 300, bg = "#14141c"), 
+    format = "file"
+  ),
+
+
   # Marcador de fin de pipeline (eliminar cuando haya targets reales)
   tar_target(pipeline_listo, TRUE)
 
