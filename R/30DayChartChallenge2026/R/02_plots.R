@@ -9,6 +9,8 @@ library(ggplot2)
 library(stringr)
 library(ggtext)
 library(showtext)
+library(logger)
+library(glue)
 
 
 # =============================================================================
@@ -407,8 +409,8 @@ plot_dia05_experimental <- function(dt, paleta) {
     scale_y_continuous(limits = c(-max_val * 0.4, max_val * 1.3)) +
     
     labs(
-      title = "La Expansión Energética",
-      subtitle = str_wrap("Dumbbell Polar del consumo de energía per cápita (kWh) en el G20. El punto verde interior marca el año 2000; el punto cyan exterior, el año 2022.", 65),
+      title = "¿La Expansión Energética?",
+      subtitle = glue("Dumbbell Polar del consumo de energía per cápita (kWh) en el G20.<br><b><span style='color: {color_2000};'>El punto verde marca el año 2000</span>;<span style='color: {color_2022};'> el punto cyan, el año 2022.</span></b>"),
       caption = generar_caption_2026("05", "Experimental", "Our World in Data", color_2022, texto_secundario)
     ) +
     
@@ -421,8 +423,8 @@ plot_dia05_experimental <- function(dt, paleta) {
       plot.caption.position = "plot",
       
       # Forzamos la alineación manual en theme_void
-      plot.title = element_text(color = texto_dia, family = "Space Grotesk", face = "bold", size = rel(2.6), margin = margin(t = 10, b = 10, l = 0)),
-      plot.subtitle = element_text(color = texto_secundario, size = rel(1.1), margin = margin(b = 30, l = 0), lineheight = 1.2),
+      plot.title = element_text(color = texto_dia, family = "Space Grotesk", face = "bold", size = rel(2.4), margin = margin(t = 10, b = 10, l = 0)),
+      plot.subtitle = element_markdown(color = texto_secundario, margin = margin(b = 30, l = 0), lineheight = 1.2),
       
       plot.caption = element_markdown(color = texto_secundario, size = rel(0.7), hjust = 0, lineheight = 1.6, margin = margin(t = 20, l = 0, b = 40))
     )
