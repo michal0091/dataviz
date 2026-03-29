@@ -320,3 +320,48 @@ prep_dia04_slope <- function() {
   
   dt_long[]
 }
+
+
+# =============================================================================
+# DÍA 05 — Experimental (Comparisons)
+# =============================================================================
+
+
+prep_dia05_experimental <- function() {
+  
+  log_info("Día 05: Extrayendo datos para el Dumbbell Polar (G20).")
+  
+  url_owid <- "https://raw.githubusercontent.com/owid/energy-data/master/owid-energy-data.csv"
+  dt_raw <- fread(url_owid)
+  
+  # Países G20
+  paises_g20 <- c("United States", "China", "Japan", "Germany", "India", "United Kingdom", 
+                  "France", "Italy", "Brazil", "Canada", "South Korea", "Russia", "Australia",
+                  "Mexico", "Indonesia", "Saudi Arabia", "Turkey", "Argentina", "South Africa")
+  
+  dt_filt <- dt_raw[country %in% paises_g20 & year %in% c(2000, 2022), 
+                    .(country, year, energy_per_capita)]
+  
+  # Long to wide
+  dt_wide <- dcast(dt_filt, country ~ year, value.var = "energy_per_capita")
+  setnames(dt_wide, c("2000", "2022"), c("y2000", "y2022"))
+  
+  # Limpiamos posibles NAs y ordenamos por el valor actual para que el círculo tenga un gradiente de tamaño
+  dt_wide <- dt_wide[!is.na(y2000) & !is.na(y2022)]
+  setorder(dt_wide, y2022)
+  
+  # Factorizar
+  dt_wide[, country := factor(country, levels = dt_wide$country)]
+  
+  # Calcular los ángulos para las etiquetas polares
+  dt_wide[, id := 1:.N]
+  dt_wide[, angle := 90 - 360 * (id - 0.5) / .N]
+  
+  # Ajustar texto cambio en 180 grados
+  dt_wide[, hjust := fifelse(angle < -90, 1, 0)]
+  dt_wide[, angle := fifelse(angle < -90, angle + 180, angle)]
+  
+  log_success("Día 05: Datos polares listos. {nrow(dt_wide)} órbitas calculadas.")
+  
+  dt_wide[]
+}
