@@ -144,6 +144,22 @@ list(
            width = 8, height = 10, dpi = 300, bg = "#FFFFFF"), 
     format = "file"
   ),
+
+    # Day 07 --- Multiscale (Distributions)
+  tar_target(
+    clean_dia07,
+    prep_dia07_renta_aeat() 
+  ),  
+  tar_target(
+    plot_dia07,
+    plot_dia07_multiscale(clean_dia07, paleta = paleta_sobria_2026)
+  ),  
+  tar_target(
+    save_dia07,
+    ggsave(paste0(OUTPUTS_DIR, "/dia07_multiscale.png"), plot_dia07, 
+           width = 8, height = 10, dpi = 300, bg = "#faf5ed"), 
+    format = "file"
+  ),
   
   # Marcador de fin de pipeline (eliminar cuando haya targets reales)
   tar_target(pipeline_listo, TRUE)
