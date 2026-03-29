@@ -3,7 +3,6 @@
 # Autor: Michal Kinel
 # Ejecutar desde la raíz del proyecto: targets::tar_make()
 # =============================================================================
-
 library(targets)
 library(tarchetypes)
 
@@ -46,34 +45,73 @@ list(
   # --- Metadatos compartidos --------------------------------------------------
   tar_target(config,  yaml::read_yaml(CONFIG_FILE), format = "rds"),
 
-  # ===========================================================================
-  # DÍA 01 — Part-to-Whole (Comparisons)
-  # ===========================================================================
+  # Day 01 --- Part-to-Whole (Comparisons)
+  tar_target(
+    url_gcat_activos,
+    "https://planet4589.org/space/gcat/tsv/derived/active.tsv"
+  ),
+  tar_target(
+    clean_dia01, 
+    prep_dia01_satelites(url_gcat_activos)
+  ),
+  tar_target(
+    plot_dia01, 
+    plot_dia01_satelites(clean_dia01, paleta = paleta_funk_2026)
+  ),
+  tar_target(
+    save_dia01,
+    ggsave(paste0(OUTPUTS_DIR, "/dia01_part_to_whole.png"), plot_dia01, 
+           width = 8, height = 10, bg = paleta_funk_2026["azul_claro"]), 
+    format = "file"
+  ),
 
-  # Nodo 1: Lectura de datos crudos
-  # tar_target(
-  #   dia01_raw,
-  #   prep_raw_dia01(
-  #     path = file.path(DATA_DIR, "day_01.csv")
-  #   )
-  # ),
+  # Day 02 --- Pictogram (Comparisons)
+  tar_target(
+    clean_dia02,
+    prep_dia02_gaming()
+  ),
+  tar_target(
+    plot_dia02,
+    plot_dia02_pictogram(clean_dia02, paleta = paleta_funk_2026)
+  ),
+  tar_target(
+    save_dia02,
+    ggsave(paste0(OUTPUTS_DIR,"/dia02_pictogram.png"), plot_dia02, 
+           width = 8, height = 10, dpi = 300, bg = "#14141c"), 
+    format = "file"
+  ),
 
-  # Nodo 2: Limpieza y transformación con data.table
-  # tar_target(
-  #   dia01_clean,
-  #   prep_datos_dia01(dt_raw = dia01_raw)
-  # ),
+  # Day 02 --- Mosaic (Comparisons)
+  tar_target(
+    clean_dia03,
+    prep_dia03_energia() # Asegúrate de que tu función en 05_data_prep se llama así
+  ),
+  tar_target(
+    plot_dia03,
+    plot_dia03_mosaico(clean_dia03, paleta = paleta_funk_2026)
+  ),
+  tar_target(
+    save_dia03,
+    ggsave(paste0(OUTPUTS_DIR,"/dia03_mosaic.png"), plot_dia03, 
+           width = 8, height = 10, dpi = 300, bg = "#14141c"), 
+    format = "file"
+  ),
 
-  # Nodo 3: Generación del gráfico con ggplot2
-  # tar_target(
-  #   dia01_plot,
-  #   plot_dia01(
-  #     dt    = dia01_clean,
-  #     tema  = theme_30dcc(),
-  #     config = config,
-  #     output = file.path(OUTPUTS_DIR, "day_01_part_to_whole.png")
-  #   )
-  # ),
+  # Day 04 --- Slope (Comparisons)
+  tar_target(
+    clean_dia04,
+    prep_dia04_slope()
+  ),
+  tar_target(
+    plot_dia04,
+    plot_dia04_slope(clean_dia04, paleta = paleta_funk_2026)
+  ),
+  tar_target(
+    save_dia04,
+    ggsave(paste0(OUTPUTS_DIR, "/dia04_slope.png"), plot_dia04, 
+           width = 8, height = 10, dpi = 300, bg = "#14141c"), 
+    format = "file"
+  ),
 
   # Marcador de fin de pipeline (eliminar cuando haya targets reales)
   tar_target(pipeline_listo, TRUE)

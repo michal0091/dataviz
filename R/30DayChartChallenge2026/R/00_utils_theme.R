@@ -28,6 +28,7 @@ setup_fonts_2026 <- function(extra_fonts = NULL) {
   }
   
   font_add(family = "fa-brands", regular = "fonts/fa-brands-400.ttf")
+  font_add(family = "fa-solid", regular = "fonts/fa-solid-900.ttf")
   showtext_auto()
 }
 
@@ -45,18 +46,27 @@ paleta_funk_2026 <- c(
 
 # --- 3. FUNCIÓN DE CAPTION (Refactorizada) ---
 generar_caption_2026 <- function(dia, tema_dia, fuente_datos, color_autor, color_texto) {
-  github_icon <- "&#xf09b;"
-  twitter_icon <- "&#xf099;"
   
-  glue(
-    "<span style='font-family:\"Space Grotesk\"; color:{color_autor};'><strong>#30DayChartChallenge2026</strong></span> | ",
-    "<span style='color:{color_texto};'>Día {dia}: {tema_dia}</span><br><br>",
-    "<span style='color:{color_texto};'><strong>Fuente:</strong> {fuente_datos}</span><br>",
-    "<span style='font-family:\"fa-brands\"; color:{color_autor};'>{github_icon}</span> ",
-    "<span style='color:{color_texto};'>@michal0091</span> &nbsp;&nbsp;&nbsp; ",
-    "<span style='font-family:\"fa-brands\"; color:{color_autor};'>{twitter_icon}</span> ",
-    "<span style='color:{color_texto};'>@tu_twitter</span>"
+  # Códigos Unicode de FontAwesome
+  icon_github <- "&#xf09b;"
+  icon_linkedin <- "&#xf08c;"
+  icon_mastodon <- "&#xf4f6;"
+  
+  # Construimos el HTML exactamente con tu layout de NatGeo
+  caption <- glue(
+    # Línea 1: Viz y Source
+    "<span style='color: {color_autor};'>**Viz:**</span> <span style='color: {color_texto};'>Michal Kinel</span> | ",
+    "<span style='color: {color_autor};'>**Source:**</span> <span style='color: {color_texto};'>{fuente_datos}</span><br>",
+    
+    # Línea 2: Redes Sociales con Iconos
+    "<span style='font-family:\"fa-brands\"; color: {color_texto};'>{icon_github}</span> <span style='color: {color_texto};'>michal0091</span> &nbsp;&nbsp;",
+    "<span style='font-family:\"fa-brands\"; color: {color_texto};'>{icon_linkedin}</span> <span style='color: {color_texto};'>michal-kinel</span> &nbsp;&nbsp;<br>",
+    
+    # Línea 3: Hashtags
+    "<span style='color: {color_autor};'>**#30DayChartChallenge2026**</span> | <span style='color: {color_texto};'>#Day{dia}: {tema_dia}</span>"
   )
+  
+  return(caption)
 }
 
 # --- 4. TEMA ESTRUCTURAL PARAMETRIZADO ---
