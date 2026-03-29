@@ -372,3 +372,60 @@ plot_dia04_slope <- function(dt, paleta) {
     
   return(p)
 }
+
+
+# =============================================================================
+# DÍA 05 — Experimental (Comparisons)
+# =============================================================================
+
+plot_dia05_experimental <- function(dt, paleta) {
+  
+  setup_fonts_2026()
+  showtext_opts(dpi = 300)
+  
+  fondo_dia <- "#14141c" 
+  texto_dia <- "#ffffff" 
+  texto_secundario <- "#a0aab5" 
+  
+  color_2000 <- unname(paleta["oliva"])
+  color_2022 <- unname(paleta["cyan"]) 
+  color_linea <- "#2a2d34"            
+  
+  max_val <- max(dt$y2022, na.rm = TRUE)
+  
+  p <- ggplot(dt, aes(x = country)) +
+    geom_segment(aes(xend = country, y = y2000, yend = y2022), 
+                 color = color_linea, linewidth = 2) +
+    geom_point(aes(y = y2000), color = color_2000, size = 3, alpha = 0.6) +
+    geom_point(aes(y = y2022), color = color_2022, size = 5) +
+
+    geom_text(aes(y = max_val * 1.1, label = country, angle = angle, hjust = hjust), 
+              color = texto_dia, family = "Space Grotesk", fontface = "bold", size = 5) +
+    
+    coord_polar(start = 0, clip = "off") +
+    
+    scale_y_continuous(limits = c(-max_val * 0.4, max_val * 1.3)) +
+    
+    labs(
+      title = "La Expansión Energética",
+      subtitle = str_wrap("Dumbbell Polar del consumo de energía per cápita (kWh) en el G20. El punto verde interior marca el año 2000; el punto cyan exterior, el año 2022.", 65),
+      caption = generar_caption_2026("05", "Experimental", "Our World in Data", color_2022, texto_secundario)
+    ) +
+    
+    theme_void(base_size = 16, base_family = "Outfit") +
+    theme(
+      plot.background = element_rect(fill = fondo_dia, color = NA),
+      panel.background = element_rect(fill = fondo_dia, color = NA),
+      
+      plot.title.position = "plot",
+      plot.caption.position = "plot",
+      
+      # Forzamos la alineación manual en theme_void
+      plot.title = element_text(color = texto_dia, family = "Space Grotesk", face = "bold", size = rel(2.6), margin = margin(t = 10, b = 10, l = 0)),
+      plot.subtitle = element_text(color = texto_secundario, size = rel(1.1), margin = margin(b = 30, l = 0), lineheight = 1.2),
+      
+      plot.caption = element_markdown(color = texto_secundario, size = rel(0.7), hjust = 0, lineheight = 1.6, margin = margin(t = 20, l = 0, b = 40))
+    )
+    
+  return(p)
+}
