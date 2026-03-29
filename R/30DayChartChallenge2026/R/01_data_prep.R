@@ -389,3 +389,55 @@ prep_dia05_experimental <- function() {
   
   dt_wide[]
 }
+
+
+# =============================================================================
+# DÍA 06 — Reporters Without Borders (Comparisons)
+# =============================================================================
+
+prep_dia06_rsf <- function() {
+  
+  log_info("Día 06: Leyendo y limpiando índice real de RSF...")
+  
+  archivo_local <- "R/30DayChartChallenge2026/data/rsf_index_2025.csv" 
+  dt_raw <- fread(archivo_local, dec = ",", encoding = "Latin-1")
+  
+  # Renombrar
+  setnames(dt_raw, 
+           old = c("Country_ES", "Score 2025", "Zone"), 
+           new = c("country", "score", "zona_original"))
+  
+  # Traducir zonas
+  diccionario_zonas <- data.table(
+    zona_original = c("Afrique", "Amériques", "Asie-Pacifique", "EEAC", "MENA", "UE Balkans"),
+    continente = c("África", "América", "Asia-Pacífico", "Europa del Este y Asia Central", "Oriente Medio y Norte de África", "UE y Balcanes")
+  )
+  dt_raw <- merge(dt_raw, diccionario_zonas, by = "zona_original", all.x = TRUE)
+  
+  # Clasificar según RSF
+  dt_raw[, categoria := fcase(
+    score >= 85, "Buena",
+    score >= 70 & score < 85, "Satisfactoria",
+    score >= 55 & score < 70, "Problemática",
+    score >= 40 & score < 55, "Difícil",
+    score < 40, "Muy Grave"
+  )]
+  
+  niveles_rsf <- c("Buena", "Satisfactoria", "Problemática", "Difícil", "Muy Grave")
+  dt_raw[, categoria := factor(categoria, levels = niveles_rsf)]
+  
+  # Ordenar zonas por mediana
+  dt_medianas <- dt_raw[, .(mediana = median(score, na.rm = TRUE)), by = continente]
+  setorder(dt_medianas, mediana)
+  dt_raw[, continente := factor(continente, levels = dt_medianas$continente)]
+  
+  # Labels
+  setorder(dt_raw, continente, -score)
+  dt_raw[, etiqueta := ""]
+  dt_raw[, id_rango := 1:.N, by = continente]
+  dt_raw[id_rango == 1 | id_rango == .N, etiqueta := country]
+  
+  log_success("Día 06: Datos RSF reales procesados. {nrow(dt_raw)} países listos para plotear.")
+  
+  dt_raw[]
+}
