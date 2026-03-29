@@ -84,7 +84,7 @@ list(
   # Day 02 --- Mosaic (Comparisons)
   tar_target(
     clean_dia03,
-    prep_dia03_energia() # Asegúrate de que tu función en 05_data_prep se llama así
+    prep_dia03_energia() 
   ),
   tar_target(
     plot_dia03,
@@ -129,7 +129,22 @@ list(
     format = "file"
   ),
 
-
+  # Day 06 --- RSF (Editorial)
+  tar_target(
+    clean_dia06,
+    prep_dia06_rsf() 
+  ),  
+  tar_target(
+    plot_dia06,
+    plot_dia06_rsf_editorial(clean_dia06)
+  ),  
+  tar_target(
+    save_dia06,
+    ggsave(paste0(OUTPUTS_DIR, "/dia06_rsf.png"), plot_dia06, 
+           width = 8, height = 10, dpi = 300, bg = "#FFFFFF"), 
+    format = "file"
+  ),
+  
   # Marcador de fin de pipeline (eliminar cuando haya targets reales)
   tar_target(pipeline_listo, TRUE)
 

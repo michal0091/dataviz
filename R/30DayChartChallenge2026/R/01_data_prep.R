@@ -410,7 +410,7 @@ prep_dia06_rsf <- function() {
   # Traducir zonas
   diccionario_zonas <- data.table(
     zona_original = c("Afrique", "Amériques", "Asie-Pacifique", "EEAC", "MENA", "UE Balkans"),
-    continente = c("África", "América", "Asia-Pacífico", "Europa del Este y Asia Central", "Oriente Medio y Norte de África", "UE y Balcanes")
+    continente = c("África", "América", "Asia-Pacífico", "Europa del Este\ny Asia Central", "Oriente Medio\ny Norte de África", "UE y Balcanes")
   )
   dt_raw <- merge(dt_raw, diccionario_zonas, by = "zona_original", all.x = TRUE)
   
