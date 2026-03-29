@@ -11,9 +11,13 @@ library(glue)
 #' @param extra_fonts Vector de caracteres con nombres exactos de Google Fonts
 setup_fonts_2026 <- function(extra_fonts = NULL) {
   
-  # Fuentes base (las cargamos siempre por defecto)
+  # Fuentes base Funk (Tech/Neón)
   font_add_google("Space Grotesk", "Space Grotesk")
   font_add_google("Outfit", "Outfit")
+  
+  # Fuentes base Sobrias (Editorial/Distribuciones)
+  font_add_google("Lora", "Lora")
+  font_add_google("Fira Sans", "Fira Sans")
   
   # Si el usuario pide más fuentes (ej. para un Theme Day), las iteramos
   if (!is.null(extra_fonts)) {
@@ -32,7 +36,9 @@ setup_fonts_2026 <- function(extra_fonts = NULL) {
   showtext_auto()
 }
 
-# --- 2. PALETA FUNK 2026 ---
+# --- 2. PALETAS DE COLOR ---
+
+# Paleta original (Días 1-6)
 paleta_funk_2026 <- c(
   lima = "#c0d10e",
   azul_claro = "#4399ef",
@@ -44,7 +50,19 @@ paleta_funk_2026 <- c(
   mostaza = "#cfb423"
 )
 
-# --- 3. FUNCIÓN DE CAPTION (Refactorizada) ---
+# Paleta nueva (Distribuciones / Editorial)
+paleta_sobria_2026 <- c(
+  fondo = "#faf5ed",       # Crema/Blanco roto para el lienzo
+  magenta = "#cd2162",     # Color de acento brutal
+  pino = "#4f766f",        # Verde oscuro apagado
+  coral = "#e2928d",       # Rosa salmón
+  malva = "#a88b93",       # Morado grisáceo
+  pizarra = "#6d7172",     # Gris medio para textos/ejes
+  dorado = "#e6c570",      # Amarillo arena
+  nude = "#f4caab"         # Piel/Melocotón claro
+)
+
+# --- 3. FUNCIÓN DE CAPTION ---
 generar_caption_2026 <- function(dia, tema_dia, fuente_datos, color_autor, color_texto) {
   
   # Códigos Unicode de FontAwesome
