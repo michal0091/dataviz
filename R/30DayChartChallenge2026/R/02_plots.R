@@ -8,6 +8,7 @@
 library(ggplot2)
 library(stringr)
 library(ggtext)
+library(ggridges)
 library(showtext)
 library(logger)
 library(glue)
@@ -513,4 +514,74 @@ plot_dia06_rsf_editorial <- function(dt) {
     )
     
   return(p)
+}
+
+
+# =============================================================================
+# DÍA 07 — Multiscale (Distributions)
+# =============================================================================
+
+plot_dia07_multiscale <- function(dt, paleta) {
+  
+  setup_fonts_2026()
+  
+  fondo_papel <- unname(paleta["fondo"])
+  color_texto <- unname(paleta["pizarra"])
+  color_macro <- unname(paleta["magenta"])
+  
+  # Mapeo de la paleta a las zonas NUTS 1
+  colores_nuts1 <- c(
+    "TOTAL NACIONAL"      = color_macro,
+    "Comunidad de Madrid" = unname(paleta["coral"]),
+    "Noreste"             = unname(paleta["pino"]),
+    "Este"                = unname(paleta["malva"]),
+    "Noroeste"            = unname(paleta["dorado"]),
+    "Centro"              = unname(paleta["nude"]),
+    "Sur"                 = "#c5aeb1", # Tono extra mezclado para que encaje
+    "Canarias"            = "#8f9c99"  # Tono extra mezclado
+  )
+  
+  p <- ggplot(dt, aes(x = renta, y = nuts1, fill = nuts1)) +
+    
+    geom_density_ridges(scale = 1.7, rel_min_height = 0.005, color = fondo_papel, 
+                        linewidth = 0.8, alpha = 0.85) +
+    
+    scale_fill_manual(values = colores_nuts1) +
+    
+    scale_x_continuous(labels = scales::label_dollar(prefix = "", suffix = "€", big.mark = ".", decimal.mark = ","),
+                       breaks = seq(10000, 30000, by = 5000), 
+                       limits = c(7000, 32000), expand = c(0, 0)) +
+    
+    labs(
+      title = "La Fractura Macro-Regional",
+      subtitle = str_wrap("Distribución multiescala de la renta neta por persona a nivel NUTS 1 (2023). La perspectiva macro revela profundas brechas territoriales: mientras el Sur, Canarias y el Noroeste presentan distribuciones estrechas que indican gran homogeneidad en rentas medias y bajas, la Comunidad de Madrid destaca por su extrema dispersión y una pronunciada cola hacia las rentas más altas.", 60),
+      caption = generar_caption_2026("07", "Multiscale (NUTS 1)", "INE (Atlas de Distribución de Renta)", color_macro, color_texto)
+    ) +
+    
+    theme_minimal(base_size = 16, base_family = "Fira Sans") +
+    theme(
+      plot.background = element_rect(fill = fondo_papel, color = NA),
+      panel.background = element_rect(fill = fondo_papel, color = NA),
+      text = element_text(color = color_texto),
+      
+      plot.title = element_text(family = "Lora", face = "bold", size = rel(2.2), color = color_macro),
+      plot.subtitle = element_text(family = "Lora", size = rel(1.05), color = color_texto, margin = margin(b = 40), lineheight = 1.2),
+      
+      plot.title.position = "plot",
+
+      axis.title = element_blank(),
+      axis.text.y = element_text(face = "bold", size = rel(1.1), color = color_texto),
+      axis.text.x = element_text(size = rel(0.9), margin = margin(t = 10)),
+      
+      panel.grid.major.y = element_line(color = "#e6ded1", linewidth = 1),
+      panel.grid.major.x = element_blank(),
+      panel.grid.minor = element_blank(),
+      
+      legend.position = "none",
+      plot.caption = element_markdown(family = "Lora", size = rel(0.7), color = color_macro, hjust = 0, lineheight = 1.6, margin = margin(t = 40)),
+      plot.caption.position = "plot",
+      plot.margin = margin(40, 20, 40, 40)
+    )
+    
+    return(p)
 }
