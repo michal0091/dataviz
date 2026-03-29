@@ -342,6 +342,30 @@ prep_dia05_experimental <- function() {
   dt_filt <- dt_raw[country %in% paises_g20 & year %in% c(2000, 2022), 
                     .(country, year, energy_per_capita)]
   
+  # Traducir
+  dt_filt[, country := fcase(
+    "United States" == country, "Estados Unidos",
+    "China" == country, "China",
+    "Japan" == country, "Japón",
+    "Germany" == country, "Alemania",
+    "India" == country, "India",
+    "United Kingdom" == country, "Reino Unido",
+    "France" == country, "Francia",
+    "Italy" == country, "Italia",
+    "Brazil" == country, "Brasil",
+    "Canada" == country, "Canadá",
+    "South Korea" == country, "Corea del Sur",
+    "Russia" == country, "Rusia",
+    "Australia" == country, "Australia",
+    "Mexico" == country, "México",
+    "Indonesia" == country, "Indonesia",
+    "Saudi Arabia" == country, "Arabia Saudita",
+    "Turkey" == country, "Turquía",
+    "Argentina" == country, "Argentina",
+    "South Africa" == country, "Sudáfrica",
+    default = country
+  )]
+  
   # Long to wide
   dt_wide <- dcast(dt_filt, country ~ year, value.var = "energy_per_capita")
   setnames(dt_wide, c("2000", "2022"), c("y2000", "y2022"))
