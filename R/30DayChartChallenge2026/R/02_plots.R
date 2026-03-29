@@ -431,3 +431,86 @@ plot_dia05_experimental <- function(dt, paleta) {
     
   return(p)
 }
+
+
+# =============================================================================
+# DÍA 06 — Reporters Without Borders (Comparisons)
+# =============================================================================
+
+plot_dia06_rsf_editorial <- function(dt) {
+  
+  # Añadir fuente Lato
+  font_add_google("Lato", "lato")
+  showtext_opts(dpi = 300)
+  showtext_auto()
+  
+  # Estética de RSF.ORG
+  fondo_rsf <- "#FFFFFF" 
+  texto_rsf <- "#1B1B1B" 
+  texto_secundario <- "#949494" 
+  color_referencia <- "#E0E0E0" 
+  color_acento_rsf <- "#EA0A38" # Lipstick Red RSF
+  
+  colores_score <- c(
+    "Buena" = "#3E5FFF",           
+    "Satisfactoria" = "#ADDAA8",   
+    "Problemática" = "#FFFF66",     
+    "Difícil" = "#FFA100",         
+    "Muy Grave" = "#DE2717"         
+  )
+  
+  p <- ggplot(dt, aes(x = score, y = continente, color = categoria)) +
+    
+    geom_vline(xintercept = 50, color = color_referencia, linewidth = 1, linetype = "dashed") +
+    geom_jitter(height = 0.25, width = 0, size = 3.5, alpha = 0.85) +
+    
+    # Textos de los países usando Lato Bold
+    geom_text(aes(label = etiqueta), vjust = -1.5, color = color_acento_rsf,
+              family = "lato", fontface = "bold", size = 4.5, show.legend = FALSE) +
+    
+    scale_color_manual(values = colores_score) +
+    scale_x_continuous(limits = c(0, 100), breaks = seq(0, 100, 20), expand = c(0.02, 0)) +
+    
+    labs(
+      title = "La Geografía de la Censura",
+      subtitle = str_wrap("Índice Mundial de Libertad de Prensa. Cada punto representa un país. Las puntuaciones más bajas (0) indican represión absoluta; las más altas (100), libertad total.", 65),
+      caption = generar_caption_2026("06", "Reporters Without Borders", "RSF World Press Freedom Index", color_acento_rsf, texto_secundario)
+    ) +
+    
+    # Tema editorial RSF
+    theme_minimal(base_size = 16, base_family = "lato") +
+    theme(
+      plot.background = element_rect(fill = fondo_rsf, color = NA),
+      panel.background = element_rect(fill = fondo_rsf, color = NA),
+      text = element_text(color = texto_rsf, family = "lato"),
+      
+      plot.title.position = "plot",
+      plot.caption.position = "plot",
+      
+      # Títulos en Lato Bold con el color de RSF
+      plot.title = element_text(family = "lato", face = "bold", size = rel(2.2), color = color_acento_rsf, margin = margin(b = 10)),
+      plot.subtitle = element_text(family = "lato", size = rel(1.1), color = texto_secundario, margin = margin(b = 40), lineheight = 1.2),
+      
+      axis.title = element_blank(),
+      axis.text.y = element_text(color = texto_rsf, face = "bold", size = rel(1), margin = margin(r = 5)),
+      axis.text.x = element_text(color = texto_secundario, size = rel(1.1)),
+      
+      panel.grid.major.y = element_blank(), 
+      panel.grid.minor = element_blank(),
+      panel.grid.major.x = element_line(color = color_referencia, linewidth = 0.5, linetype = "dotted"),
+      
+      legend.position = "top",
+      legend.justification.top = "left",
+      legend.location = "plot",
+      legend.title = element_blank(),
+      legend.text = element_text(size = rel(0.8), color = texto_rsf, face = "bold"),
+      legend.key.size = unit(0.8, "cm"),
+      legend.margin = margin(b = 20),
+      
+      # Forzamos que ggtext también respete Lato
+      plot.caption = element_markdown(family = "lato", size = rel(0.7), color = texto_secundario, hjust = 0, lineheight = 1.6, margin = margin(t = 40)),
+      plot.margin = margin(40, 40, 40, 40)
+    )
+    
+  return(p)
+}
