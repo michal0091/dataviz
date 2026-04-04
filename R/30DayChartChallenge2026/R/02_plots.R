@@ -443,6 +443,7 @@ plot_dia06_rsf_editorial <- function(dt) {
   # Añadir fuente Lato
   font_add_google("Lato", "lato")
   showtext_opts(dpi = 300)
+  setup_fonts_2026()
   showtext_auto()
   
   # Estética de RSF.ORG
