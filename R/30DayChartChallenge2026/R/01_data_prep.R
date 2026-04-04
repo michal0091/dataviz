@@ -567,3 +567,47 @@ prep_dia08_circular <- function() {
   
   dt_mes[]
 }
+
+
+# =============================================================================
+# DÍA 09 — Wealth (Distributions)
+# =============================================================================
+
+prep_dia09_wealth <- function() {
+  
+  log_info("Día 09: Procesando microdatos de Riqueza (Forbes Billionaires)...")
+  
+  archivo_local <- "R/30DayChartChallenge2026/data/billionaires_2024.csv"
+  
+  if (!file.exists(archivo_local)) {
+    log_error("FALTA EL ARCHIVO: Descarga el CSV de Forbes Billionaires y guárdalo en {archivo_local}")
+    stop("Pipeline detenido: Necesitamos datos reales.")
+  }
+  
+  dt_raw <- fread(archivo_local)
+
+  setnames(dt_raw, 
+           old = c("2024 Net Worth", "Industry"), 
+           new = c("net_worth_raw", "sector"), 
+           skip_absent = TRUE)
+  
+  # Regex
+  # Eliminar el "$" y la "B", y convertimos a numérico
+  dt_raw[, riqueza_b := as.numeric(str_remove_all(net_worth_raw, "[\\$B]"))]
+  
+  # Filtrar NAs
+  dt_clean <- dt_raw[!is.na(riqueza_b) & !is.na(sector)]
+
+  # Filtrar
+  sectores_top <- dt_clean[, .N, by = sector][order(-N)][1:6, sector]
+  dt_top <- dt_clean[sector %in% sectores_top]
+  
+  dt_medianas <- dt_top[, .(mediana = median(riqueza_b)), by = sector]
+  setorder(dt_medianas, mediana)
+  
+  dt_top[, sector := factor(sector, levels = dt_medianas$sector)]
+  
+  log_success("Día 09 preparado. Extracción limpia de {nrow(dt_top)} milmillonarios del top 6 sectores.")
+  
+  dt_top[]
+}

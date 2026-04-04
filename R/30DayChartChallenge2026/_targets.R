@@ -179,6 +179,24 @@ list(
     format = "file"
   ),
 
+  # Day 09 --- Wealth (Distributions)
+  tar_target(
+    clean_dia09,
+    prep_dia09_wealth()
+  ),
+  
+  tar_target(
+    plot_dia09,
+    plot_dia09_wealth(clean_dia09, paleta = paleta_sobria_2026)
+  ),
+  
+  tar_target(
+    save_dia09,
+    ggsave(paste0(OUTPUTS_DIR, "/dia09_wealth.png"), plot_dia09, 
+           width = 8, height = 10, dpi = 300, bg = "#faf5ed"), 
+    format = "file"
+  ),
+
   # Marcador de fin de pipeline (eliminar cuando haya targets reales)
   tar_target(pipeline_listo, TRUE)
 

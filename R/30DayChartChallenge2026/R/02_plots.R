@@ -673,3 +673,70 @@ plot_dia08_circular <- function(dt, paleta) {
     
   return(p)
 }
+
+
+# =============================================================================
+# DÍA 09 — Wealth (Distributions)
+# =============================================================================
+
+plot_dia09_wealth <- function(dt, paleta) {
+  
+  setup_fonts_2026()
+  showtext_opts(dpi = 300)
+  
+  fondo_papel <- unname(paleta["fondo"])
+  color_texto <- unname(paleta["pizarra"])
+  color_base <- unname(paleta["malva"])       # Verde oscuro sobrio para el "montón"
+  color_tech <- unname(paleta["magenta"])    # Magenta vibrante para destacar a la tecnología
+  color_boxplot <- unname(paleta["pino"])
+  
+  # Flag para colorear a los "Tech Bros"
+  dt[, color_flag := fifelse(sector == "Technology", "Tech", "Resto")]
+  
+  p <- ggplot(dt, aes(x = riqueza_b, y = sector, color = color_flag)) +
+    
+    geom_jitter(height = 0.2, size = 3, alpha = 0.5) +
+    geom_boxplot(width = 0.5, fill = "transparent", color = color_boxplot, 
+                 outlier.shape = NA, linewidth = 0.9) +
+    
+    scale_color_manual(values = c("Resto" = color_base, "Tech" = color_tech)) +
+    
+    # Escala Logarítmica base 10
+    scale_x_log10(
+      labels = scales::label_dollar(suffix = " B", accuracy = 1),
+      breaks = c(1, 3, 10, 30, 100, 200) 
+    ) +
+    
+    labs(
+      title = "La Desigualdad de la Élite",
+      subtitle = str_wrap("Patrimonio neto (Miles de millones $) de los multimillonarios de Forbes 2024. Al usar una escala logarítmica, la Ley de Potencias se revela: la inmensa mayoría forma una densa 'clase media' alrededor de 2B-3B$, mientras unos pocos titanes (especialmente en Tecnología) estiran la cola hacia la derecha.", 60),
+      caption = generar_caption_2026("09", "Wealth (Distributions)", "Forbes World's Billionaires List 2024 (via Kaggle)", color_tech, color_texto)
+    ) +
+    
+    theme_minimal(base_size = 16, base_family = "Fira Sans") +
+    theme(
+      plot.background = element_rect(fill = fondo_papel, color = NA),
+      panel.background = element_rect(fill = fondo_papel, color = NA),
+      text = element_text(color = color_texto),
+      
+      plot.title.position = "plot",
+      plot.caption.position = "plot",
+      
+      plot.title = element_text(family = "Lora", face = "bold", size = rel(2.1), color = color_tech, margin = margin(b = 10)),
+      plot.subtitle = element_text(family = "Lora", size = rel(1.05), color = color_texto, margin = margin(b = 40), lineheight = 1.3),
+      
+      axis.title = element_blank(),
+      axis.text.y = element_text(family = "Fira Sans", face = "bold", size = rel(1.05), color = color_texto),
+      axis.text.x = element_text(family = "Fira Sans", size = rel(0.9), color = color_texto, margin = margin(t = 5)),
+      
+      panel.grid.major.y = element_blank(),
+      panel.grid.major.x = element_line(color = "#e6ded1", linewidth = 1, linetype = "dotted"),
+      panel.grid.minor.x = element_blank(),
+      
+      legend.position = "none",
+      plot.caption = element_markdown(family = "Fira Sans", size = rel(0.7), color = color_texto, hjust = 0, lineheight = 1.6, margin = margin(t = 40)),
+      plot.margin = margin(40, 40, 40, 40)
+    )
+    
+  return(p)
+}
