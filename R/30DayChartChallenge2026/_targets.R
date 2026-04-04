@@ -145,7 +145,7 @@ list(
     format = "file"
   ),
 
-    # Day 07 --- Multiscale (Distributions)
+  # Day 07 --- Multiscale (Distributions)
   tar_target(
     clean_dia07,
     prep_dia07_renta_aeat() 
@@ -160,7 +160,25 @@ list(
            width = 8, height = 10, dpi = 300, bg = "#faf5ed"), 
     format = "file"
   ),
+
+  # Day 08 --- Circular (Distributions)
+  tar_target(
+    clean_dia08,
+    prep_dia08_circular()
+  ),
   
+  tar_target(
+    plot_dia08,
+    plot_dia08_circular(clean_dia08, paleta = paleta_sobria_2026)
+  ),
+  
+  tar_target(
+    save_dia08,
+    ggsave(paste0(OUTPUTS_DIR, "/dia08_circular.png"), plot_dia08, 
+           width = 8, height = 10, dpi = 300, bg = "#faf5ed"), 
+    format = "file"
+  ),
+
   # Marcador de fin de pipeline (eliminar cuando haya targets reales)
   tar_target(pipeline_listo, TRUE)
 

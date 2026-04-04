@@ -586,3 +586,90 @@ plot_dia07_multiscale <- function(dt, paleta) {
     
     return(p)
 }
+
+
+# =============================================================================
+# DÍA 08 — Circular (Distributions)
+# =============================================================================
+
+plot_dia08_circular <- function(dt, paleta) {
+  
+  setup_fonts_2026()
+  showtext_opts(dpi = 300)
+  
+  fondo_papel <- unname(paleta["fondo"])
+  color_texto <- unname(paleta["pizarra"])
+  
+  # Colores para la doble capa
+  color_base_total <- "#e6ded1"             
+  color_cesareas_normal <- unname(paleta["pino"])  
+  color_cesareas_pico <- unname(paleta["magenta"]) 
+  
+  max_val <- max(dt$total_nacimientos)
+  
+  p <- ggplot(dt, aes(x = MESPAR)) +
+    
+    geom_hline(yintercept = seq(0, max_val, length.out = 4), 
+               color = color_base_total, linewidth = 0.75, linetype = "dotted") +
+    geom_col(aes(y = total_nacimientos), fill = color_base_total, 
+             width = 0.9, color = fondo_papel, linewidth = 0.5, alpha = 0.75) +
+    geom_col(aes(y = total_cesareas, fill = color_flag), 
+             width = 0.9, color = fondo_papel, linewidth = 0.5) +
+    
+    # Textos
+    geom_text(aes(y = total_cesareas + (max_val * 0.2), 
+                  label = paste0(round(pct_cesarea * 100, 1), "%"),
+                  color = color_flag),
+              family = "Fira Sans", fontface = "bold", size = 4.5) +
+    
+    scale_fill_manual(values = c("Normal" = color_cesareas_normal, "Pico" = color_cesareas_pico)) +
+    scale_color_manual(values = c("Normal" = color_texto, "Pico" = color_cesareas_pico)) +
+    
+    # Configuración de los meses en el anillo exterior
+    scale_x_continuous(
+      breaks = 1:12,
+      labels = dt$mes_nombre,
+      limits = c(0.5, 12.5),
+      expand = c(0, 0)
+    ) +
+    
+    # El Agujero del Donut
+    scale_y_continuous(
+      limits = c(-max_val * 0.35, max_val * 1.05),
+      expand = c(0, 0)
+    ) +
+    
+    coord_polar(start = -pi/12, clip = "off") +
+    
+    labs(
+      title = "El Calendario de Quirófano",
+      subtitle = str_wrap("Distribución mensual de nacimientos en España (2024). El anillo gris exterior representa el volumen total de partos; el anillo interior resalta las intervenciones por cesárea. Analizamos si la estacionalidad médica (festivos, verano) altera la tasa natural de cirugías.", 60),
+      caption = generar_caption_2026("08", "Circular (Distributions)", "INE (Microdatos Nacimientos 2024)", color_cesareas_pico, color_texto)
+    ) +
+    
+    theme_minimal(base_size = 16, base_family = "Fira Sans") +
+    theme(
+      plot.background = element_rect(fill = fondo_papel, color = NA),
+      panel.background = element_rect(fill = fondo_papel, color = NA),
+      text = element_text(color = color_texto),
+      
+      plot.title.position = "plot",
+      plot.caption.position = "plot",
+      
+      plot.title = element_text(family = "Lora", face = "bold", size = rel(2.1), color = color_cesareas_pico, margin = margin(b = 10, l = 0)),
+      plot.subtitle = element_text(family = "Lora", size = rel(1), color = color_texto, margin = margin(b = 20, l = 0), lineheight = 1.3),
+      
+      axis.title = element_blank(),
+      axis.text.y = element_blank(),
+      axis.text.x = element_text(family = "Fira Sans", size = rel(1.2), color = color_texto, face = "bold"),
+      
+      panel.grid.major = element_blank(),
+      panel.grid.minor = element_blank(),
+      
+      legend.position = "none",
+      plot.caption = element_markdown(family = "Fira Sans", size = rel(0.7), color = color_texto, hjust = 0, lineheight = 1.6, margin = margin(t = 20, l = 0)),
+      plot.margin = margin(10, 0, 10, 0)
+    )
+    
+  return(p)
+}

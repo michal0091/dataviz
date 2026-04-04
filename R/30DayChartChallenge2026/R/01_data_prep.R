@@ -520,3 +520,50 @@ prep_dia07_renta_aeat <- function() {
   
   dt_final[]
 }
+
+
+# =============================================================================
+# DÍA 08 — Circular (Distributions)
+# =============================================================================
+
+prep_dia08_circular <- function() {
+  
+  log_info("Día 08: Procesando microdatos de nacimientos INE (2024)...")
+
+  archivo_microdatos <- "R/30DayChartChallenge2026/data/MNPnacim_2024.RData" 
+  
+  if (!file.exists(archivo_microdatos)) {
+    log_error("FALTA EL ARCHIVO: Guarda los microdatos del INE en {archivo_microdatos}")
+    stop("Pipeline detenido.")
+  }
+  load(archivo_microdatos)
+  dt_micro <- as.data.table(df_micro)
+  dt_micro[, MESPAR := as.integer(MESPAR)]
+  dt_clean <- dt_micro[MESPAR >= 1 & MESPAR <= 12]
+
+  dt_clean[, is_cesarea := fifelse(as.character(CESAREA) %in% c("1", "S", "s"), 1, 0)]
+  
+  # Agragar por mes
+  dt_mes <- dt_clean[, .(
+    total_nacimientos = .N,
+    total_cesareas = sum(is_cesarea, na.rm = TRUE)
+  ), by = MESPAR]
+
+  # Calculamos el % de cesáreas
+  dt_mes[, pct_cesarea := total_cesareas / total_nacimientos]
+  
+  setorder(dt_mes, MESPAR)
+  
+  # Etiquetar meses
+  meses_labels <- c("Ene", "Feb", "Mar", "Abr", "May", "Jun", 
+                    "Jul", "Ago", "Sep", "Oct", "Nov", "Dic")
+  dt_mes[, mes_nombre := meses_labels[MESPAR]]
+  
+  # Identificar el pico de nacimientos
+  mes_pico <- dt_mes[which.max(pct_cesarea), MESPAR]
+  dt_mes[, color_flag := fifelse(MESPAR == mes_pico, "Pico", "Normal")]
+  
+  log_success("Día 08 preparado. {sum(dt_mes$nacimientos)} nacimientos agrupados por mes.")
+  
+  dt_mes[]
+}
