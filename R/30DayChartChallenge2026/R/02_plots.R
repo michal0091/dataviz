@@ -335,7 +335,7 @@ plot_dia04_slope <- function(dt, paleta) {
     
     labs(
       title = "La Carrera Renovable",
-      subtitle = str_wrap("Evolución de la cuota de generación eléctrica mediante fuentes renovables en el siglo XXI. Destacan los saltos masivos de Reino Unido y Alemania, frente al estancamiento de Japón y EE.UU.", 65),
+      subtitle = str_wrap("Evolución de la cuota de generación eléctrica mediante fuentes renovables en el siglo XXI. Destacan los saltos masivos de España y Alemania, frente al estancamiento de Japón y EE.UU.", 65),
       caption = generar_caption_2026("04", "Slope", "Our World in Data (Energy Institute)", unname(paleta["cyan"]), texto_secundario)
     ) +
     
