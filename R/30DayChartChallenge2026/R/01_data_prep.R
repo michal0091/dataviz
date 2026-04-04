@@ -674,3 +674,53 @@ prep_dia10_popculture <- function() {
   dt_final[]
 
 }
+
+
+# =============================================================================
+# DÍA 11 — Physical (Distributions)
+# =============================================================================
+
+prep_dia11_physical <- function() {
+  
+  log_info("Día 11: Procesando microdatos físicos de atletas olímpicos...")
+  
+  archivo_local <- "R/30DayChartChallenge2026/data/dataset_olympics.csv"
+  
+  if (!file.exists(archivo_local)) {
+    log_error("FALTA EL ARCHIVO: Descarga (https://www.kaggle.com/datasets/bhanupratapbiswas/olympic-data) 'dataset_olympics.csv' de Kaggle y guárdalo en data/")
+    stop("Pipeline detenido.")
+  }
+  
+  dt_raw <- fread(archivo_local)
+  
+  # Filtrar
+  dt_clean <- dt_raw[Year >= 2000 & !is.na(Height)]
+  dt_clean <- dt_clean[Sex == "M"] # Atletas masculinos 
+  
+  # Selección 
+  deportes_clave <- c("Basketball", "Gymnastics", "Weightlifting", "Athletics", "Swimming")
+  dt_extremos <- dt_clean[Sport %in% deportes_clave]
+  
+  # Traducir
+  dt_extremos[, deporte_es := fcase(
+    Sport == "Basketball", "Baloncesto",
+    Sport == "Swimming", "Natación",
+    Sport == "Athletics", "Atletismo (General)",
+    Sport == "Weightlifting", "Halterofilia",
+    Sport == "Gymnastics", "Gimnasia Artística"
+  )]
+  
+  dt_medianas <- dt_extremos[, .(mediana_h = median(Height)), by = deporte_es]
+  setorder(dt_medianas, mediana_h)
+  
+  # Factorizamos forzando el orden de más bajitos a más altos
+  dt_extremos[, deporte_es := factor(deporte_es, levels = dt_medianas$deporte_es)]
+  
+  dt_final <- unique(dt_extremos, by = "ID")
+  
+  log_success("Día 11 preparado: {nrow(dt_final)} atletas físicos procesados.")
+  
+  dt_final[]
+}
+
+

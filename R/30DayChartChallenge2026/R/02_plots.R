@@ -815,3 +815,76 @@ plot_dia10_popculture <- function(dt, paleta_base) {
   return(p)
 }
 
+
+# =============================================================================
+# DÍA 11 — Physical (Distributions)
+# =============================================================================
+
+
+plot_dia11_physical <- function(dt, paleta) {
+  
+  setup_fonts_2026()
+  showtext_opts(dpi = 300)
+  
+  fondo_papel <- unname(paleta["fondo"])
+  color_texto <- unname(paleta["pizarra"])
+  color_acento <- unname(paleta["magenta"])
+  
+  colores_deporte <- c(
+    "Baloncesto"          = unname(paleta["magenta"]),
+    "Natación"            = unname(paleta["pino"]),
+    "Atletismo (General)" = unname(paleta["pizarra"]),
+    "Halterofilia"        = unname(paleta["dorado"]),
+    "Gimnasia Artística"  = unname(paleta["coral"])
+  )
+  
+  p <- ggplot(dt, aes(x = Height, y = deporte_es, fill = deporte_es)) +
+    
+    geom_vline(xintercept = 175, color = color_texto, linetype = "dashed", alpha = 0.5, linewidth = 0.8) +
+
+    geom_density_ridges(scale = 1.8, rel_min_height = 0.01, color = fondo_papel, 
+                        linewidth = 0.8, alpha = 0.85) +
+    annotate("text", x = 173, y = 5.8, label = "Media Humana (173cm)", 
+             family = "Fira Sans", color = color_texto, angle = 90, size = 3.5, fontface = "italic") +
+    
+    scale_fill_manual(values = colores_deporte) +
+    
+    # Configuramos el eje X (Altura en cm)
+    scale_x_continuous(breaks = seq(150, 220, by = 10), 
+                       labels = function(x) paste0(x, " cm"),
+                       limits = c(150, 225)) +
+    
+    labs(
+      title = "La Morfología del Éxito",
+      subtitle = str_wrap("Distribución de la altura física (masculina) en los Juegos Olímpicos del siglo XXI. El deporte de élite exige biotipos tan extremos que fracturan la distribución normal humana. Los gimnastas necesitan centros de gravedad bajos, mientras que el baloncesto filtra biológicamente a individuos en el percentil 99 de altura.", 60),
+      caption = generar_caption_2026("11", "Physical (Distributions)", "Kaggle (120 years of Olympic history)", color_acento, color_texto)
+    ) +
+    
+    theme_minimal(base_size = 16, base_family = "Fira Sans") +
+    theme(
+      plot.background = element_rect(fill = fondo_papel, color = NA),
+      panel.background = element_rect(fill = fondo_papel, color = NA),
+      text = element_text(color = color_texto),
+      
+      plot.title.position = "plot",
+      plot.caption.position = "plot",
+      
+      plot.title = element_text(family = "Lora", face = "bold", size = rel(2.2), color = color_acento, margin = margin(b = 10)),
+      plot.subtitle = element_text(family = "Lora", size = rel(1.1), color = color_texto, margin = margin(b = 40), lineheight = 1.3),
+      
+      axis.title = element_blank(),
+      axis.text.y = element_text(family = "Fira Sans", face = "bold", size = rel(1.05), color = color_texto, vjust = 0),
+      axis.text.x = element_text(family = "Fira Sans", size = rel(0.95), color = color_texto, margin = margin(t = 5)),
+      
+      panel.grid.major.y = element_line(color = "#e6ded1", linewidth = 1),
+      panel.grid.major.x = element_blank(),
+      panel.grid.minor = element_blank(),
+      
+      legend.position = "none",
+      
+      plot.caption = element_markdown(family = "Fira Sans", size = rel(0.7), color = color_texto, hjust = 0, lineheight = 1.6, margin = margin(t = 40)),
+      plot.margin = margin(40, 40, 40, 40)
+    )
+    
+  return(p)
+}
