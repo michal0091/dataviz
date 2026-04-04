@@ -740,3 +740,78 @@ plot_dia09_wealth <- function(dt, paleta) {
     
   return(p)
 }
+
+
+# =============================================================================
+# DÍA 10 — Pop Culture (Distributions)
+# =============================================================================
+
+plot_dia10_popculture <- function(dt, paleta_base) {
+  
+  setup_fonts_2026()
+  showtext_opts(dpi = 300)
+
+  fondo_papel <- unname(paleta_base["fondo"]) # #faf5ed
+  color_texto <- unname(paleta_base["pizarra"]) # #6d7172
+  
+  # Paleta de colores de 'FAMILY GUY' (portada)
+  fg_titulo <- "#0097D7"   # Blue-bell (Letra título)
+  
+  colores_eras <- c(
+    "Fundación y Estabilidad (T1-T3)" = "#2F642F", # Peter (Pantalón)
+    "Cénit Creativo (T4-T6)"          = "#FDDD7E", # Stewie (Camiseta)
+    "Erosión del Formato (T7-T11)"    = "#6174B8", # Chris (Camiseta)
+    "La Era de la Fatiga (T12-T23)"   = "#DE294C"  # Stewie (Pantalón - Alerta)
+  )
+  
+  p <- ggplot(dt, aes(x = averageRating, y = season_factor, fill = era)) +
+    
+    geom_vline(xintercept = 7.5, color = color_texto, linetype = "dashed", alpha = 0.4, linewidth = 0.8) +
+    geom_density_ridges(scale = 2.5, rel_min_height = 0.01, color = fondo_papel, linewidth = 0.6, alpha = 0.85) +
+    
+    scale_fill_manual(values = colores_eras) +
+    scale_x_continuous(breaks = seq(4, 10, by = 1), limits = c(4.5, 9.5)) +
+    
+    labs(
+      title = "La Decadencia de Quahog",
+      subtitle = str_wrap("Distribución de notas de 'Family Guy' en IMDb. Las primeras temporadas (Peter/Stewie) mantenían una consistencia férrea por encima del 7.5. A partir de la temporada 9, la campana se desploma, arrastrando la media hacia la mediocridad moderna.", 60),
+      caption = generar_caption_2026("10", "Pop Culture (Distributions)", "IMDb Non-Commercial Datasets", fg_titulo, color_texto)
+    ) +
+    
+    guides(fill = guide_legend(nrow = 2, byrow = TRUE)) +
+    
+    theme_minimal(base_size = 16, base_family = "Fira Sans") +
+    theme(
+      plot.background = element_rect(fill = fondo_papel, color = NA),
+      panel.background = element_rect(fill = fondo_papel, color = NA),
+      text = element_text(color = color_texto),
+      
+      plot.title.position = "plot",
+      plot.caption.position = "plot",
+      
+      # Título principal con el azul oficial de la serie
+      plot.title = element_text(family = "Lora", face = "bold", size = rel(2.2), color = fg_titulo, margin = margin(b = 10)),
+      plot.subtitle = element_text(family = "Lora", size = rel(1.1), color = color_texto, margin = margin(b = 30), lineheight = 1.3),
+      
+      axis.title = element_blank(),
+      axis.text.y = element_text(family = "Fira Sans", face = "bold", size = rel(1.1), color = color_texto, vjust = 0),
+      axis.text.x = element_text(family = "Fira Sans", size = rel(1.2), color = color_texto, margin = margin(t = 5)),
+      
+      panel.grid.major.y = element_line(color = "#e6ded1", linewidth = 0.5),
+      panel.grid.major.x = element_blank(),
+      panel.grid.minor = element_blank(),
+      
+      legend.position = "top",
+      legend.justification = "left",
+      legend.location = "plot",
+      legend.title = element_blank(),
+      legend.text = element_text(family = "Fira Sans", size = rel(0.8), face = "bold"),
+      legend.key.size = unit(0.8, "cm"),
+      
+      plot.caption = element_markdown(family = "Fira Sans", size = rel(0.7), color = color_texto, hjust = 0, lineheight = 1.6, margin = margin(t = 40)),
+      plot.margin = margin(30, 40, 30, 40)
+    )
+    
+  return(p)
+}
+

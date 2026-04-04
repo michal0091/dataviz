@@ -611,3 +611,66 @@ prep_dia09_wealth <- function() {
   
   dt_top[]
 }
+
+
+# =============================================================================
+# DÍA 10 — Pop Culture (Distributions)
+# =============================================================================
+
+
+prep_dia10_popculture <- function() {
+  
+  log_info("Día 10: Procesando los volcados masivos de IMDb para Family Guy...")
+  
+  archivo_episodios <- "R/30DayChartChallenge2026/data/title.episode.tsv.gz"
+  archivo_notas <- "R/30DayChartChallenge2026/data//title.ratings.tsv.gz"
+  
+  if (!file.exists(archivo_episodios) | !file.exists(archivo_notas)) {
+    log_error("FALTAN LOS ARCHIVOS DE IMDB (https://datasets.imdbws.com). Descarga 'title.episode.tsv.gz' y 'title.ratings.tsv.gz' en la carpeta data/")
+    stop("Pipeline detenido.")
+  }
+  
+  # Leer parcialmente
+  dt_episodes <- fread(archivo_episodios, select = c("tconst", "parentTconst", "seasonNumber"))
+  
+  # Filtramos solo los episodios cuyo padre es "Family Guy" (tt0182576)
+  dt_fg_episodes <- dt_episodes[parentTconst == "tt0182576"]
+  
+  # Limpiamos temporadas inválidas (IMDb a veces pone "\\N" para especiales o nulos)
+  dt_fg_episodes <- dt_fg_episodes[seasonNumber != "\\N"]
+  dt_fg_episodes[, seasonNumber := as.integer(seasonNumber)]
+  
+  # Leer parcialmente rankings
+  dt_ratings <- fread(archivo_notas, select = c("tconst", "averageRating", "numVotes"))
+  
+  # Merge
+  dt_final <- merge(dt_fg_episodes, dt_ratings, by = "tconst")
+  
+  # Limpiar
+  dt_final <- dt_final[numVotes > 100 & seasonNumber <= 23]
+  
+  niveles_temporadas <- sort(unique(dt_final$seasonNumber))
+  dt_final[, season_factor := factor(seasonNumber, levels = rev(niveles_temporadas))]
+  
+  # Agrupamos en "Eras" para darle color al gráfico
+  dt_final[, era := fcase(
+    seasonNumber <= 3, "Fundación y Estabilidad (T1-T3)",
+    seasonNumber >= 4 & seasonNumber <= 6, "Cénit Creativo (T4-T6)",
+    seasonNumber >= 7 & seasonNumber <= 11, "Erosión del Formato (T7-T11)",
+    seasonNumber >= 12, "La Era de la Fatiga (T12-T23)"
+  )]
+  
+  # Reordenamos el factor para el gráfico
+  orden_eras <- c(
+    "Fundación y Estabilidad (T1-T3)", 
+    "Cénit Creativo (T4-T6)", 
+    "Erosión del Formato (T7-T11)", 
+    "La Era de la Fatiga (T12-T23)"
+  )
+  dt_final[, era := factor(era, levels = orden_eras)]
+  
+  log_success("Día 10: Extraídos {nrow(dt_final)} episodios de Family Guy. Listos para graficar.")
+  
+  dt_final[]
+
+}

@@ -184,16 +184,30 @@ list(
     clean_dia09,
     prep_dia09_wealth()
   ),
-  
   tar_target(
     plot_dia09,
     plot_dia09_wealth(clean_dia09, paleta = paleta_sobria_2026)
   ),
-  
   tar_target(
     save_dia09,
     ggsave(paste0(OUTPUTS_DIR, "/dia09_wealth.png"), plot_dia09, 
            width = 8, height = 10, dpi = 300, bg = "#faf5ed"), 
+    format = "file"
+  ),
+
+  # Day 10 --- Pop Culture (Distributions)
+  tar_target(
+    clean_dia10,
+    prep_dia10_popculture()
+  ),
+  tar_target(
+    plot_dia10,
+    plot_dia10_popculture(clean_dia10, paleta = paleta_sobria_2026)
+  ),
+  tar_target(
+    save_dia10,
+    ggsave(paste0(OUTPUTS_DIR, "/dia10_popculture.png"), plot_dia10, 
+           width = 8, height = 11, dpi = 300, bg = "#faf5ed"), 
     format = "file"
   ),
 
