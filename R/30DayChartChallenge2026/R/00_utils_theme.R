@@ -36,6 +36,12 @@ setup_fonts_2026 <- function(extra_fonts = NULL) {
   showtext_auto()
 }
 
+setup_fonts_cat3 <- function() {
+  font_add_google("IBM Plex Sans", "IBMPlex")
+  font_add_google("Inter", "Inter")
+  showtext_auto()
+}
+
 # --- 2. PALETAS DE COLOR ---
 
 # Paleta original (Días 1-6)
@@ -60,6 +66,16 @@ paleta_sobria_2026 <- c(
   pizarra = "#6d7172",     # Gris medio para textos/ejes
   dorado = "#e6c570",      # Amarillo arena
   nude = "#f4caab"         # Piel/Melocotón claro
+)
+
+# Tu nueva paleta "Relacional"
+paleta_relaciones <- c(
+  fondo    = "#e6e9f0", # Gris gélido
+  marino   = "#04346a", # Texto y líneas base
+  cian     = "#3bd0e4", # Destacado principal (Positivo)
+  naranja  = "#e1913b", # Destacado secundario (Divergente)
+  coral    = "#e13b3b", # Nodos/Categorías cálidas
+  alerta   = "#e3111f"  # Rojo puro para causalidad/peligro
 )
 
 # --- 3. FUNCIÓN DE CAPTION ---

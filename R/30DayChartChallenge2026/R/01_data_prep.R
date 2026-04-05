@@ -11,6 +11,9 @@ library(logger)
 library(stringr)
 library(ggridges)
 library(climaemet)
+library(tidygraph)
+library(igraphdata)
+library(dplyr)
 
 
 # =============================================================================
@@ -769,4 +772,48 @@ prep_dia12_flowingdata <- function() {
   log_success("Día 12: {nrow(dt_clean)} días del Retiro procesados y listos para fluir.")
   
   dt_clean[]
+}
+
+
+# =============================================================================
+# DÍA 13 — Ecosystems (Relationships)
+# =============================================================================
+
+prep_dia13_ecosystems <- function() {
+  
+  log_info("Día 13: Extrayendo la red trófica real de Chesapeake Bay...")
+  
+  data("foodwebs", package = "igraphdata")
+  chesapeake <- foodwebs$Chesapeake
+  
+  dfs <- igraph::as_data_frame(chesapeake, what = "both")
+  dt_edges <- as.data.table(dfs$edges)
+  dt_nodes <- as.data.table(dfs$vertices)
+  
+  # Eliminamos sumideros químicos, entradas/salidas de energía y materia muerta
+  nodos_no_vivos <- c(
+    "Input", "Output", "Respiration", 
+    "sediment particulate orga", "suspended particulate org", "dissolved organic carbon"
+  )
+  dt_nodes <- dt_nodes[!name %in% nodos_no_vivos]
+  dt_edges <- dt_edges[!(from %in% nodos_no_vivos | to %in% nodos_no_vivos)]
+  
+  # Red
+  in_degrees <- dt_edges[, .(presas_consumidas = .N), by = to]
+  dt_nodes <- merge(dt_nodes, in_degrees, by.x = "name", by.y = "to", all.x = TRUE)
+  dt_nodes[is.na(presas_consumidas), presas_consumidas := 0]
+  
+  # Superdepredador
+  apex_name <- dt_nodes[which.max(presas_consumidas), name]
+  dt_nodes[, es_apex := fifelse(name == apex_name, "Superdepredador", "Resto del Ecosistema")]
+  
+  # Aristas
+  dt_edges[, is_apex_prey := fifelse(to == apex_name, "Alerta", "Base")]
+  
+  # GGRAPH
+  ecosistema_graph <- tbl_graph(nodes = dt_nodes, edges = dt_edges, directed = TRUE)
+  
+  log_success("Día 13: Ecosistema purgado. Apex predator real: {apex_name}.")
+  
+  return(ecosistema_graph)
 }

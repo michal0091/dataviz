@@ -9,6 +9,8 @@ library(ggplot2)
 library(stringr)
 library(ggtext)
 library(ggridges)
+library(ggraph)
+library(tidygraph)
 library(showtext)
 library(logger)
 library(glue)
@@ -968,3 +970,83 @@ plot_dia12_flowingdata <- function(dt) {
   return(p)
 }
 
+# =============================================================================
+# DÍA 13 — Ecosystems (Relationships)
+# =============================================================================
+
+plot_dia13_ecosystems <- function(graph_data, paleta) {
+  
+  setup_fonts_cat3() 
+  showtext_opts(dpi = 300)
+
+  c_fondo   <- unname(paleta["fondo"])
+  c_marino  <- unname(paleta["marino"])
+  c_cian    <- unname(paleta["cian"])
+  c_alerta  <- unname(paleta["alerta"]) 
+  
+  # Construcción del gráfico de red en modo arco
+  p <- ggraph(graph_data, layout = "linear", sort.by = presas_consumidas) +
+    
+    # Arcos
+    geom_edge_arc(
+      aes(color = is_apex_prey, alpha = is_apex_prey, edge_width = is_apex_prey),
+      fold = TRUE, strength = 0.4
+    ) +
+    
+    scale_edge_color_manual(values = c("Base" = c_marino, "Alerta" = c_alerta)) +
+    scale_edge_alpha_manual(values = c("Base" = 0.15, "Alerta" = 0.85)) +
+    scale_edge_width_manual(values = c("Base" = 0.5, "Alerta" = 1.5)) +
+    
+    # Nodos
+    geom_node_point(
+      aes(color = es_apex, size = presas_consumidas)
+    ) +
+    
+    scale_color_manual(values = c("Resto del Ecosistema" = c_cian, "Superdepredador" = c_alerta)) +
+    scale_size_continuous(range = c(1, 4.5)) + 
+    
+    # Textos de los nodos
+    geom_node_text(
+      aes(label = name, color = es_apex),
+      angle = 0, hjust = 1, nudge_y = -0.35, 
+      family = "IBM Plex Sans", fontface = "bold", size = 3.5
+    ) +
+    
+    # Rotar
+    coord_flip() +
+    
+    scale_y_continuous(expand = expansion(mult = c(0.4, 0.1))) +
+    scale_x_continuous(expand = expansion(mult = c(0.05, 0.05))) +
+    
+    labs(
+      title = "El Hambre del Superdepredador",
+      subtitle = str_wrap("Red trófica real de la Bahía de Chesapeake (33 taxones, 71 conexiones). Ordenados por la complejidad de su dieta. El rastro en rojo sangre revela las conexiones directas del superdepredador dominante, demostrando visualmente cómo su extinción impactaría en cascada a través de toda la bahía.", 70),
+      caption = generar_caption_2026("13", "Ecosystems (Relationships)", "Baird & Ulanowicz (1989) via {igraphdata}", c_alerta, c_marino)
+    ) +
+    
+    theme_minimal(base_size = 16, base_family = "Inter") +
+    theme(
+      plot.background = element_rect(fill = c_fondo, color = NA),
+      panel.background = element_rect(fill = c_fondo, color = NA),
+      text = element_text(color = c_marino),
+      
+      plot.title.position = "plot",
+      plot.caption.position = "plot",
+      
+      plot.title = element_text(family = "IBM Plex Sans", face = "bold", size = rel(2.05), color = c_marino, margin = margin(b = 10)),
+      plot.subtitle = element_text(family = "Inter", size = rel(0.95), color = c_marino, margin = margin(b = 40), lineheight = 1.3),
+      
+      # Apagamos todos los elementos de los ejes y el grid porque es una red
+      axis.title = element_blank(),
+      axis.text = element_blank(),
+      panel.grid.major = element_blank(),
+      panel.grid.minor = element_blank(),
+      
+      legend.position = "none",
+      
+      plot.caption = element_markdown(family = "Inter", size = rel(0.7), color = c_marino, hjust = 0, lineheight = 1.6, margin = margin(t = 40)),
+      plot.margin = margin(40, 40, 40, 40)
+    )
+    
+  return(p)
+}

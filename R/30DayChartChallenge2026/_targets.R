@@ -238,8 +238,24 @@ list(
   ),
   tar_target(
     save_dia12,
-    ggsave(paste0(OUTPUTS_DIR, "dia12_flowingdata.png"), plot_dia12, 
+    ggsave(paste0(OUTPUTS_DIR, "/dia12_flowingdata.png"), plot_dia12, 
            width = 8, height = 10, dpi = 300, bg = "#ffffff"), 
+    format = "file"
+  ),
+
+  # Day 13 --- Ecosystems (Relationships)
+  tar_target(
+    clean_dia13,
+    prep_dia13_ecosystems()
+  ),  
+  tar_target(
+    plot_dia13,
+    plot_dia13_ecosystems(clean_dia13, paleta = paleta_relaciones)
+  ),  
+  tar_target(
+    save_dia13,
+    ggsave(paste0(OUTPUTS_DIR, "/dia13_ecosystems.png"), plot_dia13, 
+           width = 8, height = 10, dpi = 300, bg = "#e6e9f0"), 
     format = "file"
   ),
 
