@@ -42,6 +42,7 @@ setup_fonts_cat3 <- function() {
   showtext_auto()
 }
 
+showtext_auto()
 # --- 2. PALETAS DE COLOR ---
 
 # Paleta original (Días 1-6)

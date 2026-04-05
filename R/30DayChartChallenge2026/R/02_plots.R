@@ -901,6 +901,7 @@ plot_dia12_flowingdata <- function(dt) {
   
   setup_fonts_2026()
   showtext_opts(dpi = 300)
+  showtext_auto()
   
   # Paleta FollowingData
   fondo_fd <- "#ffffff"
@@ -977,8 +978,11 @@ plot_dia12_flowingdata <- function(dt) {
 
 plot_dia13_ecosystems <- function(graph_data, paleta) {
   
-  setup_fonts_cat3() 
+  setup_fonts_cat3()
+  setup_fonts_2026()
   showtext_opts(dpi = 300)
+  showtext_auto()
+
 
   c_fondo   <- unname(paleta["fondo"])
   c_marino  <- unname(paleta["marino"])
@@ -1060,7 +1064,9 @@ plot_dia13_ecosystems <- function(graph_data, paleta) {
 plot_dia14_trade <- function(dt, paleta) {
   
   setup_fonts_cat3()
+  setup_fonts_2026()
   showtext_opts(dpi = 300)
+  showtext_auto()
   
   # Paleta
   c_fondo   <- unname(paleta["fondo"])
