@@ -888,3 +888,83 @@ plot_dia11_physical <- function(dt, paleta) {
     
   return(p)
 }
+
+
+# =============================================================================
+# DÍA 12 — FlowingData (Distributions)
+# =============================================================================
+
+plot_dia12_flowingdata <- function(dt) {
+  
+  setup_fonts_2026()
+  showtext_opts(dpi = 300)
+  
+  # Paleta FollowingData
+  fondo_fd <- "#ffffff"
+  texto_titulos <- "#000000"
+  texto_cuerpo <- "#333333"
+  texto_meta <- "#888888"
+  lineas_grid <- "#cccccc"
+  acento_rojo <- "#821122" 
+  
+  colores_estaciones <- c(
+    "Invierno"  = "#8AC2BE", 
+    "Primavera" = "#7EAD5B", 
+    "Verano"    = "#DD8B75", 
+    "Otoño"     = "#E7AE6E"  
+  )
+  
+  p <- ggplot(dt, aes(x = tmed, y = mes_factor, fill = estacion)) +
+    
+    geom_vline(xintercept = 0, color = texto_meta, linetype = "dashed", linewidth = 0.5) +
+    geom_vline(xintercept = 25, color = acento_rojo, linetype = "dotted", linewidth = 0.5) +
+    
+    # Ridgeline
+    geom_density_ridges(scale = 2.5, rel_min_height = 0.01, color = fondo_fd, linewidth = 0.8, alpha = 0.9) +
+    
+    scale_fill_manual(values = colores_estaciones) +
+  
+    scale_x_continuous(breaks = seq(-5, 35, by = 5), 
+                       labels = function(x) paste0(x, "°C")) +
+    
+    labs(
+      title = "La Huella Térmica de Madrid",
+      subtitle = str_wrap("Distribución de las temperaturas medias diarias en el Parque del Retiro (2000 - 2026). Al agrupar más de dos décadas de registros, las crestas de verano revelan colas largas y pesadas hacia la derecha, marcando el rastro de las olas de calor que superan recurrentemente los 25°C de media diaria.", 65),
+      caption = generar_caption_2026("12", "FlowingData Theme", "AEMET (Estación 3195: Madrid, Retiro)", acento_rojo, texto_meta)
+    ) +
+    
+    # Tema FollowingData
+    theme_minimal(base_size = 16) +
+    theme(
+      plot.background = element_rect(fill = fondo_fd, color = NA),
+      panel.background = element_rect(fill = fondo_fd, color = NA),
+      
+      plot.title.position = "plot",
+      plot.caption.position = "plot",
+      
+      plot.title = element_text(family = "Montserrat", face = "bold", size = rel(2.2), color = texto_titulos, margin = margin(b = 10)),
+      plot.subtitle = element_text(family = "Lora", face = "italic", size = rel(1.1), color = texto_cuerpo, margin = margin(b = 30), lineheight = 1.4),
+      
+      axis.title = element_blank(),
+      
+      axis.text.y = element_text(family = "Montserrat", face = "bold", size = rel(0.9), color = texto_meta, vjust = 0),
+      axis.text.x = element_text(family = "Inconsolata", size = rel(1.2), color = texto_cuerpo, margin = margin(t = 10)),
+      
+      panel.grid.major.y = element_blank(),
+      panel.grid.major.x = element_line(color = lineas_grid, linewidth = 0.5),
+      panel.grid.minor = element_blank(),
+      
+      legend.position = "top",
+      legend.justification = "left",
+      legend.title = element_blank(),
+      legend.text = element_text(family = "Montserrat", size = rel(0.9), color = texto_cuerpo),
+      legend.key.size = unit(0.6, "cm"),
+      legend.margin = margin(b = 15),
+      
+      plot.caption = element_markdown(family = "Montserrat", size = rel(0.7), color = texto_meta, hjust = 0, lineheight = 1.6, margin = margin(t = 40)),
+      plot.margin = margin(30, 30, 30, 30)
+    )
+    
+  return(p)
+}
+

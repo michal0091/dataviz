@@ -227,6 +227,22 @@ list(
     format = "file"
   ),
 
+  # Day 12 --- FlowingData (Distributions)
+  tar_target(
+    clean_dia12,
+    prep_dia12_flowingdata()
+  ),  
+  tar_target(
+    plot_dia12,
+    plot_dia12_flowingdata(clean_dia12)
+  ),
+  tar_target(
+    save_dia12,
+    ggsave(paste0(OUTPUTS_DIR, "dia12_flowingdata.png"), plot_dia12, 
+           width = 8, height = 10, dpi = 300, bg = "#ffffff"), 
+    format = "file"
+  ),
+
   # Marcador de fin de pipeline (eliminar cuando haya targets reales)
   tar_target(pipeline_listo, TRUE)
 

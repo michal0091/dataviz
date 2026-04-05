@@ -9,6 +9,8 @@
 library(data.table)
 library(logger)
 library(stringr)
+library(ggridges)
+library(climaemet)
 
 
 # =============================================================================
@@ -724,3 +726,47 @@ prep_dia11_physical <- function() {
 }
 
 
+# =============================================================================
+# DÍA 12 — FlowingData (Distributions)
+# =============================================================================
+
+prep_dia12_flowingdata <- function() {
+  
+  log_info("Día 12: Procesando la serie histórica de AEMET (Retiro)...")
+  
+  archivo_local <- "R/30DayChartChallenge2026/data/aemet_retiro.csv"
+  
+  if (!file.exists(archivo_local)) {
+    log_error("FALTA EL ARCHIVO: Guarda tus datos de AEMET en {archivo_local}")
+    stop("Pipeline detenido.")
+  }
+  
+  dt_raw <- fread(archivo_local)
+  
+  # Limpieza
+  dt_raw[, mes_num := month(fecha)]
+  dt_clean <- dt_raw[!is.na(tmed), .(fecha, mes_num, tmed)]
+  
+  dic_meses <- data.table(
+    mes_num = 1:12,
+    mes_es = c("Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", 
+               "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre")
+  )
+  
+  dt_clean <- merge(dt_clean, dic_meses, by = "mes_num")
+  
+  # Estadciones para paleta
+  dt_clean[, estacion := fcase(
+    mes_num %in% c(12, 1, 2), "Invierno",
+    mes_num %in% c(3, 4, 5), "Primavera",
+    mes_num %in% c(6, 7, 8), "Verano",
+    mes_num %in% c(9, 10, 11), "Otoño"
+  )]
+  
+  dt_clean[, mes_factor := factor(mes_es, levels = rev(dic_meses$mes_es))]
+  dt_clean[, estacion := factor(estacion, levels = c("Invierno", "Primavera", "Verano", "Otoño"))]
+  
+  log_success("Día 12: {nrow(dt_clean)} días del Retiro procesados y listos para fluir.")
+  
+  dt_clean[]
+}
