@@ -258,6 +258,21 @@ list(
            width = 8, height = 10, dpi = 300, bg = "#e6e9f0"), 
     format = "file"
   ),
+  # Day 14 --- Trade (Relationships)
+  tar_target(
+    clean_dia14,
+    prep_dia14_trade()
+  ),  
+  tar_target(
+    plot_dia14,
+    plot_dia14_trade(clean_dia14, paleta = paleta_relaciones)
+  ),  
+  tar_target(
+    save_dia14,
+    ggsave(paste0(OUTPUTS_DIR, "/dia14_trade.png"), plot_dia14, 
+           width = 8, height = 10, dpi = 300, bg = "#e6e9f0"), 
+    format = "file"
+  ),
 
   # Marcador de fin de pipeline (eliminar cuando haya targets reales)
   tar_target(pipeline_listo, TRUE)

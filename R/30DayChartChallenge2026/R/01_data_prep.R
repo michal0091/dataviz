@@ -13,7 +13,9 @@ library(ggridges)
 library(climaemet)
 library(tidygraph)
 library(igraphdata)
+library(quantmod)
 library(dplyr)
+library(lubridate)
 
 
 # =============================================================================
@@ -816,4 +818,109 @@ prep_dia13_ecosystems <- function() {
   log_success("Día 13: Ecosistema purgado. Apex predator real: {apex_name}.")
   
   return(ecosistema_graph)
+}
+
+
+# =============================================================================
+# DÍA 14 — Trade (Relationships)
+# =============================================================================
+
+prep_dia14_trade <- function(
+    path_xls = NULL,  # si NULL, intenta descargarlo
+    url_xls  = "https://img1.wsimg.com/blobby/go/e5e77e0b-59d1-44d9-ab25-4763ac982e53/downloads/7fd201b2-28ad-476c-bc67-7a2cab5304a3/ie_data.xls?ver=1775144929611"
+) {
+  
+  # Descargar
+  if (is.null(path_xls)) {
+    path_xls <- file.path(tempdir(), "ie_data.xls")
+    if (!file.exists(path_xls)) {
+      log_info("Descargando ie_data.xls de Shiller...")
+      download.file(url_xls, destfile = path_xls, mode = "wb", quiet = TRUE)
+    } else {
+      log_info("Usando caché local: {path_xls}")
+    }
+  }
+  
+  # Leer EXCEL
+  raw <- readxl::read_excel(
+    path      = path_xls,
+    sheet     = "Data",
+    skip      = 7,          # salta las 7 filas de notas
+    col_names = TRUE,       # fila 8 = headers
+    col_types = "text",     # leer todo como texto para no perder nada
+    na        = c("", "NA", "N/A", ".")
+  )
+  
+  dt <- as.data.table(raw)
+  
+  log_info("Columnas encontradas: {paste(names(dt)[1:15], collapse = ', ')}...")
+  
+  # Sacar columnas de interés
+  # Función para encontrar columna por patrón
+  find_col <- function(patterns) {
+    for (p in patterns) {
+      m <- grep(p, names(dt), ignore.case = TRUE, value = TRUE)
+      if (length(m) > 0) return(m[1])
+    }
+    return(NULL)
+  }
+  
+  col_date <- find_col(c("^Date$", "date", "Date"))
+  col_gs10 <- find_col(c("GS10", "Rate GS10", "gs10", "10.*year", "yield"))
+  col_cape <- find_col(c("^CAPE$", "P/E10", "cape", "CAPE"))
+  col_price <- find_col(c("^P$", "^Price$"))
+  col_earn  <- find_col(c("^E$", "Earnings"))
+  
+  log_info("Columnas mapeadas → Date:{col_date} | GS10:{col_gs10} | CAPE:{col_cape}")
+  
+  # Extraer datos y limpiar
+  dt_clean <- dt[, .(
+    fecha_dec = suppressWarnings(as.numeric(get(col_date))),
+    price     = suppressWarnings(as.numeric(get(col_price))),
+    earnings  = suppressWarnings(as.numeric(get(col_earn))),
+    yield_10y = suppressWarnings(as.numeric(get(col_gs10))),
+    cape      = suppressWarnings(as.numeric(get(col_cape)))
+  )]
+  
+  # Eliminar filas vacías o con fecha inválida
+  dt_clean <- dt_clean[!is.na(fecha_dec) & fecha_dec > 1800]
+  
+  # Limpiar fechas
+  dt_clean[, anio := floor(fecha_dec)]
+  dt_clean[, mes  := round((fecha_dec - anio) * 100)]
+  dt_clean[, mes_ano := as.Date(paste(anio, mes, "01", sep = "-"))]
+  dt_clean[, c("fecha_dec", "anio", "mes") := NULL]
+  
+  # Filtrar datos incompletos y períodos sin CAPE
+  dt_clean <- dt_clean[complete.cases(yield_10y, cape, mes_ano)]
+  
+  # P/E simple: precio / earnings
+  dt_clean[!is.na(price) & !is.na(earnings) & earnings > 0,
+           pe_simple := price / earnings]
+  
+  # Clasificación por era
+  eras <- c(
+    "Pre-WWII (1881–1945)",
+    "Posguerra / Expansión (1946–1999)",
+    "Post-GFC / QE (2008–2019)",
+    "COVID & Policrisis (2020–)"
+  )
+  
+  dt_clean[, era_macro := factor(fcase(
+    year(mes_ano) <= 1945,               eras[1],
+    between(year(mes_ano), 1946, 2007),  eras[2],
+    between(year(mes_ano), 2008, 2019),  eras[3],
+    year(mes_ano) >= 2020,               eras[4]
+  ), levels = eras)]
+  
+  # Diagnóstico
+  r_total <- cor(dt_clean$yield_10y, dt_clean$cape, use = "complete.obs")
+  
+  log_success(glue(
+    "CAPE listo: {nrow(dt_clean)} obs | ",
+    "{min(dt_clean$mes_ano)} → {max(dt_clean$mes_ano)} | ",
+    "r(CAPE, GS10) = {round(r_total, 3)}"
+  ))
+  
+  dt_clean[]
 }

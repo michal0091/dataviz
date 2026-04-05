@@ -10,6 +10,7 @@ library(stringr)
 library(ggtext)
 library(ggridges)
 library(ggraph)
+library(ggrepel)
 library(tidygraph)
 library(showtext)
 library(logger)
@@ -1048,5 +1049,123 @@ plot_dia13_ecosystems <- function(graph_data, paleta) {
       plot.margin = margin(40, 40, 40, 40)
     )
     
+  return(p)
+}
+
+
+# =============================================================================
+# DÍA 14 — Trade (Relationships)
+# =============================================================================
+
+plot_dia14_trade <- function(dt, paleta) {
+  
+  setup_fonts_cat3()
+  showtext_opts(dpi = 300)
+  
+  # Paleta
+  c_fondo   <- unname(paleta["fondo"])
+  c_marino  <- unname(paleta["marino"])
+  c_cian    <- unname(paleta["cian"])
+  c_naranja <- unname(paleta["naranja"])
+  c_alerta  <- unname(paleta["alerta"]) 
+  
+  # Mapeamos los nombres 
+  colores_era <- c(
+    "Pre-WWII (1881–1945)"              = c_naranja,
+    "Posguerra / Expansión (1946–1999)" = c_marino,
+    "Post-GFC / QE (2008–2019)"         = c_cian,
+    "COVID & Policrisis (2020–)"        = c_alerta
+  )
+  
+  # Hitos
+  dt_labels <- dt[
+    mes_ano %in% as.Date(c("1929-09-01", "1999-12-01", "2021-11-01", "2026-03-01"))
+  ]
+  
+  dt_labels[, etiqueta := fcase(
+    year(mes_ano) == 1929, "Crash de 1929",
+    year(mes_ano) == 1999, "Pico Dot-Com\n(Dic 1999)",
+    year(mes_ano) == 2021, "Euforia COVID\n(Nov 2021)",
+    year(mes_ano) == 2026, "Tensión Irán\n(Mar 2026)"
+  )]
+  
+  p <- ggplot(dt, aes(x = yield_10y, y = cape)) +
+    
+    # Puntos por Era Macroeconómica
+    geom_point(aes(fill = era_macro), shape = 21, color = "white", 
+               size = 3.5, stroke = 0.5, alpha = 0.65) +
+    
+        # La "Curva de Gravedad" no lineal (loess) calculada sobre 145 años de historia
+    geom_smooth(method = "glm",formula = "y ~ x", color = "black", 
+                linetype = "dashed", se = FALSE, linewidth = 1.2) +
+    
+    # Etiquetas Repelidas para los hitos
+    geom_text_repel(
+      data = dt_labels,
+      aes(label = etiqueta, x = yield_10y, y = cape),
+      family = "IBM Plex Sans", color = "black", fontface = "bold", size = 4.5,
+      # Forzamos los nudges manuales que calculamos arriba
+      nudge_x = dt_labels$nudge_x, nudge_y = dt_labels$nudge_y,
+      # Aumentamos agresivamente el padding para dispersarlas
+      box.padding = 1.8, point.padding = 0.8, force = 5,
+      # Estilo de la línea de conexión
+      segment.color = "black", segment.alpha = 0.6,
+      bg.color = "white", bg.r = 0.15
+    ) +
+    
+    scale_fill_manual(values = colores_era) +
+    
+    scale_x_continuous(
+      labels = function(x) paste0(x, "%"),
+      breaks = seq(0, 16, by = 2) # Ampliamos hasta el 16% por los años 80
+    ) +
+    
+    scale_y_continuous(
+      breaks = seq(0, 50, by = 10)
+    ) +
+    
+    labs(
+      title = "El 'Macro Trade':\nUn Siglo de Gravedad Financiera",
+      subtitle = str_wrap("Relación entre la rentabilidad del Bono a 10 Años y el ratio CAPE de Shiller (1881-2026). La curva punteada revela la física del mercado: los tipos actúan como un ancla gravitacional sobre los múltiplos. La era COVID y la actual policrisis (rojo) sitúan las valoraciones en cotas solo vistas en 1929 y 1999, desafiando la media histórica en un entorno de restricción monetaria.", 80),
+      caption = generar_caption_2026("14", "Trade (Relationships)", "Robert Shiller Data (Yale University)", c_alerta, c_marino),
+      x = "Tasa Libre de Riesgo (Rendimiento Bono 10 Años EE.UU.)",
+      y = "Múltiplo de Valoración (CAPE Ratio de Shiller)"
+    ) +
+    
+    theme_minimal(base_size = 16, base_family = "Inter") +
+    theme(
+      plot.background = element_rect(fill = c_fondo, color = NA),
+      panel.background = element_rect(fill = c_fondo, color = NA),
+      text = element_text(color = c_marino),
+      
+      plot.title.position = "plot",
+      plot.caption.position = "plot",
+      
+      plot.title = element_text(family = "IBM Plex Sans", face = "bold", size = rel(1.8), color = c_marino, margin = margin(b = 10)),
+      plot.subtitle = element_text(family = "Inter", size = rel(0.8), color = "#4a5b6e", margin = margin(b = 30), lineheight = 1.3),
+      
+      axis.title.x = element_text(family = "IBM Plex Sans", size = rel(0.85), face = "bold", margin = margin(t = 15)),
+      axis.title.y = element_text(family = "IBM Plex Sans", size = rel(0.85), face = "bold", margin = margin(r = 15)),
+      
+      axis.text = element_text(family = "IBM Plex Sans", size = rel(0.95), color = c_marino),
+      
+      # Grid elegante estilo informe JPM
+      panel.grid.major.y = element_line(color = "#d1d5e0", linewidth = 0.5),
+      panel.grid.major.x = element_line(color = "#d1d5e0", linewidth = 0.5, linetype = "dotted"),
+      panel.grid.minor = element_blank(),
+      
+      legend.position = "top",
+      legend.justification = "center",
+      legend.title = element_blank(),
+      legend.text = element_text(family = "IBM Plex Sans", face = "bold", size = rel(0.9)),
+      legend.key.size = unit(0.4, "cm"),
+      legend.margin = margin(b = 20),
+      
+      plot.caption = element_markdown(family = "Inter", size = rel(0.75), color = c_marino, hjust = 0, lineheight = 1.6, margin = margin(t = 30)),
+      plot.margin = margin(30, 40, 30, 40)
+    )
+    
+  p <- p + guides(fill = guide_legend(nrow = 2, byrow = TRUE))
+  
   return(p)
 }

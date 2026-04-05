@@ -37,7 +37,7 @@ setup_fonts_2026 <- function(extra_fonts = NULL) {
 }
 
 setup_fonts_cat3 <- function() {
-  font_add_google("IBM Plex Sans", "IBMPlex")
+  font_add_google("IBM Plex Sans")
   font_add_google("Inter", "Inter")
   showtext_auto()
 }
