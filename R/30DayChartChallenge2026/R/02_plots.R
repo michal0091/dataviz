@@ -1268,3 +1268,177 @@ labs(
   return(p)
 }
 
+
+# =============================================================================
+# DÍA 16 — Causation (Relationships)
+# =============================================================================
+
+plot_dia16_causation <- function(dt, paleta) {
+  
+  setup_fonts_cat3()
+  setup_fonts_2026()
+  showtext_opts(dpi = 300)
+  showtext_auto()
+  
+  c_fondo   <- unname(paleta["fondo"])
+  c_marino  <- unname(paleta["marino"])
+  c_cian    <- unname(paleta["cian"])
+  c_naranja <- unname(paleta["naranja"])
+  c_alerta  <- unname(paleta["alerta"]) 
+  
+  colores_ciclo <- c(
+    "Burbuja Dot-Com" = c_naranja,
+    "Gran Crisis Financiera" = c_marino,
+    "Pánico COVID-19" = c_cian,
+    "Policrisis (Ciclo Actual)" = c_alerta
+  )
+  
+  # Extraemos solo los puntos finales de cada línea para poner las etiquetas
+  dt_labels <- dt[, .SD[.N], by = ciclo]
+  
+  p <- ggplot(dt, aes(x = dia_relativo, y = precio_norm, color = ciclo)) +
+    
+    geom_vline(xintercept = 0, color = c_marino, linetype = "dotted", linewidth = 1) +
+    annotate(
+      "text", x = 5, y = 125, label = "La FED ejecuta\nel primer recorte\n(T = 0)",
+      family = "IBM Plex Sans", fontface = "italic", color = c_marino, size = 3.5, hjust = 0
+    ) +
+    
+    # Línea base de 100 (Break-even)
+    geom_hline(yintercept = 100, color = c_marino, linetype = "solid", linewidth = 0.3, alpha = 0.5) +
+    
+    # Las trayectorias
+    geom_line(linewidth = 1.2, alpha = 0.85) +
+  
+    geom_text_repel(
+      data = dt_labels,
+      aes(label = ciclo),
+      family = "IBM Plex Sans", fontface = "bold", size = 4,
+      nudge_x = 10, direction = "y", hjust = 0,
+      segment.color = NA # Sin línea de conexión, pegado al final del trazo
+    ) +
+    
+    scale_color_manual(values = colores_ciclo, guide = "none") +
+    
+    scale_x_continuous(
+      breaks = seq(-50, 250, by = 50),
+      expand = expansion(mult = c(0, 0.3)) # Espacio a la derecha para las etiquetas
+    ) +
+    
+    scale_y_continuous(
+      breaks = seq(40, 140, by = 10),
+      labels = function(x) paste0(x, " pts")
+    ) +
+    
+    labs(
+      title = "Inferencia Causal: La Trampa y el Rebote",
+      subtitle = str_wrap("Estudio de eventos: Impacto del primer recorte de tipos de la FED. La historia revela dos regímenes. En 2000 y 2008 (naranja/marino), el 'Pivot' precedió a mercados bajistas prolongados. Sin embargo, las crisis modernas muestran una resiliencia antinatural: en el ciclo actual (rojo), tras una euforia inicial y una dura capitulación hacia los 88 puntos en el día 138, el mercado protagonizó una violenta recuperación en V (+18%), emulando la inyección del COVID y desafiando la gravedad macroeconómica.", 80),
+      caption = generar_caption_2026("16", "Causation (Relationships)", "Análisis propio sobre datos Yahoo Finance", c_alerta, c_marino),
+      x = "Días de cotización desde la intervención de la FED (El Evento)",
+      y = "S&P 500 Normalizado (Día 0 = 100)"
+    ) +
+    
+    theme_minimal(base_size = 16, base_family = "Inter") +
+    theme(
+      plot.background = element_rect(fill = c_fondo, color = NA),
+      panel.background = element_rect(fill = c_fondo, color = NA),
+      text = element_text(color = c_marino),
+      
+      plot.title.position = "plot",
+      plot.caption.position = "plot",
+      
+      plot.title = element_text(family = "IBM Plex Sans", face = "bold", size = rel(1.6), color = c_marino, margin = margin(b = 10)),
+      plot.subtitle = element_text(family = "Inter", size = rel(0.8), color = "#4a5b6e", margin = margin(b = 30), lineheight = 1.3),
+      
+      axis.title.x = element_text(family = "IBM Plex Sans", size = rel(0.95), face = "bold", margin = margin(t = 15)),
+      axis.title.y = element_text(family = "IBM Plex Sans", size = rel(0.95), face = "bold", margin = margin(r = 15)),
+      
+      axis.text = element_text(family = "IBM Plex Sans", size = rel(0.9), color = c_marino),
+      
+      panel.grid.major = element_line(color = "#d1d5e0", linewidth = 0.5),
+      panel.grid.minor = element_blank(),
+      
+      plot.caption = element_markdown(family = "Inter", size = rel(0.75), color = c_marino, hjust = 0, lineheight = 1.6, margin = margin(t = 30)),
+      plot.margin = margin(30, 40, 30, 40)
+    )
+    
+  return(p)
+}
+
+
+# =============================================================================
+# DÍA 17 — Remake (Relationships)
+# =============================================================================
+
+plot_dia17_remake <- function(dt, paleta) {
+  
+  setup_fonts_cat3()
+  setup_fonts_2026()
+  showtext_opts(dpi = 300)
+  showtext_auto()
+  
+  c_fondo   <- unname(paleta["fondo"])
+  c_marino  <- unname(paleta["marino"])
+  c_alerta  <- unname(paleta["alerta"]) 
+  c_cian    <- unname(paleta["cian"])
+  
+  # Calculamos la verdadera R2 cíclica
+  modelo <- lm(ciclo_sp ~ ciclo_m2, data = dt)
+  r_squared <- summary(modelo)$r.squared
+  
+  p <- ggplot(dt, aes(x = ciclo_m2, y = ciclo_sp)) +
+    
+    geom_hline(yintercept = 0, color = c_marino, linetype = "solid", linewidth = 0.5, alpha = 0.2) +
+    geom_vline(xintercept = 0, color = c_marino, linetype = "solid", linewidth = 0.5, alpha = 0.2) +
+    
+    geom_smooth(method = "lm", color = c_alerta, linetype = "dashed", se = FALSE, linewidth = 1.2) +
+    
+    geom_point(shape = 21, fill = c_cian, color = c_fondo, size = 3.5, stroke = 0.6, alpha = 0.85) +
+    
+    annotate(
+      "label", 
+      x = min(dt$ciclo_m2), 
+      y = max(dt$ciclo_sp), 
+      label = sprintf("R² = %.3f\nEl ciclo del M2 no explica a la Bolsa", r_squared),
+      family = "IBM Plex Sans", fontface = "bold", color = c_alerta, size = 4.5, 
+      hjust = 0, vjust = 1, fill = c_fondo, label.size = NA
+    ) +
+    
+    scale_x_continuous(labels = scales::percent_format(accuracy = 1)) +
+    scale_y_continuous(labels = scales::percent_format(accuracy = 1)) +
+    
+    labs(
+      title = "El Fraude del Doble Eje Y (Remake)",
+      subtitle = str_wrap("Apollo Academy sugiere una correlación casi perfecta entre la Masa Monetaria y el S&P 500 alineando a la fuerza dos ejes con tendencia infinita. Al aplicar el algoritmo MBH {MacroFilters} para extirpar la inercia temporal y aislar los ciclos reales, la ilusión se desploma. La dispersión demuestra empíricamente que la impresión de dinero (M2) no dicta las fluctuaciones del mercado.", 70),
+      caption = generar_caption_2026("17", "Remake (Relationships)", "FRED & Yahoo. Filtro: {MacroFilters} MBH", c_alerta, c_marino),
+      x = "Ciclo de Masa Monetaria M2\n(Desviación % respecto a su tendencia base)",
+      y = "Ciclo del S&P 500\n(Desviación % respecto a su tendencia base)"
+    ) +
+    
+    theme_minimal(base_size = 16, base_family = "Inter") +
+    theme(
+      plot.background = element_rect(fill = c_fondo, color = NA),
+      panel.background = element_rect(fill = c_fondo, color = NA),
+      text = element_text(color = c_marino),
+      
+      plot.title.position = "plot",
+      plot.caption.position = "plot",
+      
+      plot.title = element_text(family = "IBM Plex Sans", face = "bold", size = rel(1.8), color = c_marino, margin = margin(b = 10)),
+      plot.subtitle = element_text(family = "Inter", size = rel(0.9), color = "#4a5b6e", margin = margin(b = 30), lineheight = 1.3),
+      
+      axis.title.x = element_text(family = "IBM Plex Sans", size = rel(0.8), face = "bold", margin = margin(t = 15)),
+      axis.title.y = element_text(family = "IBM Plex Sans", size = rel(0.8), face = "bold", margin = margin(r = 15)),
+      
+      axis.text = element_text(family = "IBM Plex Sans", size = rel(1.1), color = c_marino),
+      
+      panel.grid.major = element_line(color = "#d1d5e0", linewidth = 0.5, linetype = "dotted"),
+      panel.grid.minor = element_blank(),
+      
+      plot.caption = element_markdown(family = "Inter", size = rel(0.75), color = c_marino, hjust = 0, lineheight = 1.6, margin = margin(t = 30)),
+      plot.margin = margin(30, 40, 30, 40)
+    )
+    
+  return(p)
+}
+

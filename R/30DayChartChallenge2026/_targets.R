@@ -274,7 +274,7 @@ list(
     format = "file"
   ),
 
-  # Day 15 — Correlation (Relationships)
+  # Day 15 --- Correlation (Relationships)
   tar_target(
     clean_dia15,
     prep_dia15_correlation()
@@ -286,6 +286,38 @@ list(
   tar_target(
     save_dia15,
     ggsave(paste0(OUTPUTS_DIR, "/dia15_correlation.png"), plot_dia15, 
+           width = 8, height = 10, dpi = 300, bg = "#e6e9f0"), 
+    format = "file"
+  ),
+
+  # Day 16 --- Causation (Relationships)
+  tar_target(
+    clean_dia16,
+    prep_dia16_causation()
+  ),  
+  tar_target(
+    plot_dia16,
+    plot_dia16_causation(clean_dia16, paleta = paleta_relaciones)
+  ),  
+  tar_target(
+    save_dia16,
+    ggsave(paste0(OUTPUTS_DIR, "/dia16_causation.png"), plot_dia16, 
+           width = 8, height = 10, dpi = 300, bg = "#e6e9f0"), 
+    format = "file"
+  ),
+
+  # Day 17 --- Remake (Relationships)
+  tar_target(
+    clean_dia17,
+    prep_dia17_remake()
+  ),
+  tar_target(
+    plot_dia17,
+    plot_dia17_remake(clean_dia17, paleta = paleta_relaciones)
+  ),
+  tar_target(
+    save_dia17,
+    ggsave(paste0(OUTPUTS_DIR, "/dia17_remake.png"), plot_dia17, 
            width = 8, height = 10, dpi = 300, bg = "#e6e9f0"), 
     format = "file"
   ),

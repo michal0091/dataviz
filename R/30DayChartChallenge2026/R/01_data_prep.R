@@ -17,6 +17,7 @@ library(quantmod)
 library(dplyr)
 library(lubridate)
 library(PerformanceAnalytics)
+library(MacroFilters)
 
 
 # =============================================================================
@@ -981,4 +982,114 @@ prep_dia15_correlation <- function() {
   log_success("Día 15 preparado: Matriz de correlación de {length(activos)} activos calculada.")
   
   dt_cor[]
+}
+
+
+# =============================================================================
+# DÍA 16 — Causation (Relationships)
+# =============================================================================
+
+prep_dia16_causation <- function() {
+  
+  log_info("Día 16: Aislando el efecto causal del 'FED Pivot' (Event Study)...")
+  
+  env <- new.env()
+  
+  # S&P 500
+  getSymbols("^GSPC", src = "yahoo", from = "1999-01-01", env = env, warnings = FALSE)
+  dt_sp500 <- as.data.table(env$GSPC)
+  setnames(dt_sp500, c("index", "GSPC.Adjusted"), c("fecha", "precio"), skip_absent = TRUE)
+  dt_sp500 <- dt_sp500[!is.na(precio), .(fecha, precio)]
+  
+  # Definir evento causal (T = 0)
+  eventos_pivot <- list(
+    "Burbuja Dot-Com" = as.Date("2001-01-03"),
+    "Gran Crisis Financiera" = as.Date("2007-09-18"),
+    "Pánico COVID-19" = as.Date("2020-03-03"),
+    "Policrisis (Ciclo Actual)" = as.Date("2024-09-18") 
+  )
+  
+  # Ventanas temporales de referencia (T-50 a T+250 días de mercado)
+  lista_eventos <- lapply(names(eventos_pivot), function(nombre) {
+    fecha_cero <- eventos_pivot[[nombre]]
+    idx_cero <- which.min(abs(dt_sp500$fecha - fecha_cero))
+    
+    # Extraer la ventana
+    idx_inicio <- max(1, idx_cero - 50)
+    idx_fin <- min(nrow(dt_sp500), idx_cero + 250)
+    
+    dt_ventana <- dt_sp500[idx_inicio:idx_fin]
+    
+    # Creamos el eje X relativo (Días desde el evento)
+    dt_ventana[, dia_relativo := .I - (idx_cero - idx_inicio + 1)]
+    
+    # Normalización
+    precio_base <- dt_ventana[dia_relativo == 0, precio]
+    dt_ventana[, precio_norm := (precio / precio_base) * 100]
+    
+    dt_ventana[, ciclo := nombre]
+    
+    return(dt_ventana[, .(ciclo, dia_relativo, precio_norm)])
+  })
+  
+  dt_causation <- rbindlist(lista_eventos)
+  
+  # Ordenamos los factores para la paleta
+  dt_causation[, ciclo := factor(ciclo, levels = c(
+    "Burbuja Dot-Com", "Gran Crisis Financiera", "Pánico COVID-19", "Policrisis (Ciclo Actual)"
+  ))]
+  
+  log_success("Día 16 preparado: Inferencia causal alineada a T=0 para 4 ciclos históricos.")
+  
+  dt_causation[]
+}
+
+
+# =============================================================================
+# DÍA 17 — Remake (Relationships)
+# =============================================================================
+
+prep_dia17_remake <- function() {
+  
+  log_info("Día 17: Extrayendo componentes cíclicos con MacroFilters (MBH)...")
+  
+  env <- new.env()
+  
+  # S&P 500 y M2
+  getSymbols("M2SL", src = "FRED", env = env, warnings = FALSE)
+  getSymbols("^GSPC", src = "yahoo", from = "2000-01-01", env = env, warnings = FALSE)
+  
+  dt_m2 <- as.data.table(env$M2SL)
+  setnames(dt_m2, c("index", "M2SL"), c("fecha", "m2"), skip_absent = TRUE)
+  dt_m2[, mes_ano := floor_date(as.Date(fecha), "month")]
+  
+  dt_sp <- as.data.table(env$GSPC)
+  setnames(dt_sp, "index", "fecha", skip_absent = TRUE)
+  dt_sp[, mes_ano := floor_date(as.Date(fecha), "month")]
+  dt_sp_m <- dt_sp[, .(sp500 = mean(GSPC.Adjusted, na.rm = TRUE)), by = mes_ano]
+  
+  dt <- merge(dt_sp_m, dt_m2[, .(mes_ano, m2)], by = "mes_ano")
+  dt <- na.omit(dt)
+  
+  # Transformación Logarítmica
+  dt[, log_sp := log(sp500)]
+  dt[, log_m2 := log(m2)]
+  
+  # 3. FILTRADO MACROECONÓMICO ROBUSTO (La técnica de la viñeta)
+  log_info("Calibrando la delta de Huber y aplicando MBH...")
+
+  d_sp <- mad(hp_filter(dt$log_sp, freq = 12)$cycle)
+  d_m2 <- mad(hp_filter(dt$log_m2, freq = 12)$cycle)
+  
+  # Aplicamos el filtro MBH robusto a shocks estructurales
+  filtro_sp <- mbh_filter(dt$log_sp, d = d_sp)
+  filtro_m2 <- mbh_filter(dt$log_m2, d = d_m2)
+  
+  # Extraemos el ciclo puro
+  dt[, ciclo_sp := filtro_sp$cycle]
+  dt[, ciclo_m2 := filtro_m2$cycle]
+  
+  log_success("Día 17 preparado: Ciclos limpios y sin distorsión de shocks extraídos.")
+  
+  dt[]
 }
