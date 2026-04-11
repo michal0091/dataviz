@@ -1175,3 +1175,96 @@ plot_dia14_trade <- function(dt, paleta) {
   
   return(p)
 }
+
+
+# =============================================================================
+# DÍA 15 — Correlation (Relationships)
+# =============================================================================
+
+plot_dia15_correlation <- function(dt, paleta) {
+  
+  setup_fonts_cat3()
+  setup_fonts_2026()
+  showtext_opts(dpi = 300)
+  showtext_auto()
+  
+  # Extraemos tu paleta
+  c_fondo   <- unname(paleta["fondo"])
+  c_marino  <- unname(paleta["marino"])
+  c_cian    <- unname(paleta["cian"])
+  c_alerta  <- unname(paleta["alerta"]) 
+  
+  p <- ggplot(dt, aes(x = activo_2, y = activo_1, fill = correlacion)) +
+    
+    # Heatmap
+    geom_tile(color = c_fondo, linewidth = 1.5) +
+    geom_text(
+      aes(
+        label = sprintf("%.2f", correlacion),
+        color = abs(correlacion) > 0.4
+      ),
+      family = "IBM Plex Sans", fontface = "bold", size = 4
+    ) +
+    
+    # Escalas color
+    scale_fill_gradient2(
+      low = c_alerta,      # Negativa = Rojo
+      mid = c_fondo,       # Cero = Color de fondo del lienzo
+      high = c_cian,       # Positiva = Cian
+      midpoint = 0,
+      limits = c(-1, 1),
+      breaks = c(-1, -0.5, 0, 0.5, 1),
+      guide = guide_colorbar(
+        title = "← Opuestos | Se mueven juntos →",
+        title.position = "top",
+        barwidth = unit(12, "cm"),
+        barheight = unit(0.5, "cm")
+      )
+    ) +
+    
+    scale_color_manual(values = c("TRUE" = c_fondo, "FALSE" = c_marino), guide = "none") +
+    
+    # Fortmat
+labs(
+      title = "La Muerte de la Cartera 60/40",
+      subtitle = str_wrap("Correlación diaria en el último año. La policrisis aniquila el 60/40: bonos y bolsa ya no se compensan, caen a la par (+0.14). Mientras Bitcoin (+0.44) se comporta como un activo de riesgo puro, el Oro (0.00) resiste como el único refugio verdaderamente descorrelacionado.", 65),
+      caption = generar_caption_2026("15", "Correlation (Relationships)", "Yahoo Finance vía {PerformanceAnalytics}", c_alerta, c_marino),
+      x = NULL, y = NULL
+    ) +
+    
+    theme_minimal(base_size = 16, base_family = "Inter") +
+    theme(
+      plot.background = element_rect(fill = c_fondo, color = NA),
+      panel.background = element_rect(fill = c_fondo, color = NA),
+      text = element_text(color = c_marino),
+      
+      plot.title.position = "plot",
+      plot.caption.position = "plot",
+      
+      plot.title = element_text(family = "IBM Plex Sans", face = "bold", size = rel(1.8), color = c_marino, margin = margin(b = 10)),
+      plot.subtitle = element_text(family = "Inter", size = rel(0.8), color = "#4a5b6e", margin = margin(b = 30), lineheight = 1.3),
+      
+      # Estilizamos los ejes de la matriz
+      axis.text.x = element_text(family = "IBM Plex Sans", face = "bold", size = rel(0.9), color = c_marino, angle = 45, hjust = 1),
+      axis.text.y = element_text(family = "IBM Plex Sans", face = "bold", size = rel(0.9), color = c_marino),
+      
+      # Eliminamos la cuadrícula porque geom_tile ya hace de matriz
+      panel.grid = element_blank(),
+      
+      legend.position = "top",
+      legend.justification = "left",
+      legend.location = "plot",
+      legend.title = element_text(family = "IBM Plex Sans", size = rel(0.75), face = "italic", hjust = 0.5),
+      legend.text = element_text(family = "IBM Plex Sans", face = "bold", size = rel(0.7)),
+      legend.margin = margin(b = 10),
+      
+      plot.caption = element_markdown(family = "Inter", size = rel(0.75), color = c_marino, hjust = 0, lineheight = 1.6, margin = margin(t = 40)),
+      plot.margin = margin(t = 40, r = 20, b = 40, l =  0)
+    )
+    
+  # Forzamos que los azulejos sean cuadrados perfectos
+  p <- p + coord_fixed(ratio = 8/10)
+  
+  return(p)
+}
+

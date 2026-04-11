@@ -274,6 +274,22 @@ list(
     format = "file"
   ),
 
+  # Day 15 — Correlation (Relationships)
+  tar_target(
+    clean_dia15,
+    prep_dia15_correlation()
+  ),  
+  tar_target(
+    plot_dia15,
+    plot_dia15_correlation(clean_dia15, paleta = paleta_relaciones)
+  ),
+  tar_target(
+    save_dia15,
+    ggsave(paste0(OUTPUTS_DIR, "/dia15_correlation.png"), plot_dia15, 
+           width = 8, height = 10, dpi = 300, bg = "#e6e9f0"), 
+    format = "file"
+  ),
+
   # Marcador de fin de pipeline (eliminar cuando haya targets reales)
   tar_target(pipeline_listo, TRUE)
 

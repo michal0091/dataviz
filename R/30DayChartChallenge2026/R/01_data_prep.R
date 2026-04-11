@@ -16,6 +16,7 @@ library(igraphdata)
 library(quantmod)
 library(dplyr)
 library(lubridate)
+library(PerformanceAnalytics)
 
 
 # =============================================================================
@@ -923,4 +924,61 @@ prep_dia14_trade <- function(
   ))
   
   dt_clean[]
+}
+
+
+# =============================================================================
+# DÍA 15 — Correlation (Relationships)
+# =============================================================================
+
+prep_dia15_correlation <- function() {
+  
+  log_info("Día 15: Descargando cotizaciones para matriz de correlación...")
+  
+  env <- new.env()
+  
+  activos <- c(
+    "SPY" = "S&P500", 
+    "TLT" = "Bonos 20Y", 
+    "GLD" = "Oro", 
+    "BZ=F" = "Brent", 
+    "BTC-USD" = "BTC"
+  )
+  
+  # Descargar datos
+  getSymbols(names(activos), src = "yahoo", from = Sys.Date() - 365, env = env, warnings = FALSE)
+  
+  # Limpieza
+  dt_list <- lapply(names(activos), function(ticker) {
+    xts_data <- env[[ticker]][, paste0(ticker, ".Adjusted")]
+    # Log-returns
+    xts_retornos <- Return.calculate(xts_data, method = "log")
+    # Limpiamos los outliers (winsorización de Boudt)
+    xts_limpios <- Return.clean(xts_retornos, method = "boudt")
+    # Pasar a data.table
+    dt <- data.table(index = index(xts_limpios), coredata(xts_limpios))
+    setnames(dt, c("index", names(xts_data)), c("fecha", "retorno"))
+    dt[, activo := activos[ticker]]
+    
+    dt[!is.na(retorno), .(fecha, activo, retorno)][]
+  })
+
+  dt_long <- rbindlist(dt_list)
+  dt_wide <- dcast(dt_long, fecha ~ activo, value.var = "retorno")
+  
+  # Correlación de Pearson
+  matriz_cor <- cor(dt_wide[, -1, with = FALSE], use = "pairwise.complete.obs")
+  matriz_cor[upper.tri(matriz_cor, diag = FALSE)] <- NA
+  
+  # Adaptar para ggplot
+  dt_cor <- as.data.table(as.table(matriz_cor))
+  setnames(dt_cor, c("V1", "V2", "N"), c("activo_1", "activo_2", "correlacion"))
+  dt_cor <- dt_cor[!is.na(correlacion)]
+
+  dt_cor[, activo_1 := factor(activo_1, levels = rev(unname(activos)))]
+  dt_cor[, activo_2 := factor(activo_2, levels = unname(activos))]
+  
+  log_success("Día 15 preparado: Matriz de correlación de {length(activos)} activos calculada.")
+  
+  dt_cor[]
 }
