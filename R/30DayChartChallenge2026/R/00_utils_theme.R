@@ -42,6 +42,13 @@ setup_fonts_cat3 <- function() {
   showtext_auto()
 }
 
+setup_fonts_cat4 <- function() {
+  font_add_google("Pridi")
+  font_add_google("Roboto Condensed") 
+  
+  showtext_auto()
+}
+
 showtext_auto()
 # --- 2. PALETAS DE COLOR ---
 
@@ -77,6 +84,22 @@ paleta_relaciones <- c(
   naranja  = "#e1913b", # Destacado secundario (Divergente)
   coral    = "#e13b3b", # Nodos/Categorías cálidas
   alerta   = "#e3111f"  # Rojo puro para causalidad/peligro
+)
+
+# La paleta editorial para Series Temporales
+paleta_ts <- c(
+  "light"     = "#dadfde",
+  "dark"      = "#080606",
+  "primary"   = "#e7165e",
+  "secondary" = "#e8118c",
+  "info"      = "#22adc9",
+  "accent1"   = "#1cdec3",
+  "accent2"   = "#2e8a7d",
+  "accent3"   = "#9dc5c6",
+  "success"   = "#6eb909",
+  "warning"   = "#ffc686",
+  "danger"    = "#fb036c",
+  "white"     = "#ffffff"
 )
 
 # --- 3. FUNCIÓN DE CAPTION ---
