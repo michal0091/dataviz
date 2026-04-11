@@ -338,6 +338,22 @@ list(
     format = "file"
   ),
 
+  # Day 19 --- Evolution (Timeseries)
+  tar_target(
+    clean_dia19,
+    prep_dia19_evolution()
+  ),  
+  tar_target(
+    plot_dia19,
+    plot_dia19_evolution(clean_dia19, paleta = paleta_ts)
+  ),  
+  tar_target(
+    save_dia19,
+    ggsave(paste0(OUTPUTS_DIR, "/dia19_evolution.png"), plot_dia19, 
+           width = 8, height = 10, dpi = 300, bg = paleta_ts["light"]), # El gris verdoso editorial
+    format = "file"
+  ),
+
   # Marcador de fin de pipeline (eliminar cuando haya targets reales)
   tar_target(pipeline_listo, TRUE)
 

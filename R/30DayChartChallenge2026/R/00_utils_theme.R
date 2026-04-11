@@ -43,7 +43,7 @@ setup_fonts_cat3 <- function() {
 }
 
 setup_fonts_cat4 <- function() {
-  font_add_google("Pridi")
+  font_add_google("Pridi", bold.wt = 500)
   font_add_google("Roboto Condensed") 
   
   showtext_auto()

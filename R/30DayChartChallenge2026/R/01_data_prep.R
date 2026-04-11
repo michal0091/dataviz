@@ -1165,3 +1165,63 @@ prep_dia18_unicef <- function(ruta_xlsx = "R/30DayChartChallenge2026/data/UNICEF
   
   dt_final[]
 }
+
+
+# =============================================================================
+# DÍA 19 — Evolution (Timeseries)
+# =============================================================================
+
+prep_dia19_evolution <- function() {
+  
+  log_info("Día 19: Descargando la estructura temporal de los tipos de interés (FRED)...")
+  
+  env <- new.env()
+  
+  # Tickers de FRED
+  tickers <- c(
+    "1m" = "DGS1MO", "3m" = "DGS3MO", "6m" = "DGS6MO", 
+    "1y" = "DGS1", "2y" = "DGS2", "3y" = "DGS3", 
+    "5y" = "DGS5", "7y" = "DGS7", "10y" = "DGS10", 
+    "20y" = "DGS20", "30y" = "DGS30"
+  )
+  
+  # Mapeo a meses numéricos para el eje X continuo
+  madurez_meses <- c("1m"=1, "3m"=3, "6m"=6, "1y"=12, "2y"=24, "3y"=36, "5y"=60, "7y"=84, "10y"=120, "20y"=240, "30y"=360)
+  
+  # Descargar
+  getSymbols(unname(tickers), src = "FRED", env = env, warnings = FALSE)
+  
+  # Unir
+  lista_dt <- lapply(names(tickers), function(nombre) {
+    ticker_sym <- tickers[nombre]
+    dt <- as.data.table(env[[ticker_sym]])
+    setnames(dt, c("index", ticker_sym), c("fecha", "yield"), skip_absent = TRUE)
+    dt[, tramo := nombre]
+    dt[, meses := madurez_meses[nombre]]
+    return(dt[!is.na(yield)])
+  })
+  
+  dt_full <- rbindlist(lista_dt)
+  dt_full[, ano := year(fecha)]
+  
+  dt_full <- dt_full[ano >= 2000]
+  
+  dt_cierre <- dt_full[order(fecha), .SD[.N], by = .(ano, tramo)]
+  
+  # Detectar Inversión (10y - 3m). 
+  dt_wide <- dcast(dt_cierre, ano ~ tramo, value.var = "yield")
+  dt_wide[, spread := `10y` - `3m`]
+  dt_wide[, estado := fcase(
+    spread < 0, "Invertida (Recesión inminente)",
+    default = "Normal (Expansión)"
+  )]
+  
+  dt_final <- merge(dt_cierre, dt_wide[, .(ano, estado)], by = "ano")
+  
+  # Ordenamos para el plot
+  dt_final <- dt_final[order(ano, meses)]
+  
+  log_success("Día 19 preparado: Curvas anuales desde el año 2000 extraídas. Listos para el Ridgeline.")
+  
+  dt_final[]
+}

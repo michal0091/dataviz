@@ -1529,3 +1529,86 @@ plot_dia18_unicef <- function(dt, paleta) {
     
   return(p)
 }
+
+
+# =============================================================================
+# DÍA 19 — Evolution (Timeseries)
+# =============================================================================
+
+plot_dia19_evolution <- function(dt, paleta) {
+  
+  setup_fonts_cat4()
+  setup_fonts_2026()
+  showtext_opts(dpi = 300)
+  showtext_auto()
+  
+  c_fondo   <- unname(paleta["light"])
+  c_texto   <- unname(paleta["dark"])
+  c_inver   <- unname(paleta["danger"]) # Magenta radiactivo
+  c_sano    <- unname(paleta["info"])   # Turquesa
+  
+  p <- ggplot(dt, aes(x = meses, y = as.factor(ano), height = yield, fill = estado)) +
+    
+    # Ridgeline
+    geom_ridgeline(
+      stat = "identity", 
+      scale = 0.4,         # Controla cuánto se superponen las montañas
+      alpha = 0.85, 
+      color = c_texto,     
+      linewidth = 0.6
+    ) +
+    
+    scale_fill_manual(
+      values = c("Invertida (Recesión inminente)" = c_inver, "Normal (Expansión)" = c_sano)
+    ) +
+    scale_x_continuous(
+      trans = "log10",
+      breaks = c(1, 3, 6, 12, 24, 60, 120, 360),
+      labels = c("1M", "3M", "6M", "1Y", "2Y", "5Y", "10Y", "30Y"),
+      expand = c(0, 0)
+    ) +
+    
+    # Invertir el eje Y
+    scale_y_discrete(limits = rev, expand = expansion(mult = c(0.01, 0.05))) +
+    
+    labs(
+      title = "El Reloj de la Recesión",
+      subtitle = "Evolución histórica de la Curva de Tipos de EE.UU. (2000-2026). La anatomía de una crisis se hace visible cuando el frente de la curva (tipos a corto plazo) se eleva por encima del largo plazo. Las olas magentas revelan la inversión de la curva previa a la crisis de las Punto-Com, la Gran Recesión de 2008 y la agresiva constricción monetaria de la era post-COVID.",
+      caption = generar_caption_2026("19", "Evolution (Timeseries)", "FRED Data vía {quantmod}", c_inver, c_texto),      x = "Vencimiento del Bono",
+      y = NULL
+    ) +
+    
+    theme_minimal(base_size = 14, base_family = "Pridi") +
+    theme(
+      plot.background = element_rect(fill = c_fondo, color = NA),
+      panel.background = element_rect(fill = c_fondo, color = NA),
+      text = element_text(color = c_texto),
+      
+      plot.title.position = "plot",
+      plot.caption.position = "plot",
+      
+      # Tipografía editorial contundente
+      plot.title = element_text(family = "Pridi", face = "bold", size = rel(2.5), color = c_texto, margin = margin(b = 20)),
+      plot.subtitle = element_textbox_simple(family = "Pridi", size = rel(1.1), color = "#3b4140", margin = margin(b = 30), lineheight = 1.4),
+      
+      axis.title.x = element_text(family = "Pridi", size = rel(1.0), face = "bold", margin = margin(t = 15)),
+      
+      axis.text.y = element_text(family = "Pridi", face = "bold", size = rel(1.3), color = c_texto, vjust = 0),
+      axis.text.x = element_text(family = "Pridi", face = "bold", size = rel(1.0), color = c_texto),
+      
+      panel.grid.major.y = element_line(color = "#b0b8b6", linewidth = 0.5, linetype = "dotted"),
+      panel.grid.major.x = element_blank(),
+      panel.grid.minor = element_blank(),
+      
+      legend.position = "top",
+      legend.justification = "left",
+      legend.title = element_blank(),
+      legend.text = element_text(family = "Pridi", face = "bold", size = rel(1.1)),
+      legend.key.size = unit(0.5, "cm"),
+      legend.margin = margin(b = 15),
+      
+      plot.caption = element_markdown(family = "Roboto Condensed", size = rel(0.85), color = c_texto, hjust = 0, lineheight = 1.6, margin = margin(t = 20)),      plot.margin = margin(30, 40, 30, 40)
+    )
+    
+  return(p)
+}
