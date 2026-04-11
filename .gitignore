@@ -76,3 +76,7 @@ R/30DayChartChallenge2025/data/pand-p-shp/pand_p.shp.xml
 # targets directories
 *_targets/
 /_targets/
+R/30DayChartChallenge2026/data/dataset_olympics.csv
+R/30DayChartChallenge2026/data/MNPnacim_2024.RData
+R/30DayChartChallenge2026/data/title.ratings.tsv.gz
+R/30DayChartChallenge2026/data/title.episode.tsv.gz
