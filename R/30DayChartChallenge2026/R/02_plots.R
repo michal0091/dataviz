@@ -11,6 +11,7 @@ library(ggtext)
 library(ggridges)
 library(ggraph)
 library(ggrepel)
+library(ggtext)
 library(tidygraph)
 library(showtext)
 library(logger)
@@ -1612,3 +1613,86 @@ plot_dia19_evolution <- function(dt, paleta) {
     
   return(p)
 }
+
+
+# =============================================================================
+# DÍA 20 — Global Change (Timeseries)
+# =============================================================================
+
+plot_dia20_global_change <- function(dt, paleta) {
+  
+  setup_fonts_cat4()
+  setup_fonts_2026()
+  showtext_opts(dpi = 300)
+  showtext_auto()
+  
+  c_fondo   <- unname(paleta["light"])
+  c_texto   <- unname(paleta["dark"])
+  c_frio    <- unname(paleta["info"])     # Azul Cian
+  c_calor   <- unname(paleta["danger"])   # Magenta 
+  
+  p <- ggplot(dt, aes(x = mes, y = Year, fill = anomalia)) +
+    
+    geom_tile(color = c_fondo, linewidth = 0.1) +
+    
+    scale_fill_gradient2(
+      low = c_frio, 
+      mid = c_fondo, 
+      high = c_calor, 
+      midpoint = 0,
+      limits = c(-1.5, 1.5), 
+      oob = scales::squish,
+      guide = guide_colorbar(
+        title = "Anomalía Térmica (°C)",
+        title.position = "top",
+        barwidth = unit(12, "cm"),
+        barheight = unit(0.4, "cm")
+      )
+    ) +
+    
+    scale_y_continuous(
+      trans = "reverse", # El tiempo cae hacia abajo
+      breaks = seq(1880, 2030, by = 10),
+      expand = c(0, 0)
+    ) +
+    
+    scale_x_discrete(expand = c(0, 0), position = "top") + # Meses arriba
+    
+    labs(
+      title = "El Tapiz del Calentamiento Global",
+      subtitle = "Anomalía de la temperatura superficial terrestre y oceánica (1880-Presente) respecto a la media base. La matriz térmica revela un cambio de régimen absoluto: el siglo XIX y principios del XX (dominados por tonos cian) han sido devorados por un avance implacable del magenta extremo en las últimas dos décadas. Las estaciones ya no importan; el exceso térmico es sistémico.",
+      caption = generar_caption_2026("20", "Global Change (Timeseries)", "NASA Goddard Institute for Space Studies (GISTEMP v4)", c_calor, c_texto),
+      x = NULL,
+      y = NULL
+    ) +
+    
+    theme_minimal(base_size = 14, base_family = "Pridi") +
+    theme(
+      plot.background = element_rect(fill = c_fondo, color = NA),
+      panel.background = element_rect(fill = c_fondo, color = NA),
+      text = element_text(color = c_texto),
+      
+      plot.title.position = "plot",
+      plot.caption.position = "plot",
+      
+      plot.title = element_text(family = "Pridi", face = "bold", size = rel(2.1), color = c_texto, margin = margin(b = 20)),
+      plot.subtitle = element_textbox_simple(family = "Pridi", size = rel(1.1), color = "#3b4140", margin = margin(b = 20), lineheight = 1.4),
+      axis.text.y = element_text(family = "Pridi", face = "bold", size = rel(1.2), color = c_texto),
+      axis.text.x = element_text(family = "Pridi", face = "bold", size = rel(1.1), color = c_texto, margin = margin(b = 10)),
+      
+      # Eliminamos grid porque los tiles hacen su propio grid
+      panel.grid = element_blank(),
+      
+      legend.position = "bottom",
+      legend.justification = "center",
+      legend.title = element_text(family = "Pridi", face = "bold", size = rel(0.9)),
+      legend.text = element_text(family = "Pridi", size = rel(0.9)),
+      legend.margin = margin(t = 20, b = 0),
+      
+      plot.caption = element_markdown(family = "Roboto Condensed", size = rel(0.85), color = c_texto, hjust = 0, lineheight = 1.6, margin = margin(t = 30)),
+      plot.margin = margin(30, 40, 30, 40)
+    )
+    
+  return(p)
+}
+

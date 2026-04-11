@@ -1225,3 +1225,43 @@ prep_dia19_evolution <- function() {
   
   dt_final[]
 }
+
+
+# =============================================================================
+# DÍA 20 — Global Change (Timeseries)
+# =============================================================================
+
+prep_dia20_global_change <- function() {
+  
+  log_info("Día 20: Descargando anomalías térmicas globales desde NASA GISS...")
+  
+  # GISTEMP v4
+  url <- "https://data.giss.nasa.gov/gistemp/tabledata_v4/GLB.Ts+dSST.csv"
+  
+  # La NASA incluye una fila de título descriptiva, así que la saltamos (skip = 1)
+  # Además, los NAs vienen marcados como "***"
+  dt_raw <- fread(url, skip = 1, na.strings = "***")
+  
+  # Seleccionamos explícitamente la columna del Año y los 12 meses
+  meses <- c("Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec")
+  meses_es <- c("Ene", "Feb", "Mar", "Abr", "May", "Jun", "Jul", "Ago", "Sep", "Oct", "Nov", "Dic")
+  
+  dt_clean <- dt_raw[, .SD, .SDcols = c("Year", meses)]
+  
+  dt_long <- melt(
+    dt_clean, 
+    id.vars = "Year", 
+    measure.vars = meses,
+    variable.name = "mes_en", 
+    value.name = "anomalia"
+  )
+  
+  # Limpiar
+  dt_long <- dt_long[!is.na(anomalia)]
+  dt_long[, anomalia := as.numeric(anomalia)]
+  dt_long[, mes := factor(meses_es[match(mes_en, meses)], levels = meses_es)]
+  
+  log_success("Día 20 preparado: {nrow(dt_long)} registros mensuales de temperatura (1880-presente) listos.")
+  
+  dt_long[]
+}

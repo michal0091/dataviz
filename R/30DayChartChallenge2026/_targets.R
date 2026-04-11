@@ -354,6 +354,22 @@ list(
     format = "file"
   ),
 
+  # Day 20 --- Global Change (Timeseries)
+  tar_target(
+    clean_dia20,
+    prep_dia20_global_change()
+  ),  
+  tar_target(
+    plot_dia20,
+    plot_dia20_global_change(clean_dia20, paleta = paleta_ts)
+  ),  
+  tar_target(
+    save_dia20,
+    ggsave(paste0(OUTPUTS_DIR, "/dia20_global_change.png"), plot_dia20, 
+           width = 8, height = 10, dpi = 300, bg = paleta_ts["light"]),
+    format = "file"
+  ),
+
   # Marcador de fin de pipeline (eliminar cuando haya targets reales)
   tar_target(pipeline_listo, TRUE)
 
