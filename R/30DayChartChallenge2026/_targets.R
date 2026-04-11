@@ -322,6 +322,22 @@ list(
     format = "file"
   ),
 
+  # Day 18 --- UNICEF (Relationships)
+  tar_target(
+    clean_dia18,
+    prep_dia18_unicef("R/30DayChartChallenge2026/data/UNICEF_Expanded_Global_Databases_child_food_poverty_2024_2.xlsx")
+  ),  
+  tar_target(
+    plot_dia18,
+    plot_dia18_unicef(clean_dia18, paleta = paleta_relaciones)
+  ),  
+  tar_target(
+    save_dia18,
+    ggsave(paste0(OUTPUTS_DIR, "/dia18_unicef.png"), plot_dia18, 
+           width = 8, height = 10, dpi = 300, bg = "#e6e9f0"), 
+    format = "file"
+  ),
+
   # Marcador de fin de pipeline (eliminar cuando haya targets reales)
   tar_target(pipeline_listo, TRUE)
 

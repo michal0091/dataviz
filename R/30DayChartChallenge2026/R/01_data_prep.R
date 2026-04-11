@@ -1093,3 +1093,75 @@ prep_dia17_remake <- function() {
   
   dt[]
 }
+
+
+# =============================================================================
+# DÍA 18 — UNICEF (Relationships)
+# =============================================================================
+
+prep_dia18_unicef <- function(ruta_xlsx = "R/30DayChartChallenge2026/data/UNICEF_Expanded_Global_Databases_child_food_poverty_2024_2.xlsx") {
+  
+  log_info("Día 18: Procesando reporte de Pobreza Alimentaria Infantil de UNICEF...")
+  
+  if (!file.exists(ruta_xlsx)) {
+    log_error("Descarga el fichero UNICEF_Expanded_Global_Databases_child_food_poverty_2024_2.xlsx")
+    stop("Pipeline detenido.")
+  }
+
+  raw_data <- suppressMessages(
+    readxl::read_excel(ruta_xlsx, sheet = "Latest Regional Global", col_names = FALSE)
+  )
+  
+  dt_raw <- as.data.table(raw_data)
+  
+  # Basado en la estructura de UNICEF:
+  # Columna 1 = Región, Columna 4 = Severa, Columna 5 = Moderada
+  dt_clean <- dt_raw[4:.N, .(
+    region = `...1`, 
+    severe = `...4`, 
+    moderate = `...5`
+  )]
+  
+  # Limpieza estricta: Eliminar NAs, filas vacías, y guiones ("-")
+  dt_clean <- dt_clean[!is.na(region) & !is.na(severe) & !is.na(moderate)]
+  dt_clean <- dt_clean[severe != "-" & moderate != "-"]
+  dt_clean <- dt_clean[severe != "Severe child food poverty"] # Quitamos la fila de cabecera de texto
+  
+  # Convertimos a numérico de forma segura
+  dt_clean[, severe := as.numeric(severe)]
+  dt_clean[, moderate := as.numeric(moderate)]
+  
+  # Filtramos solo el bloque de regiones principales de UNICEF y el Global
+  regiones_target <- c(
+    "Global",
+    "East Asia and the Pacific",
+    "Eastern and Southern Africa",
+    "Middle East and North Africa",
+    "South Asia",
+    "West and Central Africa"
+  )
+  
+  dt_final <- dt_clean[region %in% regiones_target]
+  
+  # Calculamos el total de pobreza alimentaria para ordenar
+  dt_final[, total_poverty := severe + moderate]
+  
+  # Traducimos las regiones para el lienzo
+  traducciones <- c(
+    "Global" = "Promedio Global",
+    "East Asia and the Pacific" = "Este de Asia y\nPacífico",
+    "Eastern and Southern Africa" = "África Oriental y\nMeridional",
+    "Middle East and North Africa" = "Medio Oriente y\nNorte de África",
+    "South Asia" = "Sur de Asia",
+    "West and Central Africa" = "África Occidental y\nCentral"
+  )
+  
+  dt_final[, region_es := traducciones[region]]
+  
+  # Orden factorizado de peor a mejor
+  dt_final[, region_es := factor(region_es, levels = dt_final[order(total_poverty)]$region_es)]
+  
+  log_success("Día 18 preparado: {nrow(dt_final)} regiones procesadas nativamente desde el .xlsx.")
+  
+  dt_final[]
+}

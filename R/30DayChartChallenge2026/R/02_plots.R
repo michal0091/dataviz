@@ -1442,3 +1442,90 @@ plot_dia17_remake <- function(dt, paleta) {
   return(p)
 }
 
+
+# =============================================================================
+# DÍA 18 — UNICEF (Relationships)
+# =============================================================================
+
+plot_dia18_unicef <- function(dt, paleta) {
+  
+  setup_fonts_cat3()
+  setup_fonts_2026()
+  showtext_opts(dpi = 300)
+  showtext_auto()
+  
+  c_fondo   <- unname(paleta["fondo"])
+  c_marino  <- unname(paleta["marino"])
+  c_alerta  <- unname(paleta["alerta"])   # Severa
+  c_naranja <- unname(paleta["naranja"])  # Moderada
+  
+  p <- ggplot(dt, aes(y = region_es)) +
+    
+    # La brecha entre ambos estados
+    geom_segment(
+      aes(x = moderate, xend = severe, y = region_es, yend = region_es),
+      color = "#a8b2c1", linewidth = 1.5
+    ) +
+    
+    # Pobreza Severa vs Moderada
+    geom_point(aes(x = moderate), color = c_naranja, size = 5) +
+    geom_point(aes(x = severe), color = c_alerta, size = 5) +
+    
+    # Labels
+    geom_text(
+      aes(x = moderate, label = paste0(moderate, "%")),
+      color = c_naranja, family = "IBM Plex Sans", fontface = "bold", 
+      vjust = -1.5, size = 4
+    ) +
+    geom_text(
+      aes(x = severe, label = paste0(severe, "%")),
+      color = c_alerta, family = "IBM Plex Sans", fontface = "bold", 
+      vjust = -1.5, size = 4
+    ) +
+    geom_text(
+      aes(x = max(moderate) + 5, label = sprintf("Total:\n%d%%", total_poverty)),
+      color = c_marino, family = "IBM Plex Sans", fontface = "italic", 
+      size = 3.5, hjust = 0, lineheight = 0.9
+    ) +
+    
+    scale_x_continuous(
+      limits = c(0, max(dt$moderate) + 12),
+      breaks = seq(0, 60, by = 10),
+      labels = function(x) paste0(x, "%")
+    ) +
+    
+    labs(
+      title = "La Anatomía del Hambre Infantil",
+      subtitle = "Porcentaje de niños (6-23 meses) bajo pobreza alimentaria. El gráfico revela la relación estructural entre la carencia <b style='color:#e69f00'>Moderada (3-4 grupos de alimentos)</b> y la privación <b style='color:#e3111f'>Severa (0-2 grupos)</b>. En el Sur de Asia, la crisis no es solo de volumen total (77%), sino de la extrema gravedad de la misma, con una tasa severa que engulle a casi el 40% de la población infantil.",
+      caption = generar_caption_2026("18", "UNICEF Data Day (Relationships)", "UNICEF Global Databases: Child Food Poverty 2024", c_alerta, c_marino),
+      x = "Prevalencia en la población infantil (%)",
+      y = NULL
+    ) +
+    
+    theme_minimal(base_size = 16, base_family = "Inter") +
+    theme(
+      plot.background = element_rect(fill = c_fondo, color = NA),
+      panel.background = element_rect(fill = c_fondo, color = NA),
+      text = element_text(color = c_marino),
+      
+      plot.title.position = "plot",
+      plot.caption.position = "plot",
+      
+      plot.title = element_text(family = "IBM Plex Sans", face = "bold", size = rel(1.8), color = c_marino, margin = margin(b = 10)),
+      
+      plot.subtitle = element_textbox_simple(family = "Inter", size = rel(0.95), color = "#4a5b6e", margin = margin(b = 30), lineheight = 1.3),
+      axis.title.x = element_text(family = "IBM Plex Sans", size = rel(0.85), face = "bold", margin = margin(t = 15)),
+      
+      axis.text.y = element_text(family = "IBM Plex Sans", face = "bold", size = rel(1.1), color = c_marino, hjust = 1),
+      axis.text.x = element_text(family = "IBM Plex Sans", size = rel(0.9), color = c_marino),
+      
+      panel.grid.major.y = element_blank(), # Quitamos las líneas horizontales para limpiar el palo de la pesa
+      panel.grid.major.x = element_line(color = "#d1d5e0", linewidth = 0.5, linetype = "dotted"),
+      panel.grid.minor = element_blank(),
+      
+      plot.caption = element_markdown(family = "Inter", size = rel(0.75), color = c_marino, hjust = 0, lineheight = 1.6, margin = margin(t = 30)),
+      plot.margin = margin(30, 40, 30, 40)
+    )
+    
+  return(p)
+}
