@@ -18,6 +18,8 @@ library(showtext)
 library(logger)
 library(glue)
 library(ichimoku)
+library(cowplot) 
+library(magick)
 
 
 # =============================================================================
@@ -1724,7 +1726,6 @@ plot_dia21_historical <- function(data_list, paleta) {
   )
   
   max_anio <- max(dt_long$Periodo)
-  if (max_anio %% 2) max_anio <- max_anio + 1
   
   p <- ggplot() +
     geom_ribbon(
@@ -1980,3 +1981,150 @@ plot_dia23_seasons <- function(dt, paleta) {
     
   return(p)
 }
+
+
+# =============================================================================
+# DÍA 24 — South China Morning Post (Timeseries)
+# =============================================================================
+
+plot_dia24_scmp_skeleton <- function(dt) {
+  
+  # Paleta SCMP
+  c_bg <- "#EAE8D9"      # Fondo blanco roto
+  c_area <- "#F7A395"    # Rojo/Coral (El crecimiento de Asia)
+  c_texto <- "#000000"   # Negro absoluto SCMP
+  c_grid <- "#C8B4A8"    # Marrón suave para líneas muy finas
+  
+  p <- ggplot(dt, aes(x = year, y = exports_trill)) +
+    geom_area(fill = c_area, alpha = 0.85) +
+    
+    # Línea que delimita el borde
+    geom_line(color = "#000000", linewidth = 0.5) +
+    
+    # MAGIA SCMP: Giramos los ejes para que sea vertical, y revertimos el año para que 1970 esté arriba
+    coord_flip() +
+    scale_x_reverse(breaks = seq(1970, 2020, by = 10), expand = c(0, 0)) +
+    scale_y_continuous(position = "right", breaks = seq(0, 10, by = 2), labels = function(x) paste0("$", x, "T"), expand = c(0, 0)) +
+    
+    labs(
+      title = "SKELETON PLOT: El Despertar del Dragón",
+      subtitle = "Exportaciones de Asia Oriental y Pacífico (Trillones USD).\nDeja este espacio superior vacío para la cabecera SCMP.",
+      x = NULL,
+      y = "Volumen de Exportaciones (Billones de USD)"
+    ) +
+    
+    theme_minimal(base_family = "sans") + # Usa una fuente genérica temporalmente
+    theme(
+      plot.background = element_rect(fill = c_bg, color = NA),
+      panel.background = element_rect(fill = c_bg, color = NA),
+      text = element_text(color = c_texto),
+      
+      # Todo alineado al estilo SCMP
+      axis.text.y = element_text(face = "bold", size = 14, margin = margin(r = 10)),
+      axis.text.x = element_text(face = "bold", size = 14),
+      
+      # Grid súper fino solo en vertical
+      panel.grid.major.x = element_line(color = c_grid, linewidth = 0.3, linetype = "dotted"),
+      panel.grid.major.y = element_line(color = c_grid, linewidth = 0.3),
+      panel.grid.minor = element_blank(),
+      
+      plot.title = element_text(face = "bold", size = 20),
+      plot.margin = margin(50, 40, 50, 40)
+    )
+  
+  return(p)
+}
+
+
+plot_dia24_scmp_final <- function(dt, ruta_imagen = "R/30DayChartChallenge2026/data/day24_dragon.png", output_dir) {
+  
+  # Tipografía SCMP
+  font_add_google("Merriweather", "Merriweather")
+  showtext_opts(dpi = 300)
+  showtext_opts(dpi = 300)
+  showtext_auto()
+
+  c_area <- "#F7A395"    # Rojo/Coral SCMP
+  c_texto <- "#080606"   # Negro profundo
+  c_grid <- "#C8B4A8"    # Marrón suave para el grid
+  
+  p_base <- ggplot(dt, aes(x = year, y = exports_trill)) +
+    
+    geom_area(fill = c_area, alpha = 0.65) +
+    geom_line(color = c_texto, linewidth = 0.6) +
+    
+    # 2001: China entra en la OMC
+    annotate("segment", x = 2001, xend = 2001, y = 1.7, yend = 1.9, color = c_texto, linewidth = 0.3) +
+    annotate("text", x = 2001, y = 2.0, label = "2001\nChina entra en la OMC", family = "Merriweather", fontface = "bold", size = 4, hjust = 0, lineheight = 0.9) +
+    
+    # 2008: Crisis Financiera Global
+    annotate("segment", x = 2009, xend = 2009, y = 3.9, yend = 4.6, color = c_texto, linewidth = 0.3) +
+    annotate("text", x = 2009, y = 4.7, label = "2009\nCrisis Financiera Global", family = "Merriweather", size = 4, hjust = 0, lineheight = 0.9) +
+    
+    # 2020: Pandemia
+    annotate("segment", x = 2020, xend = 2020, y = 6.4, yend = 7.4, color = c_texto, linewidth = 0.3) +
+    annotate("text", x = 2020, y = 7.5, label = "2020\nShock del COVID-19", family = "Merriweather", size = 4, hjust = 0, lineheight = 0.9) +
+    
+    # Ejes invertidos
+    coord_flip() +
+    scale_x_reverse(breaks = seq(1970, 2020, by = 10), expand = c(0, 0)) +
+    scale_y_continuous(position = "right", breaks = seq(0, 10, by = 2), labels = function(x) paste0("$", x, "T"), limits = c(0, 10), expand = c(0, 0.2)) +
+    
+    labs(
+      title = "El Despertar del Dragón",
+      subtitle = "Exportaciones de Asia Oriental y Pacífico (Trillones USD).\nTras décadas de aletargamiento, la región se convirtió\nen la fábrica del mundo a partir del año 2000.",
+      caption = generar_caption_2026("24", "South China Morning Post", "World Bank Art: Nano Banana", c_area, c_texto),
+      x = NULL,
+      y = "Volumen de Exportaciones (Billones de USD)"
+    ) +
+    
+    theme_minimal(base_family = "Merriweather") +
+    theme(
+      # LA CLAVE: Fondos 100% transparentes para que se vea la imagen de abajo
+      plot.background = element_rect(fill = "transparent", color = NA),
+      panel.background = element_rect(fill = "transparent", color = NA),
+      
+      text = element_text(color = c_texto),
+      
+      plot.title.position = "plot",
+      plot.caption.position = "plot",
+      plot.title = element_text(face = "bold", size = rel(2.8), margin = margin(b = 20)),
+      plot.subtitle = element_text(size = rel(1.2), color = "#4a4a4a", margin = margin(b = 40), lineheight = 1.3),
+      
+      axis.text.y = element_text(face = "bold", size = rel(1.3), margin = margin(r = 10)),
+      axis.text.x = element_text(face = "bold", size = rel(1.2)),
+      axis.title.x = element_text(margin = margin(t = 20)),
+      
+      panel.grid.major.x = element_line(color = c_grid, linewidth = 0.4, linetype = "dotted"),
+      panel.grid.major.y = element_line(color = c_grid, linewidth = 0.4),
+      panel.grid.minor = element_blank(),
+      
+      plot.caption = element_textbox_simple(
+        family = "Merriweather", 
+        size = rel(0.9), 
+        color = "#666666", 
+        halign = 0,                     
+        lineheight = 1.6,               
+        width = grid::unit(1, "npc"),   
+        margin = margin(t = 30)
+      ),
+      plot.margin = margin(20, 40, 40, 40)
+    )
+  
+  # Ensamblar la imagen
+  img_fondo <- image_read(ruta_imagen)
+  
+  # ggdraw() crea un lienzo en blanco. 
+  # draw_image() pinta el dragón al fondo.
+  # draw_plot() pinta nuestro gráfico transparente encima.
+  p_ensamblado <- ggdraw() +
+    draw_image(img_fondo, scale = 1, x = 0, y = 0) + 
+    draw_plot(p_base)
+  
+  ggsave(paste0(output_dir, "/dia24_scmp.png"), p_ensamblado, 
+           width = 8, height = 16, dpi = 300, 
+           device = ragg::agg_png)
+  
+  return(p_ensamblado)
+}
+

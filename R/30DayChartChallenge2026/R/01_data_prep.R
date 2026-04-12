@@ -19,6 +19,7 @@ library(lubridate)
 library(PerformanceAnalytics)
 library(MacroFilters)
 library(ichimoku)
+library(WDI)
 
 
 # =============================================================================
@@ -1384,4 +1385,29 @@ prep_dia23_seasons <- function(archivo_local = "R/30DayChartChallenge2026/data/a
   log_success(sprintf("Día 23 preparado. Seco: %s | Húmedo: %s", anio_mas_seco, anio_mas_humedo))
   
   dt[]
+}
+
+
+# =============================================================================
+# DÍA 24 — South China Morning Post (Timeseries)
+# =============================================================================
+
+prep_dia24_scmp <- function() {
+  
+  log_info("Día 24: Descargando datos del Banco Mundial (Exportaciones Asia)...")
+  
+  # Descargamos Mercancías Exportadas (US$ actuales) para East Asia & Pacific (EAS)
+  # desde 1970 hasta la actualidad.
+  dt_raw <- WDI(indicator = "TX.VAL.MRCH.CD.WT", country = "EAS", start = 1970, end = 2023)
+  setDT(dt_raw)
+  
+  # Limpieza y conversión a "Billones de dólares" (Trillions en inglés) 
+  dt_raw <- dt_raw[!is.na(TX.VAL.MRCH.CD.WT)]
+  dt_raw[, exports_trill := TX.VAL.MRCH.CD.WT / 1e12] # Dividimos entre un billón
+  
+  setorder(dt_raw, year)
+  
+  log_success("Día 24 preparado: Datos de Exportaciones Asiáticas listos.")
+  
+  dt_raw[]
 }

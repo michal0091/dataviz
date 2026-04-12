@@ -418,6 +418,26 @@ list(
     format = "file"
   ),
 
+  # Day 24 --- South China Morning Post (Timeseries)
+  tar_target(
+    clean_dia24,
+    prep_dia24_scmp()
+  ),  
+  tar_target(
+    plot_dia24_skel,
+    plot_dia24_scmp_skeleton(clean_dia24)
+  ),  
+  tar_target(
+    save_dia24_skel,
+    ggsave(paste0(OUTPUTS_DIR, "/dia24_skeleton.pdf"), plot_dia24_skel, 
+           width = 8, height = 16, dpi = 300),
+    format = "file"
+  ),
+  tar_target(
+    plot_dia24,
+    plot_dia24_scmp_final(clean_dia24, output_dir = OUTPUTS_DIR)
+  ), 
+
   # Marcador de fin de pipeline (eliminar cuando haya targets reales)
   tar_target(pipeline_listo, TRUE)
 
