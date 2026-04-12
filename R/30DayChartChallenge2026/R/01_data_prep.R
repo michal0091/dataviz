@@ -18,6 +18,7 @@ library(dplyr)
 library(lubridate)
 library(PerformanceAnalytics)
 library(MacroFilters)
+library(ichimoku)
 
 
 # =============================================================================
@@ -1287,7 +1288,7 @@ prep_dia21_historical <- function(ruta_csv = "R/30DayChartChallenge2026/data/281
     `Intervalos de salario` == "De 2 a 3 SMI", "2 a 3 SMI",
     default =  "Más de 3 SMI"
   )]
-  
+
   dt_long <- dt_raw[, .(porcentaje = sum(Total)), by = .(Periodo, grupo)]
 
   dt_wide <- dcast(dt_long, Periodo ~ grupo, value.var = "porcentaje")
@@ -1296,4 +1297,35 @@ prep_dia21_historical <- function(ruta_csv = "R/30DayChartChallenge2026/data/281
   log_success("Día 21 preparado: Datos inquebrantables de compresión salarial.")
   
   return(list(long = dt_long, wide = dt_wide))
+}
+
+
+# =============================================================================
+# DÍA 22 — New Tool (Timeseries)
+# =============================================================================
+
+prep_dia22_new_tool <- function() {
+  
+  log_info("Día 22: Descargando el Nikkei 225 y calculando el sistema Ichimoku...")
+  
+  # Descarga del Nikkei 225 usando Yahoo Finance
+  env <- new.env()
+  getSymbols("^N225", src = "yahoo", env = env, warnings = FALSE)
+  
+  # Extraemos el objeto xts
+  dt_xts <- env$N225
+  
+  # Limpiamos NAs que a veces deja Yahoo Finance en festivos locales
+  dt_xts <- na.omit(dt_xts)
+  
+  # Filtramos el último año y medio para tener una vista detallada de la ruptura histórica
+  dt_xts_recent <- dt_xts["2023-01-01/"]
+  
+  # NUEVA HERRAMIENTA: Generamos el objeto ichimoku
+  # Esto calcula las 5 líneas (Tenkan, Kijun, Senkou A, Senkou B, Chikou)
+  nube <- ichimoku(dt_xts_recent)
+  
+  log_success("Día 22 preparado: Objeto Ichimoku Kinko Hyo listo para el renderizado.")
+  
+  return(nube)
 }

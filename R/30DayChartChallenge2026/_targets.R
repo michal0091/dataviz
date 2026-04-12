@@ -386,6 +386,22 @@ list(
     format = "file"
   ),
 
+  # Day 22 --- New Tool (Timeseries)
+  tar_target(
+    clean_dia22,
+    prep_dia22_new_tool()
+  ),  
+  tar_target(
+    plot_dia22,
+    plot_dia22_new_tool(clean_dia22, paleta = paleta_ts)
+  ),  
+  tar_target(
+    save_dia22,
+    ggsave(paste0(OUTPUTS_DIR, "/dia22_new_tool.png"), plot_dia22, 
+           width = 8, height = 10, dpi = 300, bg = paleta_ts["light"]),
+    format = "file"
+  ),
+
 
   # Marcador de fin de pipeline (eliminar cuando haya targets reales)
   tar_target(pipeline_listo, TRUE)

@@ -17,6 +17,7 @@ library(tidygraph)
 library(showtext)
 library(logger)
 library(glue)
+library(ichimoku)
 
 
 # =============================================================================
@@ -1803,3 +1804,81 @@ plot_dia21_historical <- function(data_list, paleta) {
     
   return(p)
 }
+
+
+# =============================================================================
+# DÍA 22 — New Tool (Timeseries)
+# =============================================================================
+
+plot_dia22_new_tool <- function(nube_obj, paleta) {
+  
+  setup_fonts_cat4()
+  setup_fonts_2026()
+  showtext_opts(dpi = 300)
+  showtext_auto()
+  
+  c_fondo   <- unname(paleta["light"])
+  c_texto   <- unname(paleta["dark"])
+  c_nube_up <- unname(paleta["info"])    # Turquesa 
+  c_nube_dn <- unname(paleta["danger"])  # Magenta 
+  
+  # EL VECTOR MAESTRO (Basado en el código fuente de ichimoku)
+  colores_ichimoku <- c(
+    "#d1d8d7",               # pal[1]: Relleno de la Nube (Gris azulado muy suave para que las líneas destaquen)
+    c_nube_dn,                 # pal[2]: Senkou B (Línea de soporte/resistencia lenta)
+    c_nube_up,                 # pal[3]: Senkou A (Línea rápida)
+    "#82908f",               # pal[4]: Tenkan-sen (Gris claro neutro)
+    "#4a5b6e",               # pal[5]: Kijun-sen (Azul oscuro base)
+    unname(paleta["accent2"]), # pal[6]: Chikou Span (Verde oscuro confirmación)
+    c_nube_up,                 # pal[7]: Borde Vela UP (Turquesa)
+    c_nube_dn,                 # pal[8]: Borde Vela DOWN (Magenta)
+    c_texto,                   # pal[9]: Borde Vela FLAT
+    c_fondo,                   # pal[10]: Relleno Vela UP (Usamos c_fondo para hacer velas alcistas "huecas" clásicas)
+    c_nube_dn,                 # pal[11]: Relleno Vela DOWN (Magenta sólido)
+    c_texto                    # pal[12]: Relleno Vela FLAT
+  )
+
+  p <- ichimoku::autoplot(
+    nube_obj, 
+    theme = colores_ichimoku, # Aplicamos el vector personalizado
+    type = "none"
+  ) +
+    
+    labs(
+      title = "El Equilibrio de un Vistazo",
+      subtitle = "Análisis del **Nikkei 225** mediante *Ichimoku Kinko Hyo*. Empleando el paquete **{ichimoku}** como herramienta no convencional, el gráfico proyecta las nubes dinámicas (Kumo) hacia el futuro. Observamos cómo el índice encuentra un soporte matemático perfecto en los bordes de la nube durante sus correcciones, impulsando su ruptura hacia máximos históricos.",
+      caption = generar_caption_2026("22", "New Tool ({ichimoku})", "Yahoo Finance (^N225)", c_nube_up, c_texto),
+      x = NULL,
+      y = "Precio (JPY)"
+    ) +
+    
+    # NUESTRO TEMA EDITORIAL (Aplastará el theme_ichimoku_light por defecto)
+    theme_minimal(base_size = 14, base_family = "Pridi") +
+    theme(
+      plot.background = element_rect(fill = c_fondo, color = NA),
+      panel.background = element_rect(fill = c_fondo, color = NA),
+      text = element_text(color = c_texto),
+      
+      plot.title.position = "plot",
+      plot.caption.position = "plot",
+      plot.title = element_text(family = "Pridi", face = "bold", size = rel(2.2), color = c_texto, margin = margin(b = 20)),
+      plot.subtitle = element_textbox_simple(family = "Pridi", size = rel(1.1), color = "#3b4140", margin = margin(b = 20), lineheight = 1.4),
+
+      axis.title.y = element_text(family = "Pridi", size = rel(1.0), face = "bold", margin = margin(r = 15)),
+      axis.text.y = element_text(family = "Pridi", face = "bold", size = rel(1.1), color = c_texto),
+      
+      # Rotamos 45 grados para que las fechas no colisionen en el eje X
+      axis.text.x = element_text(family = "Pridi", face = "bold", size = rel(1.1), color = c_texto, angle = 45, hjust = 1, margin = margin(t = 10)),
+      
+      panel.grid.major = element_line(color = "#b0b8b6", linewidth = 0.5, linetype = "dotted"),
+      panel.grid.minor = element_blank(),
+      
+      legend.position = "none",
+      
+      plot.caption = element_markdown(family = "Roboto Condensed", size = rel(0.85), color = c_texto, hjust = 0, lineheight = 1.6, margin = margin(t = 30)),
+      plot.margin = margin(30, 40, 30, 40)
+    )
+    
+  return(p)
+}
+
