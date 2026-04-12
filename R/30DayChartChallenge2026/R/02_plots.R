@@ -12,6 +12,7 @@ library(ggridges)
 library(ggraph)
 library(ggrepel)
 library(ggtext)
+library(ggfx)
 library(tidygraph)
 library(showtext)
 library(logger)
@@ -1696,3 +1697,109 @@ plot_dia20_global_change <- function(dt, paleta) {
   return(p)
 }
 
+
+# =============================================================================
+# DÍA 21 — Historical (Timeseries)
+# =============================================================================
+
+plot_dia21_historical <- function(data_list, paleta) {
+  
+  setup_fonts_cat4()
+  setup_fonts_2026()
+  showtext_opts(dpi = 300)
+  showtext_auto()
+  
+  dt_long <- data_list$long
+  dt_wide <- data_list$wide
+  
+  c_fondo   <- unname(paleta["light"])
+  c_texto   <- unname(paleta["dark"])
+  
+  # Asignación de colores
+  colores_grupos <- c(
+    "1 a 2 SMI" = unname(paleta["danger"]),  # Magenta (El bloque que absorbe todo)
+    "2 a 3 SMI" = unname(paleta["info"]),    # Turquesa (La clase media que se hunde)
+    "Más de 3 SMI" = unname(paleta["accent2"]) # Verde (Rentas altas)
+  )
+  
+  max_anio <- max(dt_long$Periodo)
+  if (max_anio %% 2) max_anio <- max_anio + 1
+  
+  p <- ggplot() +
+    geom_ribbon(
+      data = dt_wide,
+      aes(x = Periodo, ymin = pmin(smi_1_2, smi_2_3), ymax = pmax(smi_1_2, smi_2_3)),
+      fill = c_texto, alpha = 0.06
+    ) +
+    
+    geom_line(
+      data = dt_long,
+      aes(x = Periodo, y = porcentaje, color = grupo),
+      linewidth = 1.8
+    ) +
+    
+    # Puntos al inicio (2008) y al final (2023)
+    geom_point(data = dt_long[Periodo %in% c(2008, max_anio)], aes(x = Periodo, y = porcentaje, color = grupo), size = 3) +
+    
+    # Etiquetas directas en 2023
+    geom_text(
+      data = dt_long[Periodo == max_anio],
+      aes(x = Periodo + 0.3, y = porcentaje, label = sprintf("%s\n(%.1f%%)", grupo, porcentaje), color = grupo),
+      family = "Pridi", fontface = "bold", size = 5, hjust = 0, lineheight = 0.9
+    ) +
+    
+    # Anotación contextual
+    annotate("text", x = 2008, y = 38, label = "Empate\nClase Media (2008)", family = "Pridi", color = "#3b4140", size = 5, hjust = 0, fontface = "italic") +
+    geom_segment(aes(x = 2008.5, xend = 2008.5, y = 35.5, yend = 33.5), color = "#3b4140", arrow = arrow(length = unit(0.2, "cm"))) +
+    
+    # Hito temporal
+    geom_vline(xintercept = 2019, color = "#3b4140", linetype = "dotted", linewidth = 0.8) +
+    annotate("text", x = 2019.2, y = 15, label = "SMI\n+22%", family = "Pridi", color = "#3b4140", size = 5, hjust = 0) +
+    
+    scale_color_manual(values = colores_grupos, guide = "none") +
+    
+    scale_x_continuous(
+      breaks = seq(2008, max_anio, by = 2),
+      expand = expansion(mult = c(0.02, 0.25)) 
+    ) +
+    
+    scale_y_continuous(
+      breaks = seq(0, 60, by = 10),
+      labels = function(x) paste0(x, "%")
+    ) +
+    
+    labs(
+      title = "El 'Efecto Embudo' del SMI",
+      subtitle = "Distribución de trabajadores a jornada completa según múltiplos del Salario Mínimo (2008-2023). La 'Recuperación en K' queda al descubierto: mientras en 2008 la clase trabajadora y la clase media (2 a 3 SMI) estaban equilibradas, las fuertes subidas del SMI desde 2019 sin acompañamiento de los salarios medios han provocado una brutal compresión. Hoy, más de la mitad del país (<b style='color:#fb036c'>54%</b>) está acorralado en la franja baja.",
+      caption = generar_caption_2026("21", "Historical (Timeseries)", "INE", unname(paleta["danger"]), c_texto),
+      x = NULL,
+      y = "% del Total de Trabajadores"
+    ) +
+    
+    theme_minimal(base_size = 14, base_family = "Pridi") +
+    theme(
+      plot.background = element_rect(fill = c_fondo, color = NA),
+      panel.background = element_rect(fill = c_fondo, color = NA),
+      text = element_text(color = c_texto),
+      
+      plot.title.position = "plot",
+      plot.caption.position = "plot",
+      
+      plot.title = element_text(family = "Pridi", face = "bold", size = rel(2.4), color = c_texto, margin = margin(b = 15)),
+      plot.subtitle = element_textbox_simple(family = "Pridi", size = rel(1.1), color = "#3b4140", margin = margin(b = 30), lineheight = 1.4),
+
+      axis.title.y = element_text(family = "Pridi", size = rel(1.0), face = "bold", margin = margin(r = 15)),
+      
+      axis.text.y = element_text(family = "Pridi", face = "bold", size = rel(1.2), color = c_texto),
+      axis.text.x = element_text(family = "Pridi", face = "bold", size = rel(1.1), color = c_texto, margin = margin(t = 5)),
+      
+      panel.grid.major.y = element_line(color = "#b0b8b6", linewidth = 0.5),
+      panel.grid.major.x = element_blank(),
+      panel.grid.minor = element_blank(),
+      
+      plot.caption = element_markdown(family = "Roboto Condensed", size = rel(0.85), color = c_texto, hjust = 0, lineheight = 1.6, margin = margin(t = 30)),
+      plot.margin = margin(30, 40, 30, 40)
+    )
+    
+  return(p)
+}

@@ -1265,3 +1265,35 @@ prep_dia20_global_change <- function() {
   
   dt_long[]
 }
+
+
+# =============================================================================
+# DÍA 21 — Historical (Timeseries)
+# =============================================================================
+
+prep_dia21_historical <- function(ruta_csv = "R/30DayChartChallenge2026/data/28182.csv") {
+  
+  log_info("Día 21: Procesando la compresión salarial histórica (SMI)...")
+
+  if (!file.exists(ruta_csv)) {
+    log_error("FALTA EL ARCHIVO: Descarga 28182.csv del INE")
+    stop("Pipeline detenido.")
+  }
+
+  dt_raw <- fread(ruta_csv, dec = ",", encoding = "Latin-1")
+  dt_raw <- dt_raw[`Intervalos de salario` %notin% c("De 0 a 1 SMI", "Total de trabajadores")]
+  dt_raw[, grupo := fcase(
+    `Intervalos de salario` == "De 1 a 2 SMI", "1 a 2 SMI",
+    `Intervalos de salario` == "De 2 a 3 SMI", "2 a 3 SMI",
+    default =  "Más de 3 SMI"
+  )]
+  
+  dt_long <- dt_raw[, .(porcentaje = sum(Total)), by = .(Periodo, grupo)]
+
+  dt_wide <- dcast(dt_long, Periodo ~ grupo, value.var = "porcentaje")
+  dt_wide <- dt_wide[, .(Periodo, smi_1_2 = `1 a 2 SMI`, smi_2_3 = `2 a 3 SMI`, smi_mas_3 = `Más de 3 SMI`)]
+  
+  log_success("Día 21 preparado: Datos inquebrantables de compresión salarial.")
+  
+  return(list(long = dt_long, wide = dt_wide))
+}

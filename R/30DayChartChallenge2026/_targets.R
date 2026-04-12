@@ -370,6 +370,23 @@ list(
     format = "file"
   ),
 
+  # Day 21 ---
+  tar_target(
+    clean_dia21,
+    prep_dia21_historical(ruta_csv = "R/30DayChartChallenge2026/data/28182.csv") 
+  ),  
+  tar_target(
+    plot_dia21,
+    plot_dia21_historical(clean_dia21, paleta = paleta_ts)
+  ),  
+  tar_target(
+    save_dia21,
+    ggsave(paste0(OUTPUTS_DIR, "/dia21_historical.png"), plot_dia21, 
+           width = 8, height = 10, dpi = 300, bg = paleta_ts["light"]),
+    format = "file"
+  ),
+
+
   # Marcador de fin de pipeline (eliminar cuando haya targets reales)
   tar_target(pipeline_listo, TRUE)
 
