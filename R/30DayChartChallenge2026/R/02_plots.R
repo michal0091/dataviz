@@ -1882,3 +1882,101 @@ plot_dia22_new_tool <- function(nube_obj, paleta) {
   return(p)
 }
 
+
+# =============================================================================
+# DÍA 23 — Seasons (Timeseries)
+# =============================================================================
+
+plot_dia23_seasons <- function(dt, paleta) {
+  
+  setup_fonts_cat4()
+  setup_fonts_2026()
+  showtext_opts(dpi = 300)
+  showtext_auto()
+  
+  c_fondo   <- unname(paleta["light"])
+  c_texto   <- unname(paleta["dark"])
+  
+  c_base    <- "#3b4140"                # Gris para el histórico
+  c_humedo  <- unname(paleta["info"])     # Turquesa (Agua/Lluvia)
+  c_seco    <- unname(paleta["danger"])   # Magenta (Alarma por sequía)
+  c_actual  <- unname(paleta["accent2"])  # Verde para el año en curso
+  
+  # Extraemos los nombres exactos de los niveles calculados dinámicamente
+  niveles <- levels(dt$highlight)
+  n_historico <- niveles[1]
+  n_actual    <- niveles[2]
+  n_seco      <- niveles[3]
+  n_humedo    <- niveles[4]
+  
+  p <- ggplot(dt, aes(x = fecha_ficticia, y = prec_acumulada, group = anio, color = highlight, linewidth = highlight, alpha = highlight)) +
+    
+    geom_line() +
+    
+    scale_color_manual(values = setNames(c(c_base, c_actual, c_seco, c_humedo), niveles)) +
+    scale_linewidth_manual(values = setNames(c(0.4, 1.5, 1.5, 1.5), niveles)) +
+    scale_alpha_manual(values = setNames(c(0.3, 1, 1, 1), niveles)) +
+    
+    # Formateo estacional del eje X
+    scale_x_date(
+      date_labels = "%b", 
+      date_breaks = "1 month", 
+      expand = c(0.05, 0.15), 
+      limits = c(min(dt$fecha_ficticia), max(dt$fecha_ficticia))
+    ) +
+    
+    scale_x_date(
+      breaks = seq(as.Date("2024-01-01"), as.Date("2024-12-01"), by = "1 month"),
+      date_labels = "%b", 
+      expand = expansion(mult = c(0.01, 0.05)) # Mantenemos el aire, pero sin etiquetas extra
+    ) +
+    
+    guides(
+      color = guide_legend(nrow = 2, byrow = TRUE),
+      linewidth = guide_legend(nrow = 2, byrow = TRUE),
+      alpha = guide_legend(nrow = 2, byrow = TRUE)
+    ) +
+    
+    labs(
+      title = "El Mapa de la Sed",
+      subtitle = "Evolución de la **Precipitación Acumulada** anual en el Observatorio del Retiro (Madrid). En un clima mediterráneo fuertemente estacional, la acumulación de agua (mm/m²) dicta el pulso de la región. El gráfico revela un amplio corredor histórico gris, roto por años extremos: la alarmante planicie de la <b style='color:#fb036c'>gran sequía</b> (donde el otoño y la primavera fallaron por completo) frente a la verticalidad de las <b style='color:#22adc9'>inundaciones récord</b>.",
+      caption = generar_caption_2026("23", "Seasons (Timeseries)", "AEMET OpenData (Estación 3195). Limpieza de valores 'Ip'.", c_seco, c_texto),
+      x = NULL,
+      y = "Lluvia Acumulada (Litros / m²)"
+    ) +
+    
+    theme_minimal(base_size = 14, base_family = "Pridi") +
+    theme(
+      plot.background = element_rect(fill = c_fondo, color = NA),
+      panel.background = element_rect(fill = c_fondo, color = NA),
+      text = element_text(color = c_texto),
+      
+      plot.title.position = "plot",
+      plot.caption.position = "plot",
+      
+      plot.title = element_text(family = "Pridi", face = "bold", size = rel(2.4), color = c_texto, margin = margin(b = 20)),
+      
+      # TEXTBOX RENDERIZADO ESTRICTAMENTE AQUÍ
+      plot.subtitle = element_textbox_simple(family = "Pridi", size = rel(1.1), color = "#3b4140", margin = margin(b = 20), lineheight = 1.4),
+      
+      axis.title.y = element_text(family = "Pridi", size = rel(1.0), face = "bold", margin = margin(r = 15)),
+      axis.text = element_text(family = "Pridi", face = "bold", size = rel(1.05), color = c_texto),
+      
+      panel.grid.major.y = element_line(color = "#b0b8b6", linewidth = 0.5, linetype = "dashed"),
+      panel.grid.major.x = element_line(color = "#e0e5e3", linewidth = 0.8), # Guías para marcar el paso de los meses
+      panel.grid.minor = element_blank(),
+      
+      # Leyenda arriba para limpiar el lienzo
+      legend.position = "top",
+      legend.justification = "center",
+      legend.location = "plot",
+      legend.title = element_blank(),
+      legend.text = element_text(family = "Pridi", face = "bold", size = rel(1.1)),
+      legend.key.size = unit(0.8, "cm"),
+      
+      plot.caption = element_markdown(family = "Roboto Condensed", size = rel(0.85), color = c_texto, hjust = 0, lineheight = 1.6, margin = margin(t = 30)),
+      plot.margin = margin(30, 40, 30, 40)
+    )
+    
+  return(p)
+}

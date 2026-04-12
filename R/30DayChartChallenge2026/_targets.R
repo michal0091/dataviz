@@ -402,6 +402,21 @@ list(
     format = "file"
   ),
 
+  # Day 23 --- Seasons (Timeseries)
+  tar_target(
+    clean_dia23,
+    prep_dia23_seasons(archivo_local = "R/30DayChartChallenge2026/data/aemet_retiro.csv") 
+  ),  
+  tar_target(
+    plot_dia23,
+    plot_dia23_seasons(clean_dia23, paleta = paleta_ts)
+  ),  
+  tar_target(
+    save_dia23,
+    ggsave(paste0(OUTPUTS_DIR, "/dia23_seasons.png"), plot_dia23, 
+           width = 8, height = 10, dpi = 300, bg = paleta_ts["light"]),
+    format = "file"
+  ),
 
   # Marcador de fin de pipeline (eliminar cuando haya targets reales)
   tar_target(pipeline_listo, TRUE)

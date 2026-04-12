@@ -1329,3 +1329,59 @@ prep_dia22_new_tool <- function() {
   
   return(nube)
 }
+
+
+# =============================================================================
+# DÍA 23 — Seasons (Timeseries)
+# =============================================================================
+
+prep_dia23_seasons <- function(archivo_local = "R/30DayChartChallenge2026/data/aemet_retiro.csv") {
+  
+  log_info("Día 23: Procesando Precipitación Acumulada (AEMET - Retiro)...")
+  
+  if (!file.exists(archivo_local)) stop(paste("FALTA EL ARCHIVO:", archivo_local))
+  
+  dt_raw <- fread(archivo_local)
+  
+  # Seleccionamos variables
+  dt <- dt_raw[, .(fecha, prec)]
+  
+  # Limpiar
+  dt[, prec_clean := gsub("Ip", "0.0", prec)]
+  dt[, prec_clean := gsub(",", ".", prec_clean)]
+  dt[, prec_num := as.numeric(prec_clean)]
+  dt[is.na(prec_num), prec_num := 0] 
+  
+  # Estacional
+  dt[, anio := year(fecha)]
+  dt[, mes := month(fecha)]
+  dt[, dia := mday(fecha)]
+  
+  # Suma acumulada de lluvia a lo largo del año
+  setorder(dt, fecha)
+  dt[, prec_acumulada := cumsum(prec_num), by = anio]
+  dt[, fecha_ficticia := as.Date(sprintf("2024-%02d-%02d", mes, dia))]
+  
+  max_anio <- max(dt$anio)
+  dt_historico <- dt[anio < max_anio]
+  
+  totales_anuales <- dt_historico[, .(total = max(prec_acumulada)), by = anio]
+  anio_mas_seco <- totales_anuales[which.min(total), anio]
+  anio_mas_humedo <- totales_anuales[which.max(total), anio]
+  
+  # Clasificar
+  dt[, highlight := fcase(
+    anio == anio_mas_seco, sprintf("%s (Más Seco)", anio),
+    anio == anio_mas_humedo, sprintf("%s (Más Lluvioso)", anio),
+    anio == max_anio, sprintf("%s (Año Actual)", anio),
+    default = "Histórico"
+  )]
+  
+  niveles_factor <- c("Histórico", sprintf("%s (Año Actual)", max_anio), sprintf("%s (Más Seco)", anio_mas_seco), sprintf("%s (Más Lluvioso)", anio_mas_humedo))
+  dt[, highlight := factor(highlight, levels = niveles_factor)]
+  setorder(dt, highlight)
+  
+  log_success(sprintf("Día 23 preparado. Seco: %s | Húmedo: %s", anio_mas_seco, anio_mas_humedo))
+  
+  dt[]
+}
