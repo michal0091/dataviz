@@ -1457,3 +1457,78 @@ prep_dia25_space <- function() {
   
   dt[]
 }
+
+
+# =============================================================================
+# DÍA 26 — Trend (Uncertainties)
+# =============================================================================
+
+prep_dia26_trend <- function(ruta_csv = "R/30DayChartChallenge2026/data/ecb_yield_curve.csv") {
+  
+  log_info("Día 26: Leyendo dataset masivo del BCE y calculando curvas Svensson...")
+  
+  if (!file.exists(ruta_csv)) {
+    log_error("FALTA EL ARCHIVO: Descarga ecb_yield_curve.csv del BCE")
+    stop("Pipeline detenido.")
+    }
+
+  dt_raw <- fread(ruta_csv)
+
+  dt_params <- dt_raw[DATA_TYPE_FM %in% c("BETA0", "BETA1", "BETA2", "BETA3", "TAU1", "TAU2")]
+  
+  # Una fila por fecha, y los parámetros en columnas
+  curvas <- dcast(dt_params, TIME_PERIOD ~ DATA_TYPE_FM, value.var = "OBS_VALUE")
+  setnames(curvas, "TIME_PERIOD", "fecha")
+  curvas[, fecha := as.Date(fecha)]
+  
+  # Función: Calcular Forward Rate (SVENSSON)
+  calc_forward <- function(t, b0, b1, b2, b3, tau1, tau2) {
+    term1 <- b1 * exp(-t / tau1)
+    term2 <- b2 * (t / tau1) * exp(-t / tau1)
+    term3 <- b3 * (t / tau2) * exp(-t / tau2)
+    return(b0 + term1 + term2 + term3)
+  }
+  
+  # El tipo a corto plazo real (usamos t = 1 año como proxy de la realidad macro)
+  curvas[, tasa_real := calc_forward(1, BETA0, BETA1, BETA2, BETA3, TAU1, TAU2)]
+  dt_real <- curvas[fecha >= "2013-01-01" & fecha <= "2019-01-01", .(fecha, tasa_real)]
+  
+  # Proyecciones / Expectativas
+  # Elegimos fechas exactas (vintages) donde el BCE hizo anuncios importantes
+  fechas_vintages <- as.Date(c(
+    "2013-06-03", # Antes de medidas
+    "2014-01-02", # Inicios del debate
+    "2014-06-05", # ANUNCIO: Tipos negativos
+    "2015-01-22", # ANUNCIO: Expansión cuantitativa (QE) masiva
+    "2016-03-10"  # Capitulación del mercado
+  ))
+  
+  lista_proyecciones <- lapply(fechas_vintages, function(f_vintage) {
+    
+    # Extraemos los parámetros de ese día exacto
+    params_dia <- curvas[fecha == f_vintage]
+    if(nrow(params_dia) == 0) return(NULL) # Por si cae en fin de semana
+    
+    # Proyectamos las expectativas mes a mes desde el día del anuncio hasta 3 años al futuro
+    t_meses <- seq(0, 3, by = 1/12) 
+    fechas_futuras <- f_vintage %m+% months(0:36)
+    
+    tasas_esperadas <- calc_forward(
+      t_meses, 
+      params_dia$BETA0, params_dia$BETA1, params_dia$BETA2, 
+      params_dia$BETA3, params_dia$TAU1, params_dia$TAU2
+    )
+    
+    data.table(
+      vintage = format(f_vintage, "%b %Y"),
+      fecha = fechas_futuras,
+      tasa_proj = tasas_esperadas
+    )
+  })
+  
+  dt_proyecciones <- rbindlist(lista_proyecciones)
+  
+  log_success("Día 26 preparado: Hedgehog Chart generado con matemática de Svensson.")
+  
+  return(list(real = dt_real, proyecciones = dt_proyecciones))
+}

@@ -455,6 +455,24 @@ list(
     format = "file"
   ),
 
+  # Day 26 --- Trend (Uncertainties)
+
+  tar_target(
+    clean_dia26,
+    prep_dia26_trend(ruta_csv = "R/30DayChartChallenge2026/data/ecb_yield_curve.csv")
+  ),  
+  tar_target(
+    plot_dia26,
+    plot_dia26_trend(clean_dia26, paleta = paleta_unc)
+  ),  
+  tar_target(
+    save_dia26,
+    ggsave(paste0(OUTPUTS_DIR, "/dia26_trend.png"), plot_dia26, 
+           width = 8, height = 10, dpi = 300, 
+           device = ragg::agg_png), 
+    format = "file"
+  ),
+
   # Marcador de fin de pipeline (eliminar cuando haya targets reales)
   tar_target(pipeline_listo, TRUE)
 

@@ -2209,3 +2209,106 @@ plot_dia25_space <- function(dt, paleta) {
   return(p)
 }
 
+
+# =============================================================================
+# DÍA 26 — Trend (Uncertainties)
+# =============================================================================
+
+plot_dia26_trend <- function(datos, paleta) {
+  
+  setup_fonts_cat5()
+  setup_fonts_2026()
+  showtext_opts(dpi = 300)
+  showtext_auto()
+  
+  # Separar los data.tables
+  dt_real <- datos$real
+  dt_proj <- datos$proyecciones
+  
+  # Extraemos colores de la paleta
+  c_fondo  <- unname(paleta["light_bg"])   # #f8f9fd
+  c_texto  <- unname(paleta["dark"])       # #241e1c
+  c_grid   <- unname(paleta["light_alt"])  # #e2e6e4
+  c_pua    <- unname(paleta["blue"])       # #3884ff (Las proyecciones)
+  c_alerta <- unname(paleta["magenta"])    # #ff006e (El efecto anuncio)
+  
+  # Fechas clave para el Efecto Anuncio
+  fecha_anuncio <- as.Date("2014-06-05")   # Draghi anuncia tipos negativos
+  fecha_ejecucion <- as.Date("2015-03-09") # Comienza oficialmente el QE
+  
+  p <- ggplot() +
+    
+    # Efecto Anuncio
+    annotate("rect", xmin = fecha_anuncio, xmax = fecha_ejecucion, 
+             ymin = -Inf, ymax = Inf, fill = c_alerta, alpha = 0.08) +
+    
+    # Las proyecciones fallidas calculadas con modelo NSS
+    geom_line(data = dt_proj, aes(x = fecha, y = tasa_proj, group = vintage), 
+              color = c_pua, linewidth = 0.7, linetype = "dashed", alpha = 0.6) +
+    
+    # La tendencia real del Euribor
+    geom_line(data = dt_real, aes(x = fecha, y = tasa_real), 
+              color = c_texto, linewidth = 1.5) +
+    
+    # Línea del Cero (Psicológica y matemática)
+    geom_hline(yintercept = 0, color = c_texto, linewidth = 0.5, linetype = "dotted") +
+    
+    # Labels
+    annotate("segment", x = fecha_anuncio, xend = fecha_anuncio, y = -Inf, yend = Inf, 
+             color = c_alerta, linewidth = 0.5) +
+    
+    annotate("text", x = fecha_anuncio + 15, y = -0.6, 
+             label = "EFECTO ANUNCIO\nDraghi abre la puerta\na los tipos negativos", 
+             family = "Space Mono", color = c_alerta, size = 3.6, fontface = "bold", hjust = 0, lineheight = 0.9) +
+    
+    annotate("text", x = as.Date("2016-05-01"), y = 0.12, 
+             label = "PROYECCIONES (NSS Forward)\nEl mercado esperaba constantemente\nun repunte que nunca llegó.", 
+             family = "Manrope", color = c_pua, size = 3.6, fontface = "italic", hjust = 0, lineheight = 0.9) +
+    
+    # ESCALAS (Ajustadas a los datos reales empíricos)
+    scale_x_date(date_breaks = "1 year", date_labels = "%Y", expand = c(0, 0), 
+                 limits = c(as.Date("2013-01-01"), as.Date("2019-01-01"))) +
+    
+    scale_y_continuous(breaks = seq(-1.0, 1.0, by = 0.2), limits = c(-0.9, 0.5), 
+                       labels = function(x) paste0(x, "%")) +
+    
+    # TITULARES Y NARRATIVA
+    labs(
+      title = "El Erizo del BCE: Promesas y Realidad",
+      subtitle = "Expectativas del mercado (líneas azules discontinuas) frente a la evolución real de la curva a 1 año (línea negra). El gráfico evidencia la brutal incertidumbre de los modelos predictivos: trimestre tras trimestre, el mercado proyectaba un retorno a la normalidad. Sin embargo, la credibilidad del BCE generó un 'Efecto Anuncio' que hundió la curva real hacia terreno negativo mucho antes de que se ejecutaran las compras masivas de bonos.",
+      caption = generar_caption_2026("26", "Trend (Uncertainties)", "Datos: ECB Yield Curve Parameters (Nelson-Siegel-Svensson)", c_pua, c_texto),
+      x = NULL,
+      y = "Tipo de Interés / Forward Rate (%)"
+    ) +
+    
+    # TEMA VISUAL: Categoría 5 (Uncertainties)
+    theme_minimal(base_size = 14, base_family = "Space Mono") +
+    theme(
+      plot.background = element_rect(fill = c_fondo, color = NA),
+      panel.background = element_rect(fill = c_fondo, color = NA),
+      text = element_text(color = c_texto),
+      
+      plot.title.position = "plot",
+      plot.caption.position = "plot",
+      
+      plot.title = element_text(family = "Manrope", face = "bold", size = rel(2.05), color = c_texto, margin = margin(b = 20)),
+      plot.subtitle = element_textbox_simple(
+        family = "Manrope", size = rel(1.1), color = "#555b6e", 
+        margin = margin(b = 30), lineheight = 1.4, width = grid::unit(1, "npc")
+      ),
+      plot.caption = element_textbox_simple(
+        family = "Manrope", size = rel(0.85), color = "#555b6e", 
+        halign = 0, lineheight = 1.6, width = grid::unit(1, "npc"), margin = margin(t = 30)
+      ),
+      
+      axis.title.y = element_text(family = "Space Mono", size = rel(1.0), margin = margin(r = 15)),
+      axis.text = element_text(family = "Space Mono", size = rel(1.1), color = "#555b6e"),
+      
+      panel.grid.major = element_line(color = c_grid, linewidth = 0.5),
+      panel.grid.minor = element_blank(),
+      
+      plot.margin = margin(30, 40, 30, 40)
+    )
+    
+  return(p)
+}
