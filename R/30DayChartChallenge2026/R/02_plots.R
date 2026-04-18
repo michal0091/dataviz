@@ -20,7 +20,8 @@ library(glue)
 library(ichimoku)
 library(cowplot) 
 library(magick)
-
+library(gganimate)
+library(gifski)
 
 # =============================================================================
 # PLANTILLA DÍA XX — sustituir XX por el número de día
@@ -2311,4 +2312,219 @@ plot_dia26_trend <- function(datos, paleta) {
     )
     
   return(p)
+}
+
+
+# =============================================================================
+# DÍA 27 — Animation (Uncertainties)
+# =============================================================================
+
+plot_dia27_animation <- function(datos, paleta) {
+  
+  setup_fonts_cat5()
+  setup_fonts_2026()
+  showtext_opts(dpi = 300)
+  showtext_auto()
+  
+  dt_puntos <- datos$puntos
+  dt_lineas <- datos$lineas
+  
+  # Colores
+  c_fondo   <- unname(paleta["dark"])       # #241e1c
+  c_texto   <- unname(paleta["light_bg"])   # #f8f9fd
+  c_puntos  <- unname(paleta["blue"])       # #3884ff (Azul eléctrico)
+  c_linea   <- unname(paleta["magenta"])    # #ff006e (Rosa neón)
+  
+  p <- ggplot() +
+    
+    # Datos estáticos
+    geom_point(data = dt_puntos, aes(x = x, y = y), 
+               color = c_puntos, alpha = 0.3, size = 2) +
+    
+    # Línea móvil
+    geom_line(data = dt_lineas, aes(x = x, y = y, group = 1), 
+              color = c_linea, linewidth = 1.8, lineend = "round") +
+    
+    scale_x_continuous(limits = c(0, 10), breaks = seq(0, 10, 2)) +
+    scale_y_continuous(limits = c(-5, 20), breaks = seq(-5, 20, 5)) +
+    
+    # Textos
+    labs(
+      title = "El Baile de la Regresión",
+      subtitle = "Visualización de Incertidumbre mediante HOPs (Hypothetical Outcome Plots). En lugar de mostrar un área de confianza estática, la animación proyecta 50 regresiones lineales calculadas mediante *Bootstrapping*. La vibración de la línea rosa revela intuitivamente al cerebro la inestabilidad de la tendencia: allí donde oscila más, los datos son menos concluyentes.",
+      caption = generar_caption_2026("27", "Animation (Uncertainties)", "Simulación Bootstrapping {gganimate}", c_linea, c_texto),
+      x = "Variable Explicativa (X)",
+      y = "Variable de Respuesta (Y)"
+    ) +
+    
+    # Tema
+    theme_minimal(base_size = 14, base_family = "Space Mono") +
+    theme(
+      plot.background = element_rect(fill = c_fondo, color = NA),
+      panel.background = element_rect(fill = c_fondo, color = NA),
+      text = element_text(color = c_texto),
+      
+      plot.title.position = "plot",
+      plot.caption.position = "plot",
+      
+      plot.title = element_text(family = "Manrope", face = "bold", size = rel(2.4), color = c_texto, margin = margin(b = 10)),
+      plot.subtitle = element_textbox_simple(
+        family = "Manrope", size = rel(1.1), color = "#a8b1c2", 
+        margin = margin(b = 20), lineheight = 1.4, width = grid::unit(1, "npc")
+      ),
+      plot.caption = element_textbox_simple(
+        family = "Manrope", size = rel(0.85), color = "#a8b1c2", 
+        halign = 0, lineheight = 1.6, width = grid::unit(1, "npc"), margin = margin(t = 20)
+      ),
+      
+      axis.title = element_text(family = "Space Mono", color = "#a8b1c2"),
+      axis.text = element_text(family = "Space Mono", color = "#88929e"),
+      panel.grid.major = element_line(color = "#3d3531", linewidth = 0.4),
+      panel.grid.minor = element_blank(),
+      
+      plot.margin = margin(20, 30, 20, 30)
+    ) +
+    
+    # Motor animación
+    transition_states(frame, transition_length = 2, state_length = 1) +
+    ease_aes('sine-in-out') # Transiciones suaves como si la línea "respirara"
+  
+  return(p)
+}
+
+
+# =============================================================================
+# DÍA 28 — Modeling (Uncertainties)
+# =============================================================================
+
+plot_dia28_modeling <- function(datos, paleta, ruta_salida) {
+  
+  setup_fonts_cat5()
+  setup_fonts_2026()
+  showtext_opts(dpi = 300)
+  showtext_auto()
+  
+  dt_spag   <- datos$spaghetti
+  dt_quant  <- datos$quantiles
+  dt_vol    <- datos$vol_proj
+  params    <- datos$params
+  s0        <- datos$s0
+  
+  # Paleta Categoría 5
+  c_fondo   <- unname(paleta["dark"])       
+  c_texto   <- unname(paleta["light_bg"])   
+  c_grid    <- "#3d3531"
+  c_lineas  <- unname(paleta["blue"])       
+  c_modelo  <- unname(paleta["magenta"])    
+  c_alerta  <- unname(paleta["yellow"])
+  
+  # PANEL SUPERIOR: COMPARATIVA DE PRECIOS (GBM vs GARCH)  
+  p_precios <- ggplot() +
+    
+    # Caos (Spaghetti)
+    geom_line(data = dt_spag, aes(x = dia, y = precio, group = sim_id), 
+              color = c_lineas, alpha = 0.1, linewidth = 0.2) +
+    # Cono del 90%
+    geom_ribbon(data = dt_quant, aes(x = dia, ymin = p05, ymax = p95), 
+                fill = c_modelo, alpha = 0.15) +
+    # Cono del 50%
+    geom_ribbon(data = dt_quant, aes(x = dia, ymin = p25, ymax = p75), 
+                fill = c_modelo, alpha = 0.25) +
+    # Mediana (P50)
+    geom_line(data = dt_quant, aes(x = dia, y = p50), 
+              color = c_modelo, linewidth = 1) +
+    
+    # Separamos los dos modelos lado a lado
+    facet_wrap(~modelo, ncol = 2) +
+    
+    scale_x_continuous(expand = c(0, 0), breaks = seq(0, 252, by = 63)) +
+    scale_y_continuous(labels = scales::dollar_format(prefix = "$")) +
+    
+    labs(
+      title = "La Ilusión de la Normalidad",
+      subtitle = glue::glue("Comparativa de proyecciones a 1 año del S&P 500 (Base: ${round(s0, 2)}). El modelo clásico (GBM) asume volatilidad constante, subestimando el riesgo extremo. El modelo GARCH(1,1)-t captura la realidad empírica: volatilidad persistente (99.8%) y colas gordas (ν=5.15). Observa cómo el cono GARCH se abre mucho más en los extremos, revelando el verdadero abismo de los 'Cisnes Negros'."),
+      x = NULL,
+      y = "Precio Proyectado (USD)"
+    ) +
+    
+    theme_minimal(base_size = 14, base_family = "Space Mono") +
+    theme(
+      plot.background = element_rect(fill = c_fondo, color = NA),
+      panel.background = element_rect(fill = c_fondo, color = NA),
+      text = element_text(color = c_texto),
+      
+      plot.title = element_text(family = "Manrope", face = "bold", size = rel(1.8), color = c_texto, margin = margin(b = 20, r = 20, l = 20)),
+      plot.subtitle = element_textbox_simple(
+        family = "Manrope", size = rel(0.90), color = "#a8b1c2", 
+        margin = margin(b = 20, r = 20, l = 20), lineheight = 1.4, width = grid::unit(1, "npc")
+      ),
+
+      plot.title.position = "plot",
+      plot.caption.position = "plot",
+      
+      strip.text = element_text(family = "Space Mono", face = "bold", color = c_texto, size = rel(1.2), margin = margin(b = 10)),
+
+      axis.text = element_text(family = "Space Mono", color = "#88929e", size = rel(0.9)),
+      axis.title.y = element_text(family = "Space Mono", size = rel(1.0), margin = margin(r = 15)),
+      axis.title.x = element_text(family = "Space Mono", size = rel(1.0), margin = margin(t = 15)),
+      panel.grid.major = element_line(color = c_grid, linewidth = 0.4),
+      panel.grid.minor = element_blank(),
+      plot.margin = margin(30, 50, 10, 20)
+    )
+  
+  # PANEL INFERIOR: DINÁMICA DE LA VOLATILIDAD (GARCH)
+  p_vol <- ggplot(dt_vol, aes(x = dia)) +
+    
+    geom_ribbon(aes(ymin = vol_p10, ymax = vol_p90), fill = c_alerta, alpha = 0.15) +
+    geom_line(aes(y = vol_media), color = c_alerta, linewidth = 1) +
+    
+    # Línea de volatilidad histórica
+    geom_hline(yintercept = datos$vol_hist_pct, color = c_texto, linetype = "dashed", linewidth = 0.5) +
+    
+    annotate("text", x = 5, y = datos$vol_hist_pct + 3, label = "Volatilidad Histórica (21d)", 
+             family = "Space Mono", color = c_texto, size = 3, hjust = 0) +
+             
+    scale_x_continuous(expand = c(0, 0), breaks = seq(0, 252, by = 63)) +
+    scale_y_continuous(labels = function(x) paste0(x, "%"), limits = c(0, 80)) +
+    
+    labs(
+      title = "Agrupamiento de Volatilidad Condicional (Volatility Clustering)",
+      x = "Días de Trading (Proyección a 1 Año)",
+      y = "Volatilidad Anual. (%)",
+      caption = generar_caption_2026("28", "Modeling (Uncertainties)", "Simulación GARCH(1,1)-t vía {rugarch}", c_modelo, c_texto)
+    ) +
+    
+    theme_minimal(base_size = 12, base_family = "Space Mono") +
+    theme(
+      plot.background = element_rect(fill = c_fondo, color = NA),
+      panel.background = element_rect(fill = c_fondo, color = NA),
+      text = element_text(color = c_texto),
+      
+    plot.title = element_text(family = "Manrope", face = "bold", size = rel(1.2), color = c_alerta, hjust = 0,                
+        margin = margin(b = 15, l = 30) 
+      ),      
+      plot.caption = element_textbox_simple(
+        family = "Manrope", size = rel(0.9), color = "#a8b1c2", 
+        halign = 0, lineheight = 1.6, width = grid::unit(1, "npc"), margin = margin(t = 20)
+      ),
+
+      plot.title.position = "plot",
+      plot.caption.position = "plot",
+      
+      axis.text = element_text(family = "Space Mono", color = "#88929e", size = rel(0.9)),
+      axis.title.y = element_text(family = "Space Mono", size = rel(1.0), margin = margin(r = 15)),
+      axis.title.x = element_text(family = "Space Mono", size = rel(1.0), margin = margin(t = 15)),
+      panel.grid.major = element_line(color = c_grid, linewidth = 0.4),
+      panel.grid.minor = element_blank(),
+      plot.margin = margin(30, 50, 10, 20)
+    )
+  
+
+  # ENSAMBLAJE FINAL CON COWPLOT
+  plot_final <- plot_grid(p_precios, p_vol, ncol = 1, rel_heights = c(2, 1), align = "v", axis = "lr")
+  
+  ggsave(ruta_salida, plot_final, width = 8, height = 10, dpi = 300, device = ragg::agg_png)
+
+  plot_final
+
 }

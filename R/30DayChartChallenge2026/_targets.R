@@ -473,6 +473,50 @@ list(
     format = "file"
   ),
 
+  # Day 27 --- Animation (Uncertainties)
+  tar_target(
+    clean_dia27,
+    prep_dia27_animation()
+  ),  
+  tar_target(
+    plot_dia27,
+    plot_dia27_animation(clean_dia27, paleta = paleta_unc)
+  ),  
+  tar_target(
+    save_dia27,
+    {
+      animacion <- animate(plot_dia27, 
+                           nframes = 100, 
+                           fps = 20, 
+                           width = 2400, 
+                           height = 3000, 
+                           res = 300,
+                           renderer = gifski_renderer()) # Requiere {gifski}
+      
+      ruta_salida <- paste0(OUTPUTS_DIR, "/dia27_animation.gif")
+      anim_save(ruta_salida, animation = animacion)
+      ruta_salida 
+    },
+    format = "file"
+  ),
+
+  # Day 28 --- Modeling (Uncertainties)
+  tar_target(
+    clean_dia28,
+    prep_dia28_modeling()
+  ),  
+  tar_target(
+    save_dia28,
+    {
+      ruta_salida <- paste0(OUTPUTS_DIR, "/dia28_modeling.png")
+      plot_dia28_modeling(clean_dia28, paleta = paleta_unc, ruta_salida = ruta_salida)
+      ruta_salida
+    }, 
+    format = "file"
+  ),
+
+
+
   # Marcador de fin de pipeline (eliminar cuando haya targets reales)
   tar_target(pipeline_listo, TRUE)
 

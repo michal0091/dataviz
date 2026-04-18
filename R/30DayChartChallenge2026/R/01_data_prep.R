@@ -20,6 +20,7 @@ library(PerformanceAnalytics)
 library(MacroFilters)
 library(ichimoku)
 library(WDI)
+library(rugarch)
 
 
 # =============================================================================
@@ -1531,4 +1532,191 @@ prep_dia26_trend <- function(ruta_csv = "R/30DayChartChallenge2026/data/ecb_yiel
   log_success("Día 26 preparado: Hedgehog Chart generado con matemática de Svensson.")
   
   return(list(real = dt_real, proyecciones = dt_proyecciones))
+}
+
+
+# =============================================================================
+# DÍA 27 — Animation (Uncertainties)
+# =============================================================================
+
+prep_dia27_animation <- function() {
+  
+  log_info("Día 27: Generando Bootstrapping para Hypothetical Outcome Plots (HOPs)...")
+  
+  # Datos base
+  set.seed(2026)
+  n_puntos <- 150
+  x <- runif(n_puntos, 0, 10)
+  # Relación débil con mucho ruido para que la línea "baile"
+  y <- -0.5 * x + 10 + rnorm(n_puntos, mean = 0, sd = 4) 
+  
+  dt_puntos <- data.table(x = x, y = y)
+  
+  # Bootstrapping
+  n_frames <- 50
+  
+  lista_lineas <- lapply(1:n_frames, function(frame_actual) {
+    # Tomamos una muestra aleatoria con reemplazo
+    muestra <- dt_puntos[sample(1:.N, replace = TRUE)]    
+    modelo <- lm(y ~ x, data = muestra)
+    
+    # Guardar
+    data.table(
+      frame = frame_actual,
+      x = c(0, 10),
+      y = predict(modelo, newdata = data.frame(x = c(0, 10)))
+    )
+  })
+  
+  dt_lineas <- rbindlist(lista_lineas)
+  
+  log_success("Día 27 preparado: 50 regresiones hipotéticas calculadas.")
+  
+  return(list(puntos = dt_puntos, lineas = dt_lineas))
+}
+
+
+# =============================================================================
+# DÍA 28 — Modeling (Uncertainties)
+# =============================================================================
+
+prep_dia28_modeling <- function() {
+  
+  log_info("Día 28: Descargando datos del S&P 500...")
+  
+  # Datos
+  getSymbols("SPY", from = Sys.Date() - (365 * 10), to = Sys.Date(), auto.assign = TRUE)
+  retornos_reales <- na.omit(ROC(Cl(SPY), type = "continuous"))
+  S0_real         <- as.numeric(last(Cl(SPY)))
+  
+  # GBM clásico
+  mu_gbm    <- mean(retornos_reales) * 252
+  sigma_gbm <- sd(retornos_reales) * sqrt(252)
+  
+  # GARCH(1,1) con distribución t-Student
+  # La t-Student captura fat tails (crashes/rallies inesperados)
+  spec <- ugarchspec(
+    variance.model = list(model = "sGARCH", garchOrder = c(1, 1)),
+    mean.model     = list(armaOrder = c(0, 0), include.mean = TRUE),
+    distribution.model = "std"   # Student-t estandarizada
+  )
+  
+  fit <- ugarchfit(spec = spec, data = retornos_reales, solver = "hybrid")
+  
+  cf <- coef(fit)
+  log_info(sprintf(
+    "GARCH calibrado → ω=%.2e | α=%.4f | β=%.4f | ν=%.2f | persistencia=%.4f",
+    cf["omega"], cf["alpha1"], cf["beta1"], cf["shape"],
+    cf["alpha1"] + cf["beta1"]   # cuánto "recuerda" la volatilidad
+  ))
+  log_info(sprintf(
+    "GBM baseline    → Drift: %.2f%% | σ: %.2f%% | Precio actual: $%.2f",
+    mu_gbm * 100, sigma_gbm * 100, S0_real
+  ))
+  
+  # Simular con Monte Carlo
+  set.seed(2026)
+  n_sims <- 1000
+  n_days <- 252
+  dt     <- 1 / 252
+  
+  # GBM clásico (Geometric Brownian Motion)
+  Z_gbm <- matrix(rnorm(n_sims * n_days), nrow = n_sims)
+  S_gbm <- matrix(0, nrow = n_sims, ncol = n_days + 1)
+  S_gbm[, 1] <- S0_real
+  for (t in 1:n_days) {
+    S_gbm[, t+1] <- S_gbm[, t] * exp(
+      (mu_gbm - sigma_gbm^2 / 2) * dt + sigma_gbm * sqrt(dt) * Z_gbm[, t]
+    )
+  }
+  
+  # GARCH(1,1)-t — simulación con ugarchsim ───────────────────────────
+  # ugarchsim propaga correctamente ω, α, β, ν desde el punto actual del proceso
+  # (sigma condicional del último día observado como estado inicial)
+  sim_garch <- ugarchsim(
+    fit,
+    n.sim  = n_days,
+    m.sim  = n_sims,
+    rseed  = 2026
+  )
+  
+  # Retornos simulados: matriz [n_days × n_sims]
+  ret_sim   <- sim_garch@simulation$seriesSim
+  sigma_sim <- sim_garch@simulation$sigmaSim  # sigma diaria [n_days × n_sims]
+  
+  # Reconstruimos precios desde retornos log
+  S_garch        <- matrix(0, nrow = n_sims, ncol = n_days + 1)
+  S_garch[, 1]   <- S0_real
+  for (t in 1:n_days) {
+    S_garch[, t+1] <- S_garch[, t] * exp(ret_sim[t, ])
+  }
+  
+  # Recojn data.table
+  preprocess_sims <- function(S_mat, modelo_label) {
+    dt_s   <- as.data.table(S_mat)
+    dt_s[, sim_id := 1:.N]
+    dt_long <- melt(dt_s, id.vars = "sim_id", variable.name = "dia", value.name = "precio")
+    dt_long[, dia    := as.integer(gsub("V", "", dia)) - 1L]
+    dt_long[, modelo := modelo_label]
+    dt_long
+  }
+  
+  dt_gbm_long   <- preprocess_sims(S_gbm,   "GBM clásico")
+  dt_garch_long <- preprocess_sims(S_garch, "GARCH(1,1)-t")
+  dt_all_long   <- rbindlist(list(dt_gbm_long, dt_garch_long))
+  
+  # Cuantiles por modelo y día
+  dt_quantiles <- dt_all_long[, .(
+    p05 = quantile(precio, 0.05),
+    p25 = quantile(precio, 0.25),
+    p50 = quantile(precio, 0.50),
+    p75 = quantile(precio, 0.75),
+    p95 = quantile(precio, 0.95)
+  ), by = .(dia, modelo)]
+  
+  # Spaghetti: 60 paths por modelo, GARCH los más interesantes visualmente
+  dt_spaghetti <- rbindlist(list(
+    dt_gbm_long[sim_id   <= 60],
+    dt_garch_long[sim_id <= 60]
+  ))
+  
+  # Volatilidad condicional proyectada (anualizada) — solo GARCH
+  dt_vol_sim <- as.data.table(t(sigma_sim * sqrt(252) * 100))  # % anualizado
+  dt_vol_sim[, sim_id := 1:.N]
+  dt_vol_long <- melt(dt_vol_sim, id.vars = "sim_id", variable.name = "dia", value.name = "vol_anual_pct")
+  dt_vol_long[, dia := as.integer(gsub("V", "", dia))]
+  
+  dt_vol_proj <- dt_vol_long[, .(
+    vol_media = mean(vol_anual_pct),
+    vol_p10   = quantile(vol_anual_pct, 0.10),
+    vol_p90   = quantile(vol_anual_pct, 0.90)
+  ), by = dia]
+  
+  # Volatilidad histórica realizada para contexto (ventana 21d)
+  vol_hist_actual <- sqrt(252) * sd(tail(retornos_reales, 21)) * 100
+  
+  log_success(sprintf(
+    "Día 28 listo → σ implícita GARCH hoy: %.1f%% | σ histórica 21d: %.1f%%",
+    as.numeric(tail(sigma(fit), 1)) * sqrt(252) * 100,
+    vol_hist_actual
+  ))
+  
+  return(list(
+    spaghetti    = dt_spaghetti,
+    quantiles    = dt_quantiles,       # ambos modelos, para superponer cones
+    vol_proj     = dt_vol_proj,        # subpanel de volatilidad GARCH
+    vol_hist_pct = vol_hist_actual,    # referencia visual
+    s0           = S0_real,
+    # Parámetros para el subtítulo del plot
+    params = list(
+      mu_gbm    = mu_gbm,
+      sigma_gbm = sigma_gbm,
+      omega     = cf["omega"],
+      alpha1    = cf["alpha1"],
+      beta1     = cf["beta1"],
+      nu        = cf["shape"],
+      persist   = cf["alpha1"] + cf["beta1"]
+    ),
+    garch_fit = fit
+  ))
 }
