@@ -2537,6 +2537,7 @@ plot_dia28_modeling <- function(datos, paleta, ruta_salida) {
 plot_dia29_monochrome <- function(datos, paleta) {
   
   setup_fonts_cat5()
+  setup_fonts_2026()
   showtext_opts(dpi = 300)
   showtext_auto()
   
@@ -2632,6 +2633,7 @@ plot_dia29_monochrome <- function(datos, paleta) {
 plot_dia30_ghdx <- function(dt, paleta) {
   
   setup_fonts_cat5()
+  setup_fonts_2026()
   showtext_opts(dpi = 300)
   showtext_auto()
   
