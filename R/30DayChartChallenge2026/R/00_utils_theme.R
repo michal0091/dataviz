@@ -49,6 +49,13 @@ setup_fonts_cat4 <- function() {
   showtext_auto()
 }
 
+setup_fonts_cat5 <- function() {
+  # Manrope para titulares y narrativas
+  font_add_google("Manrope", "Manrope")
+  # Space Mono para ejes, números y anotaciones de incertidumbre
+  font_add_google("Space Mono", "Space_Mono")
+}
+
 showtext_auto()
 # --- 2. PALETAS DE COLOR ---
 
@@ -100,6 +107,20 @@ paleta_ts <- c(
   "warning"   = "#ffc686",
   "danger"    = "#fb036c",
   "white"     = "#ffffff"
+)
+
+# Paleta Categoría 5: Uncertainties
+paleta_unc <- c(
+  "light_bg"  = "#f8f9fd", # Fondo principal (blanco azulado muy limpio)
+  "light_alt" = "#e2e6e4", # Gris claro para áreas de fondo o grids
+  "dark"      = "#241e1c", # Texto principal (Casi negro)
+  "dark_grn"  = "#044411", # Verde oscuro (bueno para textos secundarios)
+  "blue"      = "#3884ff", # Azul eléctrico (Intervalos)
+  "purple"    = "#8236ec", # Morado
+  "magenta"   = "#ff006e", # Rosa neón (Líneas de predicción o anomalías)
+  "yellow"    = "#ffd60a", # Amarillo vibrante
+  "orange"    = "#ffbe0a", # Amarillo anaranjado
+  "pink"      = "#fdc7e5"  # Rosa pálido (Intervalos de confianza anchos)
 )
 
 # --- 3. FUNCIÓN DE CAPTION ---
