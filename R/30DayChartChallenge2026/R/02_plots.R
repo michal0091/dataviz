@@ -2128,3 +2128,84 @@ plot_dia24_scmp_final <- function(dt, ruta_imagen = "R/30DayChartChallenge2026/d
   return(p_ensamblado)
 }
 
+
+# =============================================================================
+# DÍA 25 — Space (Uncertainties)
+# =============================================================================
+
+plot_dia25_space <- function(dt, paleta) {
+  
+  setup_fonts_cat5()
+  setup_fonts_2026()
+  showtext_opts(dpi = 300)
+  showtext_auto()
+  
+  c_fondo   <- unname(paleta["dark"])       
+  c_texto   <- unname(paleta["light_bg"])   
+  c_grid    <- "#3d3531"                    
+  
+  c_linea   <- unname(paleta["magenta"])    # La probabilidad oficial
+  c_ribbon  <- unname(paleta["blue"])       # El margen de error (El cono)
+  c_alerta  <- unname(paleta["yellow"])     
+  
+  p <- ggplot(dt, aes(x = fecha)) +
+    
+    geom_ribbon(aes(ymin = prob_low, ymax = prob_high), fill = c_ribbon, alpha = 0.15) +
+    geom_line(aes(y = prob_high), color = c_ribbon, linewidth = 0.3, alpha = 0.5, linetype = "dashed") +
+
+    geom_line(aes(y = prob_mean), color = c_linea, linewidth = 1.2) +
+    
+    geom_point(data = dt[es_pico == TRUE], aes(y = prob_mean), color = c_alerta, size = 3) +
+    geom_text(data = dt[es_pico == TRUE], aes(y = prob_high + 0.5, label = "26 DIC 2004\nPico de Incertidumbre\n(1 entre 37)"), 
+              family = "Space Mono", color = c_alerta, size = 3.8, fontface = "bold", hjust = 0.5, lineheight = 0.9) +
+
+    annotate("segment", x = as.Date("2004-12-27"), xend = as.Date("2005-01-02"), y = 1.5, yend = 4, color = c_texto, linewidth = 0.3) +
+    annotate("text", x = as.Date("2005-01-03"), y = 4.2, label = "27 DIC:\nDescubren fotos antiguas de 1994.\nEl cono de órbita se afina y\nel riesgo colapsa a 0%.", 
+             family = "Manrope", color = c_texto, size = 3.8, hjust = 0, lineheight = 0.9) +
+    
+    geom_hline(yintercept = 0, color = c_texto, linewidth = 0.5) +
+    
+    # Ejes adaptados a fechas reales
+    scale_x_date(date_breaks = "1 week", date_labels = "%d %b\n%Y", expand = c(0, 0)) +
+    scale_y_continuous(expand = expansion(mult = c(0, 0.1)), breaks = seq(0, 10, by = 2), labels = function(x) paste0(x, "%")) +
+    
+    labs(
+      title = "El Pánico del Asteroide Apophis",
+      subtitle = "Probabilidad oficial de impacto en la Tierra y banda de incertidumbre orbital reportada por la NASA en Diciembre de 2004. Durante días, la escasez de datos generó un margen de error masivo (azul), elevando la probabilidad de impacto al 2.7%. Todo colapsó cuando la recuperación de fotografías antiguas afinó el modelo.",
+      caption = generar_caption_2026("25", "Space (Uncertainties)", "NASA JPL Sentry Earth Impact Monitoring (Historical Data)", c_linea, c_texto),
+      x = NULL,
+      y = "Probabilidad de Impacto Estimada (%)"
+    ) +
+    
+    theme_minimal(base_size = 14, base_family = "Space Mono") +
+    theme(
+      plot.background = element_rect(fill = c_fondo, color = NA),
+      panel.background = element_rect(fill = c_fondo, color = NA),
+      text = element_text(color = c_texto),
+      
+      plot.title.position = "plot",
+      plot.caption.position = "plot",
+      
+      plot.title = element_text(family = "Manrope", face = "bold", size = rel(2.2), color = c_texto, margin = margin(b = 10)),
+      plot.subtitle = element_textbox_simple(
+        family = "Manrope", size = rel(1.1), color = "#a8b1c2", 
+        margin = margin(b = 30), lineheight = 1.4, width = grid::unit(1, "npc")
+      ),
+      
+      plot.caption = element_textbox_simple(
+        family = "Manrope", size = rel(0.85), color = "#a8b1c2", 
+        halign = 0, lineheight = 1.6, width = grid::unit(1, "npc"), margin = margin(t = 30)
+      ),
+      
+      axis.title.y = element_text(family = "Space Mono", size = rel(1.0), margin = margin(r = 15)),
+      axis.text = element_text(family = "Space Mono", size = rel(1.1), color = "#88929e"),
+      
+      panel.grid.major = element_line(color = c_grid, linewidth = 0.4, linetype = "dotted"),
+      panel.grid.minor = element_blank(),
+      
+      plot.margin = margin(30, 40, 30, 40)
+    )
+    
+  return(p)
+}
+

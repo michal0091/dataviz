@@ -1411,3 +1411,49 @@ prep_dia24_scmp <- function() {
   
   dt_raw[]
 }
+
+
+# =============================================================================
+# DÍA 25 — Space (Uncertainties)
+# =============================================================================
+
+prep_dia25_space <- function() {
+  
+  log_info("Día 25: Reconstruyendo el registro histórico del Asteroide Apophis (NASA JPL)...")
+  
+  # Estos son los datos REALES de los reportes del sistema Sentry de la NASA a finales de 2004
+  # sobre la probabilidad de que el asteroide impactara en el año 2029.
+  hitos_apophis <- data.table(
+    fecha = as.Date(c(
+      "2004-06-19", # Descubrimiento (datos insuficientes, riesgo cero aparente)
+      "2004-12-20", # Se retoman observaciones, entra en la zona de riesgo
+      "2004-12-23", # Anuncio oficial de riesgo: 1.1% (1 en 90)
+      "2004-12-24", # El riesgo sube: 1.6% (1 en 62)
+      "2004-12-26", # PÁNICO MÁXIMO: Nivel 4 en la Escala de Turín. Riesgo de 2.7% (1 en 37)
+      "2004-12-27", # Salvación: Encuentran imágenes antiguas de 1994 ("precovery"). El cono se encoge.
+      "2004-12-28", # Riesgo de impacto en 2029 descartado casi por completo
+      "2005-01-10"  # Confirmación definitiva
+    )),
+    prob_real_estimada = c(0.0, 0.4, 1.1, 1.6, 2.7, 0.004, 0.0, 0.0),
+    incertidumbre_sup =  c(0.1, 1.5, 3.5, 5.0, 7.5, 0.1,   0.0, 0.0) # Tamaño del error (Cono orbital)
+  )
+  
+  dt <- data.table(fecha = seq(as.Date("2004-12-15"), as.Date("2005-01-15"), by = "1 day"))
+  
+  # Rellenar
+  dt <- merge(dt, hitos_apophis, by = "fecha", all.x = TRUE)
+  dt[, prob_mean := na.approx(prob_real_estimada, na.rm = FALSE)]
+  dt[, prob_high := na.approx(incertidumbre_sup, na.rm = FALSE)]
+  
+  # Limpiamos los NA iniciales/finales
+  dt[is.na(prob_mean), prob_mean := 0]
+  dt[is.na(prob_high), prob_high := 0]
+  dt[, prob_low := pmax(0, prob_mean - (prob_high - prob_mean))]
+  
+  # Identificamos el punto de máximo pánico para anotarlo en el gráfico
+  dt[, es_pico := ifelse(fecha == as.Date("2004-12-26"), TRUE, FALSE)]
+  
+  log_success("Día 25 preparado: Datos históricos de Apophis reconstruidos.")
+  
+  dt[]
+}

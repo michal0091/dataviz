@@ -438,6 +438,23 @@ list(
     plot_dia24_scmp_final(clean_dia24, output_dir = OUTPUTS_DIR)
   ), 
 
+  # Day 25 --- Space (Uncertainties)
+  tar_target(
+    clean_dia25,
+    prep_dia25_space()
+  ),  
+  tar_target(
+    plot_dia25,
+    plot_dia25_space(clean_dia25, paleta = paleta_unc)
+  ),  
+  tar_target(
+    save_dia25,
+    ggsave(paste0(OUTPUTS_DIR, "/dia25_space.png"), plot_dia25, 
+           width = 8, height = 10, dpi = 300, 
+           device = ragg::agg_png),
+    format = "file"
+  ),
+
   # Marcador de fin de pipeline (eliminar cuando haya targets reales)
   tar_target(pipeline_listo, TRUE)
 
