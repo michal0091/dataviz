@@ -515,7 +515,39 @@ list(
     format = "file"
   ),
 
+  # Day 29 --- Monochrome (Uncertainties)
+  tar_target(
+    clean_dia29,
+    prep_dia29_monochrome()
+  ),  
+  tar_target(
+    plot_dia29,
+    plot_dia29_monochrome(clean_dia29, paleta = paleta_unc)
+  ),  
+  tar_target(
+    save_dia29,
+    ggsave(paste0(OUTPUTS_DIR, "/dia29_monochrome.png"), plot_dia29, 
+           width = 8, height = 10, dpi = 300, 
+           device = ragg::agg_png), 
+    format = "file"
+  ),
 
+  # Day 30 --- Global Health Data Exchange (Uncertainties)
+  tar_target(
+    clean_dia30,
+    prep_dia30_ghdx(ruta_csv =  "R/30DayChartChallenge2026/data/IHME_AMR_BURDEN_2019_NUMBER_Y2022M01D20.CSV")
+  ),  
+  tar_target(
+    plot_dia30,
+    plot_dia30_ghdx(clean_dia30, paleta = paleta_unc)
+  ),  
+  tar_target(
+    save_dia30,
+    ggsave(paste0(OUTPUTS_DIR, "/dia30_ghdx.png"), plot_dia30, 
+           width = 8, height = 10, dpi = 300, 
+           device = ragg::agg_png), 
+    format = "file"
+  ),
 
   # Marcador de fin de pipeline (eliminar cuando haya targets reales)
   tar_target(pipeline_listo, TRUE)

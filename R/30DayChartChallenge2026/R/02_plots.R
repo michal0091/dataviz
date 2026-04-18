@@ -2528,3 +2528,173 @@ plot_dia28_modeling <- function(datos, paleta, ruta_salida) {
   plot_final
 
 }
+
+
+# =============================================================================
+# DÍA 29 — Monochrome (Uncertainties)
+# =============================================================================
+
+plot_dia29_monochrome <- function(datos, paleta) {
+  
+  setup_fonts_cat5()
+  showtext_opts(dpi = 300)
+  showtext_auto()
+  
+  dt_hist <- datos$hist
+  dt_dots <- datos$dots
+  
+  # LA REGLA MONOCROMA: Solo dos tonos permitidos.
+  c_fondo <- unname(paleta["light_bg"])   # #f8f9fd (El "Papel")
+  c_tinta <- unname(paleta["dark"])       # #241e1c (La "Tinta")
+  c_grid  <- unname(paleta["light_alt"])  # #e2e6e4 (Las "Guías")
+  
+  p <- ggplot() +
+    
+    # 1. EL PASADO (Línea implacable de la realidad histórica)
+    # geom_step simula los saltos reales de las reuniones de política monetaria
+    geom_step(data = dt_hist, aes(x = x, y = tasa), color = c_tinta, linewidth = 1.2) +
+    
+    # El ancla del "HOY" (Punto final de la curva histórica)
+    geom_point(data = dt_hist[x == max(x)], aes(x = x, y = tasa), color = c_fondo, fill = c_tinta, shape = 21, size = 4, stroke = 1.5) +
+    
+    # 2. EL FUTURO (La Incertidumbre Institucional / El Dot Plot)
+    geom_point(data = dt_dots, aes(x = x_final, y = tasa), 
+               color = c_tinta, fill = c_tinta, shape = 21, size = 3.2, alpha = 0.7) +
+    
+    # Anotaciones Periodísticas
+    annotate("text", x = 2023.5, y = 1.0, label = "TASA EFECTIVA\nREAL", 
+             family = "Space Mono", color = c_tinta, size = 3.2, hjust = 0, lineheight = 0.9) +
+             
+    annotate("segment", x = 2026.2, xend = 2026.8, y = 3.625, yend = 3.625, 
+             color = c_tinta, linewidth = 0.4, linetype = "dotted") +
+             
+    annotate("text", x = 2029.0, y = 4.8, label = "FRACTURA DE CONSENSO\n(Máxima Incertidumbre)", 
+             family = "Space Mono", color = c_tinta, size = 3.2, hjust = 0, lineheight = 0.9) +
+             
+    # Escalas personalizadas para alinear historia y futuro
+    scale_x_continuous(
+      limits = c(2021.5, 2033), 
+      breaks = c(2022, 2023, 2024, 2025, 2027.5, 2028.8, 2029.8, 2031.5), 
+      labels = c("2022", "2023", "2024", "2025", "2026", "2027", "2028", "Largo\nPlazo"),
+      expand = c(0, 0)
+    ) +
+    scale_y_continuous(limits = c(-0.5, 6), breaks = seq(0, 6, by = 1), labels = function(x) paste0(x, "%")) +
+    
+    labs(
+      title = "La Anatomía del Desacuerdo",
+      subtitle = "Proyecciones del FOMC (Dot Plot) de Marzo de 2026. Limitados a una sola tinta, la incertidumbre del Banco Central se manifiesta geométricamente a través de la dispersión visual. Tras la agresiva constricción monetaria iniciada en 2022 (línea continua), el consenso institucional se fractura. La nube de puntos revela un futuro inmediato fuertemente polarizado y una profunda duda matemática sobre la tasa de equilibrio a largo plazo.",
+      caption = generar_caption_2026("29", "Monochrome (Uncertainties)", "US Federal Reserve (FOMC SEP March 18, 2026)", c_tinta, c_tinta),
+      x = NULL,
+      y = "Fed Funds Target Rate (%)"
+    ) +
+    
+    # Theme estricto monocromo
+    theme_minimal(base_size = 14, base_family = "Space Mono") +
+    theme(
+      plot.background = element_rect(fill = c_fondo, color = NA),
+      panel.background = element_rect(fill = c_fondo, color = NA),
+      text = element_text(color = c_tinta),
+      
+      plot.title.position = "plot",
+      plot.caption.position = "plot",
+      
+      plot.title = element_text(family = "Manrope", face = "bold", size = rel(2.4), color = c_tinta, margin = margin(b = 20)),
+      plot.subtitle = element_textbox_simple(
+        family = "Manrope", size = rel(1.1), color = c_tinta, 
+        margin = margin(b = 40), lineheight = 1.4, width = grid::unit(1, "npc")
+      ),
+      plot.caption = element_textbox_simple(
+        family = "Manrope", size = rel(0.85), color = c_tinta, 
+        halign = 0, lineheight = 1.6, width = grid::unit(1, "npc"), margin = margin(t = 30)
+      ),
+      
+      axis.title.y = element_text(family = "Space Mono", size = rel(1.0), margin = margin(r = 15)),
+      axis.text.y = element_text(family = "Space Mono", color = c_tinta, size = rel(1.1)),
+      
+      # Los saltos de línea (\n) en las etiquetas de X requieren lineheight
+      axis.text.x = element_text(family = "Space Mono", color = c_tinta, size = rel(1.1), lineheight = 0.9, margin = margin(t = 10)),
+      
+      panel.grid.major.y = element_line(color = c_grid, linewidth = 0.5),
+      panel.grid.major.x = element_blank(),
+      panel.grid.minor = element_blank(),
+      
+      plot.margin = margin(30, 40, 30, 40)
+    )
+    
+  return(p)
+}
+
+
+# =============================================================================
+# DÍA 29 — Global Health Data Exchange (Uncertainties)
+# =============================================================================
+
+plot_dia30_ghdx <- function(dt, paleta) {
+  
+  setup_fonts_cat5()
+  showtext_opts(dpi = 300)
+  showtext_auto()
+  
+  c_fondo   <- unname(paleta["dark"])       
+  c_texto   <- unname(paleta["light_bg"])   
+  c_grid    <- "#3d3531"
+  c_alerta  <- unname(paleta["magenta"])    
+  c_rango   <- "#8a244c"                    
+  
+  p <- ggplot(dt, aes(x = pct_val, y = pathogen)) +
+    
+    # 1. LA INCERTIDUMBRE PROPORCIONAL
+    geom_linerange(aes(xmin = pct_lower, xmax = pct_upper), color = c_rango, linewidth = 4, alpha = 0.6) +
+    
+    # 2. EL VALOR CENTRAL (%)
+    geom_point(color = c_alerta, size = 5, shape = 21, fill = c_fondo, stroke = 1.5) +
+    
+    # Textos sobre los puntos (Añadimos % y un offset dinámico para que no pise la barra)
+    geom_text(aes(x = pct_upper + 0.8, label = sprintf("%.1f%%", pct_val)), 
+              family = "Space Mono", color = c_texto, size = 3.5, hjust = 0) +
+    
+    # Escalas adaptadas a porcentajes
+    scale_x_continuous(labels = function(x) paste0(x, "%"), 
+                       expand = expansion(mult = c(0, 0.15))) +
+    
+    labs(
+      title = "La Pandemia Oculta:\nSuperbacterias",
+      subtitle = "Porcentaje de muertes globales (2019) atribuibles directamente a la Resistencia Antimicrobiana por patógeno. Solo la bacteria *E. coli* es responsable de más del 17% de la letalidad mundial. Los puntos indican la estimación central del IHME, mientras que las barras magentas visualizan el inmenso Intervalo de Incertidumbre (95% UI), reflejo de los vacíos de vigilancia epidemiológica a nivel global.",
+      caption = generar_caption_2026("30", "GHDx (Uncertainties)", "Fuente: IHME Global Burden of Disease (AMR 2019)", c_alerta, c_texto),
+      x = "Proporción del Total de Muertes AMR (%)",
+      y = NULL
+    ) +
+    
+    theme_minimal(base_size = 14, base_family = "Space Mono") +
+    theme(
+      plot.background = element_rect(fill = c_fondo, color = NA),
+      panel.background = element_rect(fill = c_fondo, color = NA),
+      text = element_text(color = c_texto),
+      
+      plot.title.position = "plot",
+      plot.caption.position = "plot",
+      
+      plot.title = element_text(family = "Manrope", face = "bold", size = rel(2.4), color = c_texto, margin = margin(b = 10)),
+      plot.subtitle = element_textbox_simple(
+        family = "Manrope", size = rel(1.1), color = "#a8b1c2", 
+        margin = margin(b = 30), lineheight = 1.4, width = grid::unit(1, "npc")
+      ),
+      plot.caption = element_textbox_simple(
+        family = "Manrope", size = rel(0.85), color = "#a8b1c2", 
+        halign = 0, lineheight = 1.6, width = grid::unit(1, "npc"), margin = margin(t = 30)
+      ),
+      
+      axis.text.y = element_text(family = "Manrope", face = "italic", color = c_texto, size = rel(1.2), margin = margin(r = 15)),
+      axis.title.x = element_text(family = "Space Mono", size = rel(1.0), margin = margin(t = 15), color = "#a8b1c2"),
+      axis.text.x = element_text(family = "Space Mono", color = "#88929e"),
+      
+      panel.grid.major.x = element_line(color = c_grid, linewidth = 0.5, linetype = "dashed"),
+      panel.grid.major.y = element_blank(),
+      panel.grid.minor = element_blank(),
+      
+      plot.margin = margin(30, 40, 30, 40)
+    )
+    
+  return(p)
+}
+

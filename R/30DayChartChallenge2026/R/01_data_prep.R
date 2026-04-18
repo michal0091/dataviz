@@ -1720,3 +1720,98 @@ prep_dia28_modeling <- function() {
     garch_fit = fit
   ))
 }
+
+
+# =============================================================================
+# DÍA 29 — Monochrome (Uncertainties)
+# =============================================================================
+
+prep_dia29_monochrome <- function() {
+  
+  log_info("Día 29: Generando datos reales del Dot Plot de la FED (SEP Marzo 2026)...")
+
+ # Datos recientes 
+  dt_hist <- data.table(
+    x = c(2022.0, 2022.5, 2023.0, 2023.5, 2024.0, 2024.9, 2025.9, 2026.2),
+    tasa = c(0.125, 1.625, 4.375, 5.375, 5.375, 4.625, 3.875, 3.625)
+  )
+  
+  # Las opiniones de los 19 miembros en Marzo 2026
+  dots_2026 <- c(rep(3.625, 7), rep(3.375, 7), rep(3.125, 2), rep(2.875, 2), 2.625)
+  dots_2027 <- c(3.875, rep(3.625, 2), rep(3.375, 3), rep(3.125, 6), rep(2.875, 4), rep(2.625, 2), 2.375)
+  dots_2028 <- c(rep(3.875, 2), rep(3.625, 2), rep(3.375, 3), rep(3.125, 4), rep(2.875, 4), rep(2.625, 3), 2.375)
+  dots_lr   <- c(3.75, rep(3.50, 2), rep(3.25, 3), rep(3.00, 7), rep(2.75, 4), rep(2.50, 2))
+  
+  dt_dots <- data.table(
+    periodo_x = c(rep(2027.5, 19), rep(2028.8, 19), rep(2029.8, 19), rep(2031.5, 19)),
+    tasa = c(dots_2026, dots_2027, dots_2028, dots_lr)
+  )
+  
+  # Beeswarm manual
+  dt_dots <- dt_dots[order(periodo_x, tasa)]
+  dt_dots[, dot_id := 1:.N, by = .(periodo_x, tasa)]
+  dt_dots[, total_dots := .N, by = .(periodo_x, tasa)]
+  
+  # Calculamos el offset 
+  dt_dots[, offset_x := (dot_id - (total_dots + 1) / 2) * 0.18]
+  dt_dots[, x_final := periodo_x + offset_x]
+  
+  log_success("Día 29 preparado: Matriz del FOMC calibrada para monocromo.")
+  
+  return(list(hist = dt_hist, dots = dt_dots))
+}
+
+
+# =============================================================================
+# DÍA 29 — Global Health Data Exchange (Uncertainties)
+# =============================================================================
+
+prep_dia30_ghdx <- function(ruta_csv = "R/30DayChartChallenge2026/data/IHME_AMR_BURDEN_2019_NUMBER_Y2022M01D20.CSV") {
+  
+  log_info("Día 30: Procesando el dataset AMR 2019 del GHDx...")
+  
+  if (!file.exists(ruta_csv)) {
+    log_error("FALTA EL ARCHIVO: Descarga IHME_AMR_BURDEN_2019_NUMBER_Y2022M01D20.CSV del GHDx")
+    stop("Pipeline detenido.")
+  }
+
+  dt_raw <- fread(ruta_csv)
+  
+  # Filtrar
+  # Buscamos: Muertes, Globales, Ambos sexos, para cualquier síndrome,
+  # con resistencia a CUALQUIER antibiótico, y muertes ATRIBUIBLES (Drug-susceptible).
+  dt_fil <- dt_raw[
+    measure_name == "Deaths" & 
+    location_name == "Global" & 
+    sex_name == "Both" &
+    infectious_syndrome == "All infectious syndromes" &
+    antibiotic_class == "Resistance to one or more antibiotics" &
+    counterfactual == "Drug-susceptible infection"
+  ]
+  
+  # Agrupación por patógeno
+  # Como el dataset viene separado por edades (Post Neonatal, 5 plus, etc.),
+  # colapsamos sumando los valores para tener el total Global por bacteria.
+  dt_agg <- dt_fil[, .(
+    val = sum(val, na.rm = TRUE),
+    lower = sum(lower, na.rm = TRUE),
+    upper = sum(upper, na.rm = TRUE)
+  ), by = pathogen]
+  
+  # Seleccionamos el Top 12 de asesinos microscópicos (1 todos)
+  dt_top <- dt_agg[order(-val)][1:13]
+  
+  total_amr <- dt_top[pathogen == "All pathogens", val]
+  
+  # %
+  dt_top[, pct_val := (val / total_amr) * 100]
+  dt_top[, pct_lower := (lower / total_amr) * 100]
+  dt_top[, pct_upper := (upper / total_amr) * 100]
+  
+  dt_plot <- dt_top[pathogen != "All pathogens"]
+  dt_plot[, pathogen := factor(pathogen, levels = rev(pathogen))]
+  
+  log_success("Día 30 preparado: Patógenos AMR convertidos a porcentaje del total global.")
+  
+  dt_plot[]
+}
